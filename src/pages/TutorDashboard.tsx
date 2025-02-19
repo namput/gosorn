@@ -1,18 +1,40 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5173"; // ✅ ป้องกัน `undefined`
+
+// ✅ กำหนด Type สำหรับ `Tutor`, `Student`, `Review`
+type Tutor = {
+  id: number;
+  name: string;
+  email: string;
+  subjects: string;
+  price: number;
+};
+
+type Student = {
+  id: number;
+  name: string;
+  email: string;
+  bookingDate: string;
+};
+
+type Review = {
+  id: number;
+  rating: number;
+  comment: string;
+};
 
 const TutorDashboard = () => {
-  const [tutor, setTutor] = useState(null);
-  const [students, setStudents] = useState([]);
-  const [reviews, setReviews] = useState([]);
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [tutor, setTutor] = useState<Tutor | null>(null);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [rating, setRating] = useState<number>(5);
+  const [comment, setComment] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,8 +46,6 @@ const TutorDashboard = () => {
     }
 
     const fetchTutorData = async () => {
-        console.log('token', token);
-        
       try {
         const response = await fetch(`${API_URL}/api/tutors/me`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -48,7 +68,8 @@ const TutorDashboard = () => {
     fetchTutorData();
   }, [navigate]);
 
-  const handleReviewSubmit = async (e) => {
+  // ✅ กำหนด Type ของ `handleReviewSubmit`
+  const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!comment.trim()) {
       setError("กรุณาใส่ความคิดเห็นก่อนส่งรีวิว");
@@ -56,11 +77,12 @@ const TutorDashboard = () => {
     }
     setError("");
     const token = localStorage.getItem("token");
+
     try {
       const response = await fetch(`${API_URL}/api/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ tutorId: tutor.id, rating, comment }),
+        body: JSON.stringify({ tutorId: tutor?.id, rating, comment }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -84,13 +106,13 @@ const TutorDashboard = () => {
       <div className="p-6 max-w-4xl mx-auto">
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-blue-600">แดชบอร์ดติวเตอร์</h2>
-          <p className="text-gray-600">👋 ยินดีต้อนรับ, {tutor.name}</p>
+          <p className="text-gray-600">👋 ยินดีต้อนรับ, {tutor?.name ?? "ไม่มีข้อมูล"}</p>
 
           <div className="mt-4 p-4 border rounded-lg bg-gray-50">
             <h3 className="text-lg font-semibold">ข้อมูลติวเตอร์</h3>
-            <p><strong>อีเมล:</strong> {tutor.email}</p>
-            <p><strong>วิชาที่สอน:</strong> {tutor.subjects ? tutor.subjects.split(", ").join(", ") : "ไม่มีข้อมูล"}</p>
-            <p><strong>เรทราคา:</strong> {tutor.price} บาท/ชั่วโมง</p>
+            <p><strong>อีเมล:</strong> {tutor?.email ?? "ไม่มีข้อมูล"}</p>
+            <p><strong>วิชาที่สอน:</strong> {tutor?.subjects ? tutor.subjects.split(", ").join(", ") : "ไม่มีข้อมูล"}</p>
+            <p><strong>เรทราคา:</strong> {tutor?.price ?? "ไม่มีข้อมูล"} บาท/ชั่วโมง</p>
           </div>
 
           <div className="mt-6">
@@ -113,7 +135,7 @@ const TutorDashboard = () => {
           <div className="mt-6 p-4 bg-white shadow-md rounded-lg">
             <h3 className="text-lg font-semibold">✍️ ให้คะแนนและรีวิว</h3>
             <form onSubmit={handleReviewSubmit} className="mt-4 space-y-4">
-              <select value={rating} onChange={(e) => setRating(e.target.value)} className="w-full p-2 border rounded">
+              <select value={rating} onChange={(e) => setRating(Number(e.target.value))} className="w-full p-2 border rounded">
                 {[1, 2, 3, 4, 5].map((num) => (
                   <option key={num} value={num}>{num} ⭐</option>
                 ))}

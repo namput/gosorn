@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL ; // เผื่อไม่มี .env
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5173"; // ✅ ป้องกัน `undefined`
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "student" });
@@ -11,11 +11,12 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  // ✅ แก้ไข Type ของ `e` ให้ถูกต้อง
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
