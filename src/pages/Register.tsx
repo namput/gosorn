@@ -1,43 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import { registerTutor, RegisterData, checkEmailVerification } from "../services/authService";
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5173"; // ✅ ป้องกัน `undefined`
-
-const Register = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "student" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+const Register: React.FC = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState<RegisterData>({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    role: "tutor",
+  });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [checkCount, setCheckCount] = useState<number>(0);
+  const maxChecks = 20; // ✅ จำกัดการตรวจสอบที่ 20 ครั้ง (~1 นาที)
 
-  // ✅ แก้ไข Type ของ `e` ให้ถูกต้อง
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  useEffect(() => {
+    if (!successMessage || !formData.email) return;
+
+    const interval = setInterval(async () => {
+      if (checkCount >= maxChecks) {
+        clearInterval(interval);
+        return;
+      }
+
+      try {
+        const verified = await checkEmailVerification(formData.email);
+        if (verified) {
+          clearInterval(interval);
+          navigate("/dashboard");
+        } else {
+          setCheckCount((prev) => prev + 1);
+        }
+      } catch (err) {
+        console.error("Error checking verification:", err);
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [successMessage, formData.email, navigate, checkCount]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError(null);
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("✅ สมัครสมาชิกสำเร็จ!");
-        setFormData({ name: "", email: "", password: "", role: "student" }); // รีเซ็ตฟอร์ม
-        navigate("/dashboard"); // ไปหน้า Dashboard หลังจากสมัครเสร็จ
-      } else {
-        setError(data.error || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
+      const response = await registerTutor(formData);
+      if (response.message) {
+        setSuccessMessage(response.message);
       }
-    } catch (err) {
-      setError("❌ ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์");
+    } catch (error: any) {
+      setError(error.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง");
     } finally {
       setLoading(false);
     }
@@ -45,54 +65,46 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header />
-      <div className="flex items-center justify-center h-[80vh]">
-        <div className="bg-white p-8 rounded-lg shadow-md w-96">
-          <h2 className="text-2xl font-bold text-center text-blue-600">สมัครสมาชิก</h2>
-          {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
-          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-            <input
-              type="text"
-              name="name"
-              placeholder="ชื่อ"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="อีเมล"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="รหัสผ่าน"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border rounded"
-            />
-            <select name="role" value={formData.role} onChange={handleChange} className="w-full p-2 border rounded">
-              <option value="student">นักเรียน</option>
-              <option value="tutor">ติวเตอร์</option>
-            </select>
-            <button
-              type="submit"
-              className={`w-full p-2 text-white font-bold rounded ${loading ? "bg-gray-500" : "bg-blue-500 hover:bg-blue-700"}`}
-              disabled={loading}
-            >
-              {loading ? "กำลังสมัคร..." : "สมัครสมาชิก"}
-            </button>
-          </form>
+      <section className="py-20 text-center bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+        <h1 className="text-5xl font-bold">สมัครเป็นติวเตอร์</h1>
+        <p className="text-lg mt-4">สร้างโปรไฟล์ของคุณและเริ่มต้นสอนนักเรียนได้เลย</p>
+      </section>
+      <section className="py-16 px-10">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+          <h2 className="text-3xl font-semibold text-center text-gray-800">สมัครเป็นติวเตอร์วันนี้!</h2>
+          {successMessage ? (
+            <p className="text-green-500 text-center">{successMessage} โปรดตรวจสอบอีเมลของคุณ</p>
+          ) : (
+            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+              {error && <p className="text-red-500 text-center">{error}</p>}
+              <div>
+                <label className="block text-gray-700 font-semibold">ชื่อ-นามสกุล *</label>
+                <input type="text" name="name" placeholder="กรอกชื่อ-นามสกุลของคุณ"
+                  value={formData.name} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold">อีเมล *</label>
+                <input type="email" name="email" placeholder="กรอกอีเมลของคุณ"
+                  value={formData.email} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold">รหัสผ่าน *</label>
+                <input type="password" name="password" placeholder="สร้างรหัสผ่านที่ปลอดภัย"
+                  value={formData.password} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+              </div>
+              <div>
+                <label className="block text-gray-700 font-semibold">เบอร์โทรศัพท์ *</label>
+                <input type="tel" name="phone" placeholder="กรอกเบอร์โทรศัพท์ของคุณ"
+                  value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+              </div>
+              <button type="submit" disabled={loading}
+                className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 transition-all text-xl font-semibold">
+                {loading ? "กำลังสมัคร..." : "สมัครสมาชิกฟรี"}
+              </button>
+            </form>
+          )}
         </div>
-      </div>
-      <Footer />
+      </section>
     </div>
   );
 };

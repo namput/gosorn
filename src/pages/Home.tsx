@@ -1,70 +1,113 @@
-
 import { Link } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 const Home = () => {
- 
-
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* ✅ Header */}
-      <Header />
-
       {/* ✅ Hero Section */}
-      <section className="py-20 text-center bg-gradient-to-r from-blue-500 to-blue-700 text-white">
-        <h1 className="text-5xl font-bold">
-          บริการที่เหมาะสำหรับ <span className="typed-text">ติวเตอร์</span>
-        </h1>
-        <p className="text-lg mt-4">
-          ไม่ว่าคุณจะต้องการสมัครติวเตอร์ ค้นหาคนสอนพิเศษ หรือสร้างเว็บไซต์ส่วนตัว เราพร้อมให้บริการครบวงจร
-        </p>
-      
+      <section className="relative py-20 text-center text-white bg-gradient-to-r from-blue-500 to-blue-700">
+        <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
+        <div className="relative z-10">
+          <h1 className="text-5xl font-bold animate-fadeIn">
+            เริ่มต้นอาชีพติวเตอร์ของคุณกับเรา! 🎓
+          </h1>
+          <p className="text-lg mt-4 animate-slideInUp">
+            สมัครติวเตอร์ ค้นหาคนสอนพิเศษ หรือสร้างเว็บไซต์ส่วนตัวได้ง่าย ๆ ในที่เดียว
+          </p>
+          <Link
+            to="/register"
+            className="mt-6 inline-block bg-white text-blue-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-all animate-bounce"
+          >
+            สมัครติวเตอร์ฟรี
+          </Link>
+        </div>
       </section>
 
       {/* ✅ Services Section */}
       <section id="services" className="py-16 px-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Service 1 */}
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-semibold">สมัครติวเตอร์</h3>
-            <p className="text-gray-600 mt-2">สร้างโปรไฟล์ของคุณ และเชื่อมต่อกับนักเรียน</p>
-            <Link to="/tutors" className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-              สมัครติวเตอร์
-            </Link>
-          </div>
+        <h2 className="text-3xl font-bold text-center text-gray-800">บริการหลักของเรา</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+          {[
+            {
+              title: "สมัครติวเตอร์",
+              description: "สร้างโปรไฟล์และเริ่มต้นการสอนของคุณได้ง่าย ๆ",
+              icon: "👨‍🏫",
+              link: "/tutors",
+            },
+            {
+              title: "ค้นหาติวเตอร์",
+              description: "ค้นหาคนสอนพิเศษที่เหมาะสมกับคุณ",
+              icon: "🔎",
+              link: "/search",
+            },
+            {
+              title: "สร้างเว็บไซต์ติวเตอร์",
+              description: "ออกแบบเว็บไซต์ส่วนตัวสำหรับติวเตอร์ เพื่อโปรโมตตัวเอง",
+              icon: "🌐",
+              link: "/web-design",
+            },
+          ].map((service, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-all"
+            >
+              <div className="text-4xl">{service.icon}</div>
+              <h3 className="text-xl font-semibold mt-4">{service.title}</h3>
+              <p className="text-gray-600 mt-2">{service.description}</p>
+              <Link
+                to={service.link}
+                className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
+              >
+                ดูรายละเอียด
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
 
-          {/* Service 2 */}
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-semibold">ค้นหาติวเตอร์</h3>
-            <p className="text-gray-600 mt-2">ค้นหาคนสอนพิเศษที่เหมาะกับคุณ</p>
-            <Link to="/search" className="mt-4 inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
-              ค้นหาติวเตอร์
-            </Link>
-          </div>
-
-          {/* Service 3 */}
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h3 className="text-xl font-semibold">สร้างเว็บไซต์ติวเตอร์</h3>
-            <p className="text-gray-600 mt-2">ออกแบบเว็บไซต์ส่วนตัวสำหรับติวเตอร์</p>
-            <Link to="/web-design" className="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700">
-              ดูรายละเอียด
-            </Link>
-          </div>
+      {/* ✅ Testimonial Section */}
+      <section className="py-16 bg-gray-200 text-center">
+        <h2 className="text-3xl font-bold text-gray-800">เสียงจากผู้ใช้จริง</h2>
+        <p className="text-lg text-gray-600 mt-2">ติวเตอร์และนักเรียนของเราพูดถึงเราอย่างไร</p>
+        <div className="mt-6 flex flex-col md:flex-row justify-center gap-8">
+          {[
+            {
+              name: "อาจารย์พิมพ์",
+              quote:
+                "ฉันมีนักเรียนเพิ่มขึ้นกว่า 50% หลังจากใช้แพลตฟอร์มนี้!",
+            },
+            {
+              name: "น้องเจ",
+              quote:
+                "ผมสามารถหาติวเตอร์ที่เหมาะกับผมได้ง่ายขึ้น และเรียนได้สะดวก!",
+            },
+          ].map((testimonial, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-md max-w-md"
+            >
+              <p className="text-gray-700 italic">"{testimonial.quote}"</p>
+              <h4 className="text-blue-500 font-semibold mt-4">
+                - {testimonial.name}
+              </h4>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ✅ Call to Action */}
       <section className="py-16 text-center bg-blue-900 text-white">
         <h2 className="text-3xl font-semibold">พร้อมเริ่มต้นกับเราแล้วหรือยัง?</h2>
-        <p className="text-lg mt-2">ติดต่อเราเพื่อขอข้อมูลเพิ่มเติม หรือเริ่มต้นใช้งานบริการของคุณ</p>
-        <Link to="/contact" className="mt-6 inline-block bg-white text-blue-900 px-6 py-3 rounded-lg hover:bg-gray-200">
-          ติดต่อเรา
+        <p className="text-lg mt-2">
+          สร้างโปรไฟล์ติวเตอร์ของคุณและเข้าถึงนักเรียนได้ทันที
+        </p>
+        <Link
+          to="/register"
+          className="mt-6 inline-block bg-white text-blue-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-all"
+        >
+          สมัครฟรีตอนนี้
         </Link>
       </section>
 
-      {/* ✅ Footer */}
-      <Footer />
     </div>
   );
 };

@@ -27,7 +27,7 @@ type Review = {
   comment: string;
 };
 
-const TutorDashboard = () => {
+const Dashboard = () => {
   const [tutor, setTutor] = useState<Tutor | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -158,4 +158,4 @@ const TutorDashboard = () => {
   );
 };
 
-export default TutorDashboard;
+export default Dashboard;
