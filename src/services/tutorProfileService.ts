@@ -1,11 +1,17 @@
 const API_BASE_URL =
   import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000"; // ✅ แก้พอร์ต Backend API
 export const submitTutorProfile = async (formData: FormData) => {
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${API_BASE_URL}/tutor/create-profile`, {
         method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         body: formData,
       });
+      
   
       if (!response.ok) throw new Error("เกิดข้อผิดพลาดในการบันทึกโปรไฟล์");
   
