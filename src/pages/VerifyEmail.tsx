@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { verifyEmail } from "../services/authService";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 const VerifyEmail: React.FC = () => {
   const [searchParams] = useSearchParams();

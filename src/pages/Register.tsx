@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerTutor, RegisterData, checkEmailVerification } from "../services/authService";
+import { Link } from "react-router-dom";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -65,12 +66,18 @@ const Register: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <section className="py-20 text-center bg-gradient-to-r from-blue-500 to-blue-700 text-white">
-        <h1 className="text-5xl font-bold">สมัครเป็นติวเตอร์</h1>
-        <p className="text-lg mt-4">สร้างโปรไฟล์ของคุณและเริ่มต้นสอนนักเรียนได้เลย</p>
+      {/* ✅ Hero Section */}
+      <section className="relative py-20 text-center text-white bg-gradient-to-r from-blue-900 to-blue-700">
+        <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
+        <div className="relative z-10">
+          <h1 className="text-5xl font-bold animate-fadeIn">สมัครเป็นติวเตอร์</h1>
+          <p className="text-lg mt-4 animate-slideInUp">สร้างโปรไฟล์ของคุณและเริ่มต้นสอนนักเรียนได้เลย</p>
+        </div>
       </section>
+
+      {/* ✅ Register Form Section */}
       <section className="py-16 px-10">
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl">
+        <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl">
           <h2 className="text-3xl font-semibold text-center text-gray-800">สมัครเป็นติวเตอร์วันนี้!</h2>
           {successMessage ? (
             <p className="text-green-500 text-center">{successMessage} โปรดตรวจสอบอีเมลของคุณ</p>
@@ -79,30 +86,71 @@ const Register: React.FC = () => {
               {error && <p className="text-red-500 text-center">{error}</p>}
               <div>
                 <label className="block text-gray-700 font-semibold">ชื่อ-นามสกุล *</label>
-                <input type="text" name="name" placeholder="กรอกชื่อ-นามสกุลของคุณ"
-                  value={formData.name} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+                <input 
+                  type="text" 
+                  name="name" 
+                  placeholder="กรอกชื่อ-นามสกุลของคุณ"
+                  value={formData.name} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" 
+                  required 
+                />
               </div>
               <div>
                 <label className="block text-gray-700 font-semibold">อีเมล *</label>
-                <input type="email" name="email" placeholder="กรอกอีเมลของคุณ"
-                  value={formData.email} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+                <input 
+                  type="email" 
+                  name="email" 
+                  placeholder="กรอกอีเมลของคุณ"
+                  value={formData.email} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" 
+                  required 
+                />
               </div>
               <div>
                 <label className="block text-gray-700 font-semibold">รหัสผ่าน *</label>
-                <input type="password" name="password" placeholder="สร้างรหัสผ่านที่ปลอดภัย"
-                  value={formData.password} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+                <input 
+                  type="password" 
+                  name="password" 
+                  placeholder="สร้างรหัสผ่านที่ปลอดภัย"
+                  value={formData.password} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" 
+                  required 
+                />
               </div>
               <div>
                 <label className="block text-gray-700 font-semibold">เบอร์โทรศัพท์ *</label>
-                <input type="tel" name="phone" placeholder="กรอกเบอร์โทรศัพท์ของคุณ"
-                  value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" required />
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  placeholder="กรอกเบอร์โทรศัพท์ของคุณ"
+                  value={formData.phone} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200" 
+                  required 
+                />
               </div>
-              <button type="submit" disabled={loading}
-                className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 transition-all text-xl font-semibold">
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 transition-all text-xl font-semibold"
+              >
                 {loading ? "กำลังสมัคร..." : "สมัครสมาชิกฟรี"}
               </button>
             </form>
           )}
+
+          {/* ✅ ลิงก์ไปหน้า Login */}
+          <div className="text-center mt-6">
+            <p className="text-gray-600">
+              มีบัญชีแล้ว?{" "}
+              <Link to="/login" className="text-blue-500 font-semibold hover:underline">
+                เข้าสู่ระบบที่นี่
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
     </div>

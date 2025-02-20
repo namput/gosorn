@@ -9,7 +9,7 @@ export interface AuthData {
     role: string;
   }
   
-  const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5173";
+  const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000"; // ✅ แก้พอร์ต Backend API
   
   export const registerTutor = async (userData: RegisterData) => {
     try {
@@ -27,7 +27,8 @@ export interface AuthData {
   
       return await response.json();
     } catch (error) {
-      throw new Error(error.message || "เกิดข้อผิดพลาด ไม่สามารถลงทะเบียนได้");
+      const err = error as Error; // ✅ แก้ TypeScript Error
+      throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถลงทะเบียนได้");
     }
   };
   
@@ -46,15 +47,16 @@ export interface AuthData {
       }
   
       const data = await response.json();
-      localStorage.setItem("token", data.token); // ✅ เก็บ Token ไว้สำหรับใช้ในระบบ
+      localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
-      throw new Error(error.message || "เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้");
+      const err = error as Error; // ✅ แก้ TypeScript Error
+      throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้");
     }
   };
   
   export const logoutUser = () => {
-    localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก localStorage
+    localStorage.removeItem("token");
   };
   
   export const verifyEmail = async (token: string) => {
@@ -72,11 +74,13 @@ export interface AuthData {
         throw new Error(data.message || "ไม่สามารถยืนยันอีเมลได้");
       }
   
-      return data; // ✅ ส่ง token กลับไปใช้ต่อ
-    } catch (error: any) {
-      throw new Error(error.message || "เกิดข้อผิดพลาด ไม่สามารถยืนยันอีเมลได้");
+      return data;
+    } catch (error) {
+      const err = error as Error; // ✅ แก้ TypeScript Error
+      throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถยืนยันอีเมลได้");
     }
   };
+  
   export const checkEmailVerification = async (email: string) => {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/check-verification?email=${email}`, {
@@ -92,8 +96,10 @@ export interface AuthData {
         throw new Error(data.message || "ไม่สามารถตรวจสอบสถานะการยืนยันอีเมลได้");
       }
   
-      return data.verified; // ✅ คืนค่า true หรือ false
-    } catch (error: any) {
-      throw new Error(error.message || "เกิดข้อผิดพลาด ไม่สามารถตรวจสอบอีเมลได้");
+      return data.verified;
+    } catch (error) {
+      const err = error as Error; // ✅ แก้ TypeScript Error
+      throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถตรวจสอบอีเมลได้");
     }
   };
+  

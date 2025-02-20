@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logoutUser } from "../services/authService";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { FaHome, FaUserPlus, FaSignInAlt, FaChartBar, FaSignOutAlt } from "react-icons/fa";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -20,31 +21,45 @@ const Header = () => {
     navigate("/login");
   };
 
-  const getPageBackground = () => {
-    if (location.pathname === "/register" || location.pathname === "/login") {
-      return "bg-gradient-to-r from-blue-900 to-blue-700";
-    }
-    return "bg-gradient-to-r from-blue-500 to-blue-700";
-  };
+  // ✅ เช็คว่าหน้าไหนถูกเลือก (Active)
+  const getActiveClass = (path: string) =>
+    location.pathname === path
+      ? "bg-blue-600 text-white shadow-md"
+      : "text-gray-700 hover:bg-blue-100 hover:text-blue-600 transition-all duration-300";
 
   return (
     <header className="bg-white shadow-md py-4 px-6 sticky top-0 z-50">
       <div className="flex justify-between items-center">
         {/* ✅ โลโก้ */}
-        <h1 className="text-2xl font-logo text-blue-900">GuSorn</h1>
+        <Link to="/" className="text-3xl font-bold text-blue-900 flex items-center gap-x-2">
+          <FaHome /> <span>GuSorn</span>
+        </Link>
 
         {/* ✅ เมนูในจอใหญ่ */}
-        <nav className="hidden md:flex space-x-6">
-          <Link to="/" className="hover:text-blue-500 text-lg text-gray-700">หน้าแรก</Link>
+        <nav className="hidden md:flex space-x-4 items-center">
+          <Link to="/" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/")}`}>
+            <FaHome /> <span>หน้าแรก</span>
+          </Link>
           {isLoggedIn ? (
             <>
-              <Link to="/dashboard" className="hover:text-blue-500 text-lg text-gray-700">แดชบอร์ด</Link>
-              <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">ออกจากระบบ</button>
+              <Link to="/dashboard" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/dashboard")}`}>
+                <FaChartBar /> <span>แดชบอร์ด</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 bg-red-500 text-white rounded-md flex items-center gap-x-2 hover:bg-red-700 transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
+              >
+                <FaSignOutAlt /> <span>ออกจากระบบ</span>
+              </button>
             </>
           ) : (
             <>
-              <Link to="/register" className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-700 text-lg">ลงทะเบียน</Link>
-              <Link to="/login" className="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-700 text-lg">เข้าสู่ระบบ</Link>
+              <Link to="/register" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/register")}`}>
+                <FaUserPlus /> <span>ลงทะเบียน</span>
+              </Link>
+              <Link to="/login" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/login")}`}>
+                <FaSignInAlt /> <span>เข้าสู่ระบบ</span>
+              </Link>
             </>
           )}
         </nav>
@@ -54,43 +69,46 @@ const Header = () => {
           <Menu.Button className="text-gray-700 text-2xl">☰</Menu.Button>
           <Transition
             as={Fragment}
-            enter="transition ease-out duration-100"
+            enter="transition ease-out duration-200"
             enterFrom="transform opacity-0 scale-95"
             enterTo="transform opacity-100 scale-100"
-            leave="transition ease-in duration-75"
+            leave="transition ease-in duration-150"
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg flex flex-col items-start py-4 px-4 text-gray-700">
+            <Menu.Items className="absolute right-0 mt-3 w-56 bg-white shadow-xl rounded-lg flex flex-col items-start py-4 px-4 text-gray-700 backdrop-blur-lg">
               <Menu.Item>
-                {({ active }) => (
-                  <Link to="/" className={`hover:text-blue-500 w-full text-lg ${active && "text-blue-500"}`}>หน้าแรก</Link>
-                )}
+                <Link to="/" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/")}`}>
+                  <FaHome /> <span>หน้าแรก</span>
+                </Link>
               </Menu.Item>
               {isLoggedIn ? (
                 <>
                   <Menu.Item>
-                    {({ active }) => (
-                      <Link to="/dashboard" className={`hover:text-blue-500 w-full text-lg ${active && "text-blue-500"}`}>แดชบอร์ด</Link>
-                    )}
+                    <Link to="/dashboard" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/dashboard")}`}>
+                      <FaChartBar /> <span>แดชบอร์ด</span>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    {({ active }) => (
-                      <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 w-full text-center text-lg">ออกจากระบบ</button>
-                    )}
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-500 text-white px-4 py-2 rounded-md flex items-center gap-x-2 hover:bg-red-700 w-full text-center text-lg transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
+                    >
+                      <FaSignOutAlt /> <span>ออกจากระบบ</span>
+                    </button>
                   </Menu.Item>
                 </>
               ) : (
                 <>
                   <Menu.Item>
-                    {({ active }) => (
-                      <Link to="/register" className={`bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full text-center text-lg ${active && "bg-blue-700"}`}>ลงทะเบียน</Link>
-                    )}
+                    <Link to="/register" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/register")}`}>
+                      <FaUserPlus /> <span>ลงทะเบียน</span>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    {({ active }) => (
-                      <Link to="/login" className={`bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full text-center text-lg ${active && "bg-blue-700"}`}>เข้าสู่ระบบ</Link>
-                    )}
+                    <Link to="/login" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/login")}`}>
+                      <FaSignInAlt /> <span>เข้าสู่ระบบ</span>
+                    </Link>
                   </Menu.Item>
                 </>
               )}
