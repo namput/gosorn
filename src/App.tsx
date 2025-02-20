@@ -7,6 +7,9 @@ import PrivateRoute from "./components/PrivateRoute";
 import ThemeProvider from "./components/ThemeProvider";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import SelectPackage from "./pages/SelectPackage";
+import CreateProfile from "./pages/CreateProfile";
+
 
 const App: React.FC = () => {
   return (
@@ -20,6 +23,8 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/select-package" element={<SelectPackage />} />
+              <Route path="/create-profile" element={<CreateProfile />} />
             </Route>
           </Routes>
         </Layout>

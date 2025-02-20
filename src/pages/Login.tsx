@@ -21,8 +21,15 @@ const Login: React.FC = () => {
     try {
       const data = await loginUser(formData);
       localStorage.setItem("token", data.token);
+
       alert("✅ ล็อกอินสำเร็จ!");
-      navigate("/dashboard");
+
+      // ✅ ตรวจสอบว่าผู้ใช้มีโปรไฟล์หรือยัง
+      if (data.hasProfile) {
+        navigate("/dashboard"); // ถ้ามีโปรไฟล์แล้ว → ไปแดชบอร์ด
+      } else {
+        navigate("/select-package"); // ถ้ายังไม่มีโปรไฟล์ → ไปหน้าเลือกแพ็กเกจ
+      }
     } catch (error: any) {
       setError(error.message);
     } finally {
