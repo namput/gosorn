@@ -4,7 +4,6 @@ import { submitTutorProfile } from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const TutorProfileForm = () => {
   const [profileData, setProfileData] = useState({
     fullName: "",
@@ -48,8 +47,8 @@ const TutorProfileForm = () => {
     }));
   };
 
- // ✅ บันทึกข้อมูล (ใช้ API)
- const handleSubmit = async (e: React.FormEvent) => {
+  // ✅ บันทึกข้อมูล (ใช้ API)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
@@ -99,12 +98,6 @@ const TutorProfileForm = () => {
           <label htmlFor="profile-upload" className="btn-upload">
             <FaUpload /> อัปโหลดรูป
           </label>
-          {profileImage && (
-            <img
-              src={URL.createObjectURL(profileImage)}
-              className="mt-2 w-32 h-32 rounded-full object-cover"
-            />
-          )}
         </div>
         {profileImage && (
           <div className="mt-2 flex items-center space-x-3">
@@ -138,9 +131,21 @@ const TutorProfileForm = () => {
             <FaUpload /> อัปโหลดวิดีโอ
           </label>
           {introVideo && (
-            <video controls className="mt-2 w-64">
-              <source src={URL.createObjectURL(introVideo)} type="video/mp4" />
-            </video>
+            <>
+              <video controls className="mt-2 w-64">
+                <source
+                  src={URL.createObjectURL(introVideo)}
+                  type="video/mp4"
+                />
+              </video>
+              <button
+                type="button"
+                onClick={() => setIntroVideo(null)}
+                className="btn-danger"
+              >
+                ลบวิดีโอ
+              </button>
+            </>
           )}
         </div>
 

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { logoutUser } from "../services/authService";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { FaHome, FaUserPlus, FaSignInAlt, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -13,13 +13,16 @@ const Header = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, []);
+    
+  }, [location]);
 
   const handleLogout = () => {
-    logoutUser();
-    setIsLoggedIn(false);
-    navigate("/login");
+    localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก Storage
+    setIsLoggedIn(false); // ✅ อัปเดตสถานะล็อกเอาท์
+    toast.info("👋 ออกจากระบบเรียบร้อย!", { position: "top-right" });
+    navigate("/login"); // ✅ กลับไปหน้า Login
   };
+  
 
   // ✅ เช็คว่าหน้าไหนถูกเลือก (Active)
   const getActiveClass = (path: string) =>
