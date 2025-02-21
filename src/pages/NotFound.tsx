@@ -51,7 +51,7 @@ const NotFound = () => {
       document.removeEventListener("click", playAudio);
     };
   }, [navigate]);
-
+  
   return (
     <div className="relative flex items-center justify-center h-screen bg-black text-white overflow-hidden">
       {/* 🎇 เอฟเฟกต์ Particle ดวงดาว */}
