@@ -14,6 +14,7 @@ const PendingStatus = () => {
     try {
       setLoading(true);
       const data = await getSubscriptionStatus();
+console.log("Checking status", data);
 
       if (data.hasSubscription) {
         setStatus(data.status);
