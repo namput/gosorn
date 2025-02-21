@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import SelectPackage from "./pages/SelectPackage";
 import CreateProfile from "./pages/CreateProfile";
+import NotFound from "./pages/NotFound";
 
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
               <Route path="/select-package" element={<SelectPackage />} />
               <Route path="/create-profile" element={<CreateProfile />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
       </Router>
