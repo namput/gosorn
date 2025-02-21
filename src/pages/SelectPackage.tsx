@@ -1,57 +1,74 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle, FaRocket, FaStar, FaCrown, FaGlobe } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const packages = [
+  { id: "basic", name: "Basic", price: 99, features: ["สร้างเว็บไซต์", "แก้ไขข้อมูลโปรไฟล์"], icon: <FaRocket />, color: "from-gray-700 to-gray-900" },
+  { id: "standard", name: "Standard", price: 199, features: ["ทุกอย่างใน Basic", "Dashboard", "เปิดให้รีวิว"], icon: <FaStar />, color: "from-blue-600 to-blue-800", popular: true },
+  { id: "premium", name: "Premium", price: 299, features: ["ทุกอย่างใน Standard", "เปลี่ยน Template"], icon: <FaCrown />, color: "from-purple-600 to-purple-800" },
+  { id: "business", name: "Business", price: 399, features: ["ทุกอย่างใน Premium", "ใช้โดเมนเนมตัวเอง"], icon: <FaGlobe />, color: "from-yellow-500 to-yellow-700" },
+];
 
 const SelectPackage = () => {
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSelectPackage = (packageType: string) => {
-    localStorage.setItem("selectedPackage", packageType); // ✅ เก็บแพ็กเกจที่เลือกไว้
-    navigate("/create-profile"); // ✅ ไปที่หน้าสร้างโปรไฟล์
+  const handleSelect = (packageId: string) => {
+    setSelectedPackage(packageId);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedPackage) return alert("กรุณาเลือกแพ็กเกจก่อน");
+    navigate(`/payment?package=${selectedPackage}`); // ✅ ไปหน้าชำระเงิน
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-900">เลือกแพ็กเกจของคุณ</h1>
-      <p className="text-gray-600 mt-2">เลือกแพ็กเกจที่เหมาะกับคุณเพื่อเริ่มต้นใช้งาน</p>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="flex-grow flex flex-col items-center justify-center p-6">
+        <h1 className="text-4xl font-bold mb-6">🚀 เลือกแพ็กเกจของคุณ</h1>
+        <p className="mb-8 text-gray-400 text-lg">ยกระดับเว็บไซต์ของคุณด้วยแพ็กเกจที่เหมาะสม!</p>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Free Package */}
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-          <h2 className="text-2xl font-bold text-blue-700">แพ็กเกจฟรี</h2>
-          <p className="text-gray-600 mt-2">สร้างโปรไฟล์และเริ่มต้นได้ฟรี</p>
-          <p className="text-3xl font-semibold text-blue-700 mt-4">฿0</p>
-          <button
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-all"
-            onClick={() => handleSelectPackage("Free")}
-          >
-            เลือกแพ็กเกจนี้
-          </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {packages.map((pkg) => (
+            <motion.div
+              key={pkg.id}
+              className={`relative bg-gradient-to-r ${pkg.color} p-6 rounded-2xl shadow-xl cursor-pointer transform transition-all duration-300 hover:scale-105 ${
+                selectedPackage === pkg.id ? "ring-4 ring-yellow-300 shadow-yellow-500/50" : ""
+              }`}
+              onClick={() => handleSelect(pkg.id)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {pkg.popular && (
+                <div className="absolute top-3 right-3 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                  แนะนำ!
+                </div>
+              )}
+
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">{pkg.icon}</div>
+                <h2 className="text-2xl font-bold">{pkg.name}</h2>
+              </div>
+              <p className="text-lg font-semibold mt-2">฿{pkg.price}/เดือน</p>
+
+              <ul className="mt-4 space-y-2">
+                {pkg.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm">
+                    <FaCheckCircle className="text-green-400" /> {feature}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Premium Package */}
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center border-2 border-yellow-500">
-          <h2 className="text-2xl font-bold text-yellow-500">แพ็กเกจพรีเมียม</h2>
-          <p className="text-gray-600 mt-2">เพิ่มฟีเจอร์พิเศษและความน่าเชื่อถือ</p>
-          <p className="text-3xl font-semibold text-yellow-500 mt-4">฿199/เดือน</p>
-          <button
-            className="mt-4 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all"
-            onClick={() => handleSelectPackage("Premium")}
-          >
-            เลือกแพ็กเกจนี้
-          </button>
-        </div>
-
-        {/* Pro Package */}
-        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-          <h2 className="text-2xl font-bold text-green-500">แพ็กเกจโปร</h2>
-          <p className="text-gray-600 mt-2">รับฟีเจอร์ขั้นสูงและการสนับสนุนพิเศษ</p>
-          <p className="text-3xl font-semibold text-green-500 mt-4">฿499/เดือน</p>
-          <button
-            className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-700 transition-all"
-            onClick={() => handleSelectPackage("Pro")}
-          >
-            เลือกแพ็กเกจนี้
-          </button>
-        </div>
+        <motion.button
+          className="mt-6 px-8 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-green-800 transition-all"
+          onClick={handleConfirm}
+        >
+          ดำเนินการชำระเงิน
+        </motion.button>
       </div>
     </div>
   );
