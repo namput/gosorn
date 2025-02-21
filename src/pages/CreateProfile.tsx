@@ -14,8 +14,8 @@ const TutorProfileForm = () => {
     email: "",
     introduction: "",
     location: "",
-    profileImage: null as string | null, // ✅ เพิ่มรูปโปรไฟล์
-    introVideo: null as string | null, // ✅ เพิ่มวิดีโอแนะนำตัว
+    profileImage: null as File | null,  // ✅ เปลี่ยนเป็น File | null
+    introVideo: null as File | null,  // ✅ เปลี่ยนเป็น File | null
     profileImagePreview: null as string | null,
     introVideoPreview: null as string | null,
     teachingMethods: [] as string[],
@@ -26,8 +26,7 @@ const TutorProfileForm = () => {
     price: "", // ✅ เพิ่มช่องราคาหลัก
   });
 
-  const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [introVideo, setIntroVideo] = useState<File | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   // ✅ จัดการการอัปโหลดไฟล์
@@ -98,15 +97,17 @@ const TutorProfileForm = () => {
     const formData = new FormData();
 
     Object.entries(profileData).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        formData.append(key, JSON.stringify(value));
-      } else {
-        formData.append(key, value as string);
-      }
-    });
-
-    if (profileImage) formData.append("profileImage", profileImage);
-    if (introVideo) formData.append("introVideo", introVideo);
+        if (Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value instanceof File) {
+          formData.append(key, value);
+        } else if (value) {
+          formData.append(key, value as string);
+        }
+      });
+    if (profileData.profileImage) formData.append("profileImage", profileData.profileImage);
+    if (profileData.introVideo) formData.append("introVideo", profileData.introVideo);
+  
 
     const result = await submitTutorProfile(formData);
 
@@ -118,6 +119,7 @@ const TutorProfileForm = () => {
 
     setLoading(false);
   };
+  // ✅ ล้าง URL object เมื่อเปลี่ยน preview image/video
   useEffect(() => {
     return () => {
       if (profileData.profileImagePreview)
