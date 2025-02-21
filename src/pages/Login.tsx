@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       const data = await loginUser(formData);
       localStorage.setItem("token", data.token);
 
-      toast.success("✅ ล็อกอินสำเร็จ!", { position: "top-right" });
+      toast.success("ล็อกอินสำเร็จ!", { position: "top-right" });
 
       // ✅ ตรวจสอบว่าผู้ใช้มีโปรไฟล์หรือยัง
       if (data.hasProfile) {

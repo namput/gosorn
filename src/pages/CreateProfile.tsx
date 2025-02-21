@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus, FaRedo, FaSave, FaTrash, FaUpload } from "react-icons/fa";
 import { submitTutorProfile } from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
-const MAX_VIDEO_SIZE_MB = 200; // 50MB
+const MAX_VIDEO_SIZE_MB = 1024; // 50MB
 
 const TutorProfileForm = () => {
   const [profileData, setProfileData] = useState({
@@ -16,6 +16,8 @@ const TutorProfileForm = () => {
     location: "",
     profileImage: null as string | null, // ✅ เพิ่มรูปโปรไฟล์
     introVideo: null as string | null, // ✅ เพิ่มวิดีโอแนะนำตัว
+    profileImagePreview: null as string | null,
+    introVideoPreview: null as string | null,
     teachingMethods: [] as string[],
     ageGroups: [] as string[],
     subjects: [""],
@@ -29,13 +31,14 @@ const TutorProfileForm = () => {
   const [loading, setLoading] = useState(false);
 
   // ✅ จัดการการอัปโหลดไฟล์
+  // ✅ จัดการการอัปโหลดไฟล์
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     field: "profileImage" | "introVideo"
   ) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-  
+
       // ✅ ตรวจสอบขนาดไฟล์
       const fileSizeMB = file.size / (1024 * 1024);
       if (
@@ -43,19 +46,28 @@ const TutorProfileForm = () => {
         (field === "introVideo" && fileSizeMB > MAX_VIDEO_SIZE_MB)
       ) {
         toast.error(
-          `❌ ไฟล์${field === "profileImage" ? "รูป" : "วิดีโอ"}มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
+          `❌ ไฟล์${
+            field === "profileImage" ? "รูป" : "วิดีโอ"
+          }มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
             field === "profileImage" ? MAX_IMAGE_SIZE_MB : MAX_VIDEO_SIZE_MB
           }MB`,
           { position: "top-right" }
         );
         return;
       }
-  
-      // ✅ บันทึกไฟล์ใน state
+
+      // ✅ ลบ URL เก่าเพื่อลด Memory Leak
+      if (profileData[`${field}Preview` as keyof typeof profileData]) {
+        URL.revokeObjectURL(
+          profileData[`${field}Preview` as keyof typeof profileData] as string
+        );
+      }
+
+      // ✅ บันทึกไฟล์ลงใน state
       setProfileData((prev) => ({
         ...prev,
-        [field]: file, // ✅ เก็บไฟล์จริง
-        [`${field}Preview`]: URL.createObjectURL(file), // ✅ เก็บ URL สำหรับแสดงตัวอย่าง
+        [field]: file,
+        [`${field}Preview`]: URL.createObjectURL(file),
       }));
     }
   };
@@ -106,6 +118,14 @@ const TutorProfileForm = () => {
 
     setLoading(false);
   };
+  useEffect(() => {
+    return () => {
+      if (profileData.profileImagePreview)
+        URL.revokeObjectURL(profileData.profileImagePreview);
+      if (profileData.introVideoPreview)
+        URL.revokeObjectURL(profileData.introVideoPreview);
+    };
+  }, [profileData.profileImagePreview, profileData.introVideoPreview]);
 
   const validateForm = () => {
     if (!profileData.fullName.trim()) {
@@ -190,101 +210,75 @@ const TutorProfileForm = () => {
       </p>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
-        {/* ✅ รูปโปรไฟล์ */}
-        <div className="mb-4 flex flex-col items-center">
-          <label className="block font-semibold text-lg text-gray-700 mb-2">
-            รูปโปรไฟล์ <span className="text-red-500 text-xl">*</span>
-          </label>
+{/* ✅ รูปโปรไฟล์ */}
+<div className="mb-4 flex flex-col items-center relative">
+  <label className="block font-semibold text-lg text-gray-700 mb-2">
+    รูปโปรไฟล์ <span className="text-red-500 text-xl">*</span>
+  </label>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => handleFileChange(e, "profileImage")}
+    className="hidden"
+    id="profile-upload"
+  />
+  <label htmlFor="profile-upload" className="relative cursor-pointer">
+    {profileData.profileImagePreview ? (
+      <div className="relative w-36 h-36">
+        <img
+          src={profileData.profileImagePreview}
+          className="w-full h-full rounded-full object-cover border-2 border-gray-300"
+        />
+        <button
+          type="button"
+          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
+          onClick={() => setProfileData({ ...profileData, profileImage: null, profileImagePreview: null })}
+        >
+          <FaTrash className="w-4 h-4" />
+        </button>
+      </div>
+    ) : (
+      <div className="w-36 h-36 flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
+        <FaUpload className="text-3xl text-gray-500" />
+      </div>
+    )}
+  </label>
+</div>
 
-          <div className="relative w-36 h-36 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all duration-300">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, "profileImage")}
-              className="hidden"
-              id="profile-upload"
-            />
+{/* ✅ วิดีโอแนะนำตัว */}
+<div className="mb-6 flex flex-col items-center relative">
+  <label className="block font-semibold text-lg text-gray-700 mb-2">
+    คลิปแนะนำตัว (ถ้ามี) 🎥
+  </label>
+  <input
+    type="file"
+    accept="video/*"
+    onChange={(e) => handleFileChange(e, "introVideo")}
+    className="hidden"
+    id="video-upload"
+  />
+  <label htmlFor="video-upload" className="relative cursor-pointer">
+    {profileData.introVideoPreview ? (
+      <div className="relative w-64 h-36">
+        <video controls className="w-full h-full rounded-lg object-cover">
+          <source src={profileData.introVideoPreview} type="video/mp4" />
+        </video>
+        <button
+          type="button"
+          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
+          onClick={() => setProfileData({ ...profileData, introVideo: null, introVideoPreview: null })}
+        >
+          <FaTrash className="w-4 h-4" />
+        </button>
+      </div>
+    ) : (
+      <div className="w-64 h-36 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
+        <FaUpload className="text-3xl text-gray-500" />
+      </div>
+    )}
+  </label>
+</div>
 
-            <label
-              htmlFor="profile-upload"
-              className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 hover:text-blue-500 transition-all duration-300"
-            >
-              {profileImage ? (
-                <img
-                  src={URL.createObjectURL(profileImage)}
-                  className="w-full h-full rounded-full object-cover"
-                />
-              ) : (
-                <>
-                  <FaUpload className="text-3xl mb-2" />
-                  <span className="text-sm">คลิกเพื่ออัปโหลด</span>
-                </>
-              )}
-            </label>
-          </div>
-
-          {/* ปุ่มลบรูป */}
-          {profileImage && (
-            <button
-              type="button"
-              onClick={() => setProfileImage(null)}
-              className="mt-3 px-3 py-2 bg-red-600 text-white rounded-full flex items-center gap-2 text-sm hover:bg-red-700 transition-all duration-300 shadow-lg"
-            >
-              <FaTrash className="text-md" />
-              ลบรูป
-            </button>
-          )}
-        </div>
-        {/* ✅ วิดีโอแนะนำตัว */}
-        <div className="mb-6 flex flex-col items-center">
-          <label className="block font-semibold text-lg text-gray-700 mb-2">
-            คลิปแนะนำตัว (ถ้ามี) 🎥
-          </label>
-
-          <div className="relative w-64 h-36 rounded-lg border-4 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all duration-300">
-            <input
-              type="file"
-              accept="video/*"
-              onChange={(e) => handleFileChange(e, "introVideo")}
-              className="hidden"
-              id="video-upload"
-            />
-
-            <label
-              htmlFor="video-upload"
-              className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 hover:text-blue-500 transition-all duration-300"
-            >
-              {introVideo ? (
-                <video
-                  controls
-                  className="w-full h-full rounded-lg object-cover"
-                >
-                  <source
-                    src={URL.createObjectURL(introVideo)}
-                    type="video/mp4"
-                  />
-                </video>
-              ) : (
-                <>
-                  <FaUpload className="text-3xl mb-2" />
-                  <span className="text-sm">คลิกเพื่ออัปโหลดวิดีโอ</span>
-                </>
-              )}
-            </label>
-          </div>
-
-          {/* ปุ่มลบวิดีโอ */}
-          {introVideo && (
-            <button
-              type="button"
-              onClick={() => setIntroVideo(null)}
-              className="mt-3 px-3 py-2 bg-red-600 text-white rounded-full flex items-center gap-2 text-sm hover:bg-red-700 transition-all duration-300 shadow-lg"
-            >
-              <FaTrash className="text-md" />
-              ลบวิดีโอ
-            </button>
-          )}
-        </div>
 
         {/* ✅ ข้อมูลพื้นฐาน */}
         <div className="flex flex-col">
@@ -651,6 +645,8 @@ const TutorProfileForm = () => {
                   location: "",
                   profileImage: null, // ✅ รีเซ็ตตรงนี้เลย
                   introVideo: null, // ✅ รีเซ็ตตรงนี้เลย
+                  profileImagePreview: null as string | null,
+                  introVideoPreview: null as string | null,
                   teachingMethods: [],
                   ageGroups: [],
                   subjects: [""],
