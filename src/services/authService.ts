@@ -118,6 +118,7 @@ export const getUserProfile = async () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      credentials: "include", // ✅ ต้องใช้ถ้า Backend ใช้ Cookie หรือ Session
     });
 
     if (!response.ok) {
@@ -139,6 +140,7 @@ export const updateUserProfile = async (profileData: any) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      credentials: "include", // ✅ ต้องใช้ถ้า Backend ใช้ Cookie หรือ Session
       body: JSON.stringify(profileData),
     });
 
@@ -162,6 +164,7 @@ export const updateUserPackage = async (packageType: string) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      credentials: "include", // ✅ ต้องใช้ถ้า Backend ใช้ Cookie หรือ Session
       body: JSON.stringify({ packageType }),
     });
 

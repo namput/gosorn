@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { FaPlus, FaTrash, FaUpload } from "react-icons/fa";
+import { FaPlus, FaRedo, FaSave, FaTrash, FaUpload } from "react-icons/fa";
 import { submitTutorProfile } from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const MAX_IMAGE_SIZE_MB = 5; // 2MB
+const MAX_VIDEO_SIZE_MB = 200; // 50MB
 
 const TutorProfileForm = () => {
   const [profileData, setProfileData] = useState({
@@ -11,11 +14,14 @@ const TutorProfileForm = () => {
     email: "",
     introduction: "",
     location: "",
+    profileImage: null as string | null, // ✅ เพิ่มรูปโปรไฟล์
+    introVideo: null as string | null, // ✅ เพิ่มวิดีโอแนะนำตัว
     teachingMethods: [] as string[],
     ageGroups: [] as string[],
     subjects: [""],
     courses: [{ name: "", details: "", duration: "", price: "" }],
     schedule: [{ day: "", time: "" }],
+    price: "", // ✅ เพิ่มช่องราคาหลัก
   });
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -25,10 +31,32 @@ const TutorProfileForm = () => {
   // ✅ จัดการการอัปโหลดไฟล์
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    setter: React.Dispatch<React.SetStateAction<File | null>>
+    field: "profileImage" | "introVideo"
   ) => {
     if (e.target.files && e.target.files.length > 0) {
-      setter(e.target.files[0]);
+      const file = e.target.files[0];
+  
+      // ✅ ตรวจสอบขนาดไฟล์
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (
+        (field === "profileImage" && fileSizeMB > MAX_IMAGE_SIZE_MB) ||
+        (field === "introVideo" && fileSizeMB > MAX_VIDEO_SIZE_MB)
+      ) {
+        toast.error(
+          `❌ ไฟล์${field === "profileImage" ? "รูป" : "วิดีโอ"}มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
+            field === "profileImage" ? MAX_IMAGE_SIZE_MB : MAX_VIDEO_SIZE_MB
+          }MB`,
+          { position: "top-right" }
+        );
+        return;
+      }
+  
+      // ✅ บันทึกไฟล์ใน state
+      setProfileData((prev) => ({
+        ...prev,
+        [field]: file, // ✅ เก็บไฟล์จริง
+        [`${field}Preview`]: URL.createObjectURL(file), // ✅ เก็บ URL สำหรับแสดงตัวอย่าง
+      }));
     }
   };
 
@@ -50,6 +78,10 @@ const TutorProfileForm = () => {
   // ✅ บันทึกข้อมูล (ใช้ API)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // ✅ ตรวจสอบว่าฟอร์มกรอกครบหรือไม่
+    if (!validateForm()) return;
+
     setLoading(true);
     const formData = new FormData();
 
@@ -64,15 +96,88 @@ const TutorProfileForm = () => {
     if (profileImage) formData.append("profileImage", profileImage);
     if (introVideo) formData.append("introVideo", introVideo);
 
-    const result = await submitTutorProfile(formData); // ✅ ใช้ API
+    const result = await submitTutorProfile(formData);
 
     if (result.success) {
-      toast.success(result.message, { position: "top-right" });
+      toast.success("✅ บันทึกโปรไฟล์สำเร็จ!", { position: "top-right" });
     } else {
-      toast.error(result.message, { position: "top-right" });
+      toast.error("❌ เกิดข้อผิดพลาด!", { position: "top-right" });
     }
 
     setLoading(false);
+  };
+
+  const validateForm = () => {
+    if (!profileData.fullName.trim()) {
+      toast.error("❌ กรุณากรอกชื่อ-นามสกุล", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.phone.trim()) {
+      toast.error("❌ กรุณากรอกเบอร์โทรศัพท์", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.email.trim()) {
+      toast.error("❌ กรุณากรอกอีเมล", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.introduction.trim()) {
+      toast.error("❌ กรุณากรอกข้อมูลแนะนำตัว", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.location.trim()) {
+      toast.error("❌ กรุณาระบุสถานที่สอน", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.profileImage) {
+      toast.error("❌ กรุณาอัปโหลดรูปโปรไฟล์", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.teachingMethods.length) {
+      toast.error("❌ กรุณาเลือกอย่างน้อย 1 รูปแบบการสอน", {
+        position: "top-right",
+      });
+      return false;
+    }
+    if (!profileData.ageGroups.length) {
+      toast.error("❌ กรุณาเลือกวัยของผู้เรียนที่สามารถสอนได้", {
+        position: "top-right",
+      });
+      return false;
+    }
+    if (
+      profileData.subjects.length === 0 ||
+      profileData.subjects.some((s) => !s.trim())
+    ) {
+      toast.error("❌ กรุณาระบุอย่างน้อย 1 วิชาที่สอน", {
+        position: "top-right",
+      });
+      return false;
+    }
+    if (
+      profileData.courses.length === 0 ||
+      profileData.courses.some((c) => !c.name.trim())
+    ) {
+      toast.error("❌ กรุณาเพิ่มอย่างน้อย 1 คอร์สเรียน", {
+        position: "top-right",
+      });
+      return false;
+    }
+    if (
+      profileData.schedule.length === 0 ||
+      profileData.schedule.some((s) => !s.day.trim() || !s.time.trim())
+    ) {
+      toast.error("❌ กรุณาเพิ่มอย่างน้อย 1 ตารางสอน", {
+        position: "top-right",
+      });
+      return false;
+    }
+    if (!profileData.price || Number(profileData.price) <= 0) {
+      toast.error("❌ กรุณาระบุราคาค่าติวที่ถูกต้อง", {
+        position: "top-right",
+      });
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -86,91 +191,146 @@ const TutorProfileForm = () => {
 
       <form className="space-y-6" onSubmit={handleSubmit}>
         {/* ✅ รูปโปรไฟล์ */}
-        <div>
-          <label className="block font-semibold mb-1">รูปโปรไฟล์ *</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, setProfileImage)}
-            className="hidden"
-            id="profile-upload"
-          />
-          <label htmlFor="profile-upload" className="btn-upload">
-            <FaUpload /> อัปโหลดรูป
+        <div className="mb-4 flex flex-col items-center">
+          <label className="block font-semibold text-lg text-gray-700 mb-2">
+            รูปโปรไฟล์ <span className="text-red-500 text-xl">*</span>
           </label>
-        </div>
-        {profileImage && (
-          <div className="mt-2 flex items-center space-x-3">
-            <img
-              src={URL.createObjectURL(profileImage)}
-              className="w-32 h-32 rounded-full object-cover"
+
+          <div className="relative w-36 h-36 rounded-full border-4 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all duration-300">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, "profileImage")}
+              className="hidden"
+              id="profile-upload"
             />
+
+            <label
+              htmlFor="profile-upload"
+              className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 hover:text-blue-500 transition-all duration-300"
+            >
+              {profileImage ? (
+                <img
+                  src={URL.createObjectURL(profileImage)}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <>
+                  <FaUpload className="text-3xl mb-2" />
+                  <span className="text-sm">คลิกเพื่ออัปโหลด</span>
+                </>
+              )}
+            </label>
+          </div>
+
+          {/* ปุ่มลบรูป */}
+          {profileImage && (
             <button
               type="button"
               onClick={() => setProfileImage(null)}
-              className="btn-danger"
+              className="mt-3 px-3 py-2 bg-red-600 text-white rounded-full flex items-center gap-2 text-sm hover:bg-red-700 transition-all duration-300 shadow-lg"
             >
+              <FaTrash className="text-md" />
               ลบรูป
             </button>
-          </div>
-        )}
-
+          )}
+        </div>
         {/* ✅ วิดีโอแนะนำตัว */}
-        <div>
-          <label className="block font-semibold mb-1">
+        <div className="mb-6 flex flex-col items-center">
+          <label className="block font-semibold text-lg text-gray-700 mb-2">
             คลิปแนะนำตัว (ถ้ามี) 🎥
           </label>
-          <input
-            type="file"
-            accept="video/*"
-            onChange={(e) => handleFileChange(e, setIntroVideo)}
-            className="hidden"
-            id="video-upload"
-          />
-          <label htmlFor="video-upload" className="btn-upload">
-            <FaUpload /> อัปโหลดวิดีโอ
-          </label>
+
+          <div className="relative w-64 h-36 rounded-lg border-4 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-blue-500 transition-all duration-300">
+            <input
+              type="file"
+              accept="video/*"
+              onChange={(e) => handleFileChange(e, "introVideo")}
+              className="hidden"
+              id="video-upload"
+            />
+
+            <label
+              htmlFor="video-upload"
+              className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 hover:text-blue-500 transition-all duration-300"
+            >
+              {introVideo ? (
+                <video
+                  controls
+                  className="w-full h-full rounded-lg object-cover"
+                >
+                  <source
+                    src={URL.createObjectURL(introVideo)}
+                    type="video/mp4"
+                  />
+                </video>
+              ) : (
+                <>
+                  <FaUpload className="text-3xl mb-2" />
+                  <span className="text-sm">คลิกเพื่ออัปโหลดวิดีโอ</span>
+                </>
+              )}
+            </label>
+          </div>
+
+          {/* ปุ่มลบวิดีโอ */}
           {introVideo && (
-            <>
-              <video controls className="mt-2 w-64">
-                <source
-                  src={URL.createObjectURL(introVideo)}
-                  type="video/mp4"
-                />
-              </video>
-              <button
-                type="button"
-                onClick={() => setIntroVideo(null)}
-                className="btn-danger"
-              >
-                ลบวิดีโอ
-              </button>
-            </>
+            <button
+              type="button"
+              onClick={() => setIntroVideo(null)}
+              className="mt-3 px-3 py-2 bg-red-600 text-white rounded-full flex items-center gap-2 text-sm hover:bg-red-700 transition-all duration-300 shadow-lg"
+            >
+              <FaTrash className="text-md" />
+              ลบวิดีโอ
+            </button>
           )}
         </div>
 
         {/* ✅ ข้อมูลพื้นฐาน */}
-        <input
-          type="text"
-          placeholder="ชื่อ-นามสกุล *"
-          className="input-field"
-          required
-        />
-        <input
-          type="text"
-          placeholder="เบอร์โทรศัพท์ *"
-          className="input-field"
-          required
-        />
-        <input
-          type="email"
-          placeholder="อีเมลติดต่อ *"
-          className="input-field"
-          required
-        />
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-semibold mb-1 flex items-center gap-1">
+            ชื่อ-นามสกุล
+            <span className="text-red-500 text-xl">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="ชื่อ-นามสกุล"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+            required
+          />
+
+          {/* เบอร์โทรศัพท์ */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-1">
+              เบอร์โทรศัพท์ <span className="text-red-500 text-xl">*</span>
+            </label>
+            <input
+              type="tel"
+              placeholder="เบอร์โทรศัพท์"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              required
+            />
+          </div>
+
+          {/* อีเมลติดต่อ (ให้เต็มแถว) */}
+          <div className="flex flex-col md:col-span-2">
+            <label className="text-gray-700 font-semibold mb-1">
+              อีเมลติดต่อ <span className="text-red-500 text-xl">*</span>
+            </label>
+            <input
+              type="email"
+              placeholder="อีเมลติดต่อ"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              required
+            />
+          </div>
+        </div>
+
         {/* ✅ ฟิลด์แนะนำตัวเอง */}
         <div>
-          <label className="block font-semibold">แนะนำตัวเอง *</label>
+          <label className="block font-semibold">
+            แนะนำตัวเอง <span className="text-red-500 text-xl">*</span>
+          </label>
           <textarea
             className="input-field h-32 resize-none"
             placeholder="เขียนแนะนำตัวเอง เช่น ประสบการณ์, สไตล์การสอน, จุดเด่นของคุณ"
@@ -178,21 +338,28 @@ const TutorProfileForm = () => {
         </div>
         {/* ✅ รูปแบบการสอน (เลือกได้มากกว่า 1) */}
         <div>
-          <label className="block font-semibold">รูปแบบการสอน *</label>
-          <div className="flex flex-wrap gap-3 mt-2">
+          <label className="block text-gray-700 font-semibold mb-2">
+            รูปแบบการสอน <span className="text-red-500 text-xl">*</span>
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              "ออนไลน์",
-              "ตัวต่อตัว",
-              "เรียนกลุ่ม",
-              "ไฮบริด (ออนไลน์ + ตัวต่อตัว)",
+              { label: "ออนไลน์", icon: "🌐" },
+              { label: "ตัวต่อตัว", icon: "🤝" },
+              { label: "เรียนกลุ่ม", icon: "👨‍👩‍👧‍👦" },
+              { label: "ไฮบริด (ออนไลน์ + ตัวต่อตัว)", icon: "🔄" },
             ].map((method) => (
-              <label key={method} className="flex items-center space-x-2">
+              <label
+                key={method.label}
+                className="flex items-center justify-start gap-2 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-blue-100 transition-all shadow-sm"
+              >
                 <input
                   type="checkbox"
-                  value={method}
-                  className="form-checkbox text-blue-500"
+                  value={method.label}
+                  className="form-checkbox text-blue-500 h-5 w-5 accent-blue-600"
                 />
-                <span>{method}</span>
+                <span className="text-gray-700 font-medium">
+                  {method.icon} {method.label}
+                </span>
               </label>
             ))}
           </div>
@@ -201,7 +368,8 @@ const TutorProfileForm = () => {
         {/* ✅ สถานที่สอน */}
         <div>
           <label className="block font-semibold">
-            สถานที่ที่สามารถสอนได้ *
+            สถานที่ที่สามารถสอนได้{" "}
+            <span className="text-red-500 text-xl">*</span>
           </label>
           <input
             type="text"
@@ -209,26 +377,48 @@ const TutorProfileForm = () => {
             placeholder="ระบุสถานที่ เช่น ออนไลน์, กรุงเทพฯ, ตามบ้านผู้เรียน ฯลฯ"
           />
         </div>
+        {/* ราคา */}
+        <div>
+          <label className="block font-semibold text-gray-700">
+            ค่าติว / ชั่วโมง <span className="text-red-500 text-xl">*</span>
+          </label>
+          <input
+            type="number"
+            placeholder="ระบุค่าติว (บาท)"
+            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+            value={profileData.price}
+            onChange={(e) =>
+              setProfileData({ ...profileData, price: e.target.value })
+            }
+          />
+        </div>
 
         {/* ✅ วัยของผู้เรียนที่สามารถสอนได้ (เลือกได้มากกว่า 1) */}
         <div>
-          <label className="block font-semibold">วัยของผู้เรียน *</label>
-          <div className="flex flex-wrap gap-3 mt-2">
+          <label className="block text-gray-700 font-semibold mb-2">
+            วัยของผู้เรียน <span className="text-red-500 text-xl">*</span>
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              "เด็กเล็ก",
-              "ประถมศึกษา",
-              "มัธยมศึกษา",
-              "มหาวิทยาลัย",
-              "วัยทำงาน / ผู้ใหญ่",
-              "ทุกช่วงวัย",
+              { label: "เด็กเล็ก", icon: "👶" },
+              { label: "ประถมศึกษา", icon: "📚" },
+              { label: "มัธยมศึกษา", icon: "🏫" },
+              { label: "มหาวิทยาลัย", icon: "🎓" },
+              { label: "วัยทำงาน / ผู้ใหญ่", icon: "👔" },
+              { label: "ทุกช่วงวัย", icon: "🌍" },
             ].map((ageGroup) => (
-              <label key={ageGroup} className="flex items-center space-x-2">
+              <label
+                key={ageGroup.label}
+                className="flex items-center gap-3 bg-gray-100 px-4 py-3 rounded-lg cursor-pointer hover:bg-blue-100 transition-all shadow-sm"
+              >
                 <input
                   type="checkbox"
-                  value={ageGroup}
-                  className="form-checkbox text-blue-500"
+                  value={ageGroup.label}
+                  className="form-checkbox text-blue-500 h-5 w-5 accent-blue-600"
                 />
-                <span>{ageGroup}</span>
+                <span className="text-gray-700 font-medium">
+                  {ageGroup.icon} {ageGroup.label}
+                </span>
               </label>
             ))}
           </div>
@@ -236,24 +426,29 @@ const TutorProfileForm = () => {
 
         {/* ✅ วิชาที่สอน */}
         <div>
-          <label className="block font-semibold">วิชาที่สอน *</label>
+          <label className="block font-semibold">
+            วิชาที่สอน <span className="text-red-500 text-xl">*</span>
+          </label>
           {/* ✅ วิชาที่สอน */}
           {profileData.subjects.map((subject, index) => (
-            <div key={index}>
+            <div key={index} className="flex space-x-2 mt-2">
               <input
                 type="text"
                 value={subject}
+                className="input-field"
                 onChange={(e) => {
                   const updatedSubjects = [...profileData.subjects];
                   updatedSubjects[index] = e.target.value;
                   setProfileData({ ...profileData, subjects: updatedSubjects });
                 }}
               />
+
               <button
                 type="button"
                 onClick={() => removeField("subjects", index)}
+                className="btn-danger flex items-center space-x-1 hover:bg-red-600"
               >
-                ลบ
+                <FaTrash /> <span>ลบ</span>
               </button>
             </div>
           ))}
@@ -268,7 +463,9 @@ const TutorProfileForm = () => {
 
         {/* ✅ คอร์สเรียน */}
         <div>
-          <label className="block font-semibold">คอร์สเรียน *</label>
+          <label className="block font-semibold">
+            คอร์สเรียน <span className="text-red-500 text-xl">*</span>
+          </label>
           {profileData.courses.map((course, index) => (
             <div key={index} className="border p-4 rounded-md mt-2">
               <input
@@ -342,7 +539,9 @@ const TutorProfileForm = () => {
 
         {/* ✅ ตารางสอน */}
         <div>
-          <label className="block font-semibold">ตารางสอน *</label>
+          <label className="block font-semibold">
+            ตารางสอน <span className="text-red-500 text-xl">*</span>
+          </label>
           {profileData.schedule.map((slot, index) => (
             <div key={index} className="flex space-x-2 mt-2">
               <input
@@ -358,7 +557,7 @@ const TutorProfileForm = () => {
               />
               <input
                 type="text"
-                placeholder="เวลา (เช่น 10:00 - 12:00)"
+                placeholder="เช่น 10:00 - 12:00"
                 className="input-field"
                 value={slot.time}
                 onChange={(e) => {
@@ -396,31 +595,77 @@ const TutorProfileForm = () => {
           </button>
         </div>
 
-        {/* ✅ ปุ่มบันทึก */}
-        <button type="submit" className="btn-submit w-full" disabled={loading}>
-          {loading ? "กำลังบันทึก..." : "บันทึกโปรไฟล์"}
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            setProfileData({
-              fullName: "",
-              phone: "",
-              email: "",
-              introduction: "",
-              location: "",
-              teachingMethods: [],
-              ageGroups: [],
-              subjects: [""],
-              courses: [{ name: "", details: "", duration: "", price: "" }],
-              schedule: [{ day: "", time: "" }],
-            })
-          }
-          className="btn-danger w-full"
-        >
-          รีเซ็ตฟอร์ม
-        </button>
+        <div className="flex justify-center gap-4 mt-6">
+          <div className="flex justify-center gap-4 mt-6">
+            {/* ✅ ปุ่มบันทึกโปรไฟล์ */}
+            <button
+              type="submit"
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all shadow-md
+      ${
+        loading
+          ? "bg-gray-400 cursor-not-allowed"
+          : "bg-blue-600 hover:bg-blue-700 hover:scale-105 hover:shadow-xl"
+      }`}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 11-8 8h4l-3.5 3.5L0 12h4z"
+                    ></path>
+                  </svg>
+                  <span>กำลังบันทึก...</span>
+                </>
+              ) : (
+                <>
+                  <FaSave className="h-5 w-5" />
+                  <span>บันทึกโปรไฟล์</span>
+                </>
+              )}
+            </button>
+            {/* ✅ ปุ่มรีเซ็ตฟอร์ม */}
+            <button
+              type="button"
+              onClick={() => {
+                setProfileData({
+                  fullName: "",
+                  phone: "",
+                  email: "",
+                  introduction: "",
+                  location: "",
+                  profileImage: null, // ✅ รีเซ็ตตรงนี้เลย
+                  introVideo: null, // ✅ รีเซ็ตตรงนี้เลย
+                  teachingMethods: [],
+                  ageGroups: [],
+                  subjects: [""],
+                  courses: [{ name: "", details: "", duration: "", price: "" }],
+                  schedule: [{ day: "", time: "" }],
+                  price: "",
+                });
+              }}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all shadow-md bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-xl"
+            >
+              <FaRedo className="h-5 w-5" />
+              <span>รีเซ็ตฟอร์ม</span>
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

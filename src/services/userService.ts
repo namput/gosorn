@@ -11,6 +11,7 @@ const API_BASE_URL =
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        credentials: "include", // ✅ ต้องใช้ถ้า Backend ใช้ Cookie หรือ Session
         body: JSON.stringify(profileData),
       });
   
