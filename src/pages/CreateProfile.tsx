@@ -14,8 +14,8 @@ const TutorProfileForm = () => {
     email: "",
     introduction: "",
     location: "",
-    profileImage: null as File | null,  // ✅ เปลี่ยนเป็น File | null
-    introVideo: null as File | null,  // ✅ เปลี่ยนเป็น File | null
+    profileImage: null as File | null, // ✅ เปลี่ยนเป็น File | null
+    introVideo: null as File | null, // ✅ เปลี่ยนเป็น File | null
     profileImagePreview: null as string | null,
     introVideoPreview: null as string | null,
     teachingMethods: [] as string[],
@@ -25,7 +25,6 @@ const TutorProfileForm = () => {
     schedule: [{ day: "", time: "" }],
     price: "", // ✅ เพิ่มช่องราคาหลัก
   });
-
 
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +36,7 @@ const TutorProfileForm = () => {
   ) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-  
+
       // ✅ ตรวจสอบขนาดไฟล์
       const fileSizeMB = file.size / (1024 * 1024);
       if (
@@ -45,21 +44,23 @@ const TutorProfileForm = () => {
         (field === "introVideo" && fileSizeMB > MAX_VIDEO_SIZE_MB)
       ) {
         toast.error(
-          `❌ ไฟล์${field === "profileImage" ? "รูป" : "วิดีโอ"}มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
+          `❌ ไฟล์${
+            field === "profileImage" ? "รูป" : "วิดีโอ"
+          }มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
             field === "profileImage" ? MAX_IMAGE_SIZE_MB : MAX_VIDEO_SIZE_MB
           }MB`,
           { position: "top-right" }
         );
         return;
       }
-  
+
       // ✅ ลบ URL เก่าเพื่อลด Memory Leak
       if (profileData[`${field}Preview` as keyof typeof profileData]) {
         URL.revokeObjectURL(
           profileData[`${field}Preview` as keyof typeof profileData] as string
         );
       }
-  
+
       // ✅ บันทึกไฟล์ลงใน state
       setProfileData((prev) => ({
         ...prev,
@@ -68,7 +69,6 @@ const TutorProfileForm = () => {
       }));
     }
   };
-  
 
   // ✅ เพิ่ม/ลบ ค่าใน Array Fields (วิชา, คอร์ส, ตารางสอน)
   const addField = <T,>(field: keyof typeof profileData, item: T) => {
@@ -88,13 +88,13 @@ const TutorProfileForm = () => {
   // ✅ บันทึกข้อมูล (ใช้ API)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     // ✅ ตรวจสอบว่าฟอร์มกรอกครบหรือไม่
     if (!validateForm()) return;
-  
+
     setLoading(true);
     const formData = new FormData();
-  
+
     // ✅ ส่งเฉพาะข้อมูลที่จำเป็น ไม่ส่ง `profileImagePreview`
     Object.entries(profileData).forEach(([key, value]) => {
       if (key !== "profileImagePreview" && key !== "introVideoPreview") {
@@ -107,20 +107,20 @@ const TutorProfileForm = () => {
         }
       }
     });
-  
+
     console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
-  
+
     const result = await submitTutorProfile(formData);
-  
+
     if (result.success) {
       toast.success("✅ บันทึกโปรไฟล์สำเร็จ!", { position: "top-right" });
     } else {
       toast.error("❌ เกิดข้อผิดพลาด!", { position: "top-right" });
     }
-  
+
     setLoading(false);
   };
-  
+
   // ✅ ล้าง URL object เมื่อเปลี่ยน preview image/video
   useEffect(() => {
     return () => {
@@ -132,8 +132,10 @@ const TutorProfileForm = () => {
   }, [profileData.profileImagePreview, profileData.introVideoPreview]);
 
   const validateForm = () => {
-    console.log(profileData);
-    
+    if (!profileData.profileImage) {
+      toast.error("❌ กรุณาอัปโหลดรูปโปรไฟล์", { position: "top-right" });
+      return false;
+    }
     if (!profileData.fullName.trim()) {
       toast.error("❌ กรุณากรอกชื่อ-นามสกุล", { position: "top-right" });
       return false;
@@ -154,10 +156,13 @@ const TutorProfileForm = () => {
       toast.error("❌ กรุณาระบุสถานที่สอน", { position: "top-right" });
       return false;
     }
-    if (!profileData.profileImage) {
-      toast.error("❌ กรุณาอัปโหลดรูปโปรไฟล์", { position: "top-right" });
+    if (!profileData.price || Number(profileData.price) <= 0) {
+      toast.error("❌ กรุณาระบุราคาค่าติวที่ถูกต้อง", {
+        position: "top-right",
+      });
       return false;
     }
+
     if (!profileData.teachingMethods.length) {
       toast.error("❌ กรุณาเลือกอย่างน้อย 1 รูปแบบการสอน", {
         position: "top-right",
@@ -197,12 +202,7 @@ const TutorProfileForm = () => {
       });
       return false;
     }
-    if (!profileData.price || Number(profileData.price) <= 0) {
-      toast.error("❌ กรุณาระบุราคาค่าติวที่ถูกต้อง", {
-        position: "top-right",
-      });
-      return false;
-    }
+
     return true;
   };
 
@@ -216,75 +216,92 @@ const TutorProfileForm = () => {
       </p>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
-{/* ✅ รูปโปรไฟล์ */}
-<div className="mb-4 flex flex-col items-center relative">
-  <label className="block font-semibold text-lg text-gray-700 mb-2">
-    รูปโปรไฟล์ <span className="text-red-500 text-xl">*</span>
-  </label>
-  <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => handleFileChange(e, "profileImage")}
-    className="hidden"
-    id="profile-upload"
-  />
-  <label htmlFor="profile-upload" className="relative cursor-pointer">
-    {profileData.profileImagePreview ? (
-      <div className="relative w-36 h-36">
-        <img
-          src={profileData.profileImagePreview}
-          className="w-full h-full rounded-full object-cover border-2 border-gray-300"
-        />
-        <button
-          type="button"
-          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
-          onClick={() => setProfileData({ ...profileData, profileImage: null, profileImagePreview: null })}
-        >
-          <FaTrash className="w-4 h-4" />
-        </button>
-      </div>
-    ) : (
-      <div className="w-36 h-36 flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
-        <FaUpload className="text-3xl text-gray-500" />
-      </div>
-    )}
-  </label>
-</div>
+        {/* ✅ รูปโปรไฟล์ */}
+        <div className="mb-4 flex flex-col items-center relative">
+          <label className="block font-semibold text-lg text-gray-700 mb-2">
+            รูปโปรไฟล์ <span className="text-red-500 text-xl">*</span>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileChange(e, "profileImage")}
+            className="hidden"
+            id="profile-upload"
+          />
+          <label htmlFor="profile-upload" className="relative cursor-pointer">
+            {profileData.profileImagePreview ? (
+              <div className="relative w-36 h-36">
+                <img
+                  src={profileData.profileImagePreview}
+                  className="w-full h-full rounded-full object-cover border-2 border-gray-300"
+                />
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
+                  onClick={() =>
+                    setProfileData({
+                      ...profileData,
+                      profileImage: null,
+                      profileImagePreview: null,
+                    })
+                  }
+                >
+                  <FaTrash className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="w-36 h-36 flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
+                <FaUpload className="text-3xl text-gray-500" />
+              </div>
+            )}
+          </label>
+        </div>
 
-{/* ✅ วิดีโอแนะนำตัว */}
-<div className="mb-6 flex flex-col items-center relative">
-  <label className="block font-semibold text-lg text-gray-700 mb-2">
-    คลิปแนะนำตัว (ถ้ามี) 🎥
-  </label>
-  <input
-    type="file"
-    accept="video/*"
-    onChange={(e) => handleFileChange(e, "introVideo")}
-    className="hidden"
-    id="video-upload"
-  />
-  <label htmlFor="video-upload" className="relative cursor-pointer">
-    {profileData.introVideoPreview ? (
-      <div className="relative w-64 h-36">
-        <video controls className="w-full h-full rounded-lg object-cover">
-          <source src={profileData.introVideoPreview} type="video/mp4" />
-        </video>
-        <button
-          type="button"
-          className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
-          onClick={() => setProfileData({ ...profileData, introVideo: null, introVideoPreview: null })}
-        >
-          <FaTrash className="w-4 h-4" />
-        </button>
-      </div>
-    ) : (
-      <div className="w-64 h-36 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
-        <FaUpload className="text-3xl text-gray-500" />
-      </div>
-    )}
-  </label>
-</div>
-
+        {/* ✅ วิดีโอแนะนำตัว */}
+        <div className="mb-6 flex flex-col items-center relative">
+          <label className="block font-semibold text-lg text-gray-700 mb-2">
+            คลิปแนะนำตัว (ถ้ามี) 🎥
+          </label>
+          <input
+            type="file"
+            accept="video/*"
+            onChange={(e) => handleFileChange(e, "introVideo")}
+            className="hidden"
+            id="video-upload"
+          />
+          <label htmlFor="video-upload" className="relative cursor-pointer">
+            {profileData.introVideoPreview ? (
+              <div className="relative w-64 h-36">
+                <video
+                  controls
+                  className="w-full h-full rounded-lg object-cover"
+                >
+                  <source
+                    src={profileData.introVideoPreview}
+                    type="video/mp4"
+                  />
+                </video>
+                <button
+                  type="button"
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-lg hover:bg-red-600 transition-all"
+                  onClick={() =>
+                    setProfileData({
+                      ...profileData,
+                      introVideo: null,
+                      introVideoPreview: null,
+                    })
+                  }
+                >
+                  <FaTrash className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="w-64 h-36 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-500 transition-all">
+                <FaUpload className="text-3xl text-gray-500" />
+              </div>
+            )}
+          </label>
+        </div>
 
         {/* ✅ ข้อมูลพื้นฐาน */}
         <div className="flex flex-col">
@@ -371,19 +388,16 @@ const TutorProfileForm = () => {
                 <input
                   type="checkbox"
                   className="form-checkbox text-blue-500 h-5 w-5 accent-blue-600"
-                    value={method.label}
-                    checked={profileData.teachingMethods.includes(method.label)}
-                    onChange={(e) => {
-                      const teachingMethods = e.target.checked
-                        ? [...profileData.teachingMethods, method.label]
-                        : profileData.teachingMethods.filter(
-                            (m) => m !== method.label
-                          );
-                      setProfileData({ ...profileData, teachingMethods });
-                    }
-                  }
-
-
+                  value={method.label}
+                  checked={profileData.teachingMethods.includes(method.label)}
+                  onChange={(e) => {
+                    const teachingMethods = e.target.checked
+                      ? [...profileData.teachingMethods, method.label]
+                      : profileData.teachingMethods.filter(
+                          (m) => m !== method.label
+                        );
+                    setProfileData({ ...profileData, teachingMethods });
+                  }}
                 />
                 <span className="text-gray-700 font-medium">
                   {method.icon} {method.label}
@@ -405,7 +419,7 @@ const TutorProfileForm = () => {
             placeholder="ระบุสถานที่ เช่น ออนไลน์, กรุงเทพฯ, ตามบ้านผู้เรียน ฯลฯ"
             value={profileData.location}
             onChange={(e) =>
-              setProfileData({...profileData, location: e.target.value })
+              setProfileData({ ...profileData, location: e.target.value })
             }
           />
         </div>

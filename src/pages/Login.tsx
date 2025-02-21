@@ -19,13 +19,13 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     try {
-      const data = await loginUser(formData);
-      localStorage.setItem("token", data.token);
-
-      toast.success("ล็อกอินสำเร็จ!", { position: "top-right" });
-
+      const data = await loginUser(formData); // 🔥 ส่งคำขอ Login ไปที่ API
+      localStorage.setItem("token", data.token); // ✅ บันทึก Token ลง LocalStorage
+  
+      toast.success("✅ ล็อกอินสำเร็จ!", { position: "top-right" });
+  
       // ✅ ตรวจสอบว่าผู้ใช้มีโปรไฟล์หรือยัง
       if (data.hasProfile) {
         navigate("/dashboard"); // ถ้ามีโปรไฟล์แล้ว → ไปแดชบอร์ด
@@ -38,6 +38,7 @@ const Login: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100">
