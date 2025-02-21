@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+.active-tab {
+  background-color: #2563eb; /* สีฟ้า */
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px; /* ✅ ลดขอบมนให้น้อยลง */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* ✅ ทำให้ดูมีมิติ */
+  transform: scale(1.05); /* ✅ ขยายเล็กน้อยเมื่อถูกเลือก */
+}
