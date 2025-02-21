@@ -130,6 +130,8 @@ const TutorProfileForm = () => {
   }, [profileData.profileImagePreview, profileData.introVideoPreview]);
 
   const validateForm = () => {
+    console.log(profileData);
+    
     if (!profileData.fullName.trim()) {
       toast.error("❌ กรุณากรอกชื่อ-นามสกุล", { position: "top-right" });
       return false;
@@ -293,6 +295,10 @@ const TutorProfileForm = () => {
             placeholder="ชื่อ-นามสกุล"
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
             required
+            value={profileData.fullName}
+            onChange={(e) =>
+              setProfileData({ ...profileData, fullName: e.target.value })
+            }
           />
 
           {/* เบอร์โทรศัพท์ */}
@@ -305,6 +311,10 @@ const TutorProfileForm = () => {
               placeholder="เบอร์โทรศัพท์"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
               required
+              value={profileData.phone}
+              onChange={(e) =>
+                setProfileData({ ...profileData, phone: e.target.value })
+              }
             />
           </div>
 
@@ -318,6 +328,10 @@ const TutorProfileForm = () => {
               placeholder="อีเมลติดต่อ"
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
               required
+              value={profileData.email}
+              onChange={(e) =>
+                setProfileData({ ...profileData, email: e.target.value })
+              }
             />
           </div>
         </div>
@@ -330,6 +344,10 @@ const TutorProfileForm = () => {
           <textarea
             className="input-field h-32 resize-none"
             placeholder="เขียนแนะนำตัวเอง เช่น ประสบการณ์, สไตล์การสอน, จุดเด่นของคุณ"
+            value={profileData.introduction}
+            onChange={(e) =>
+              setProfileData({ ...profileData, introduction: e.target.value })
+            }
           ></textarea>
         </div>
         {/* ✅ รูปแบบการสอน (เลือกได้มากกว่า 1) */}
@@ -350,8 +368,20 @@ const TutorProfileForm = () => {
               >
                 <input
                   type="checkbox"
-                  value={method.label}
                   className="form-checkbox text-blue-500 h-5 w-5 accent-blue-600"
+                    value={method.label}
+                    checked={profileData.teachingMethods.includes(method.label)}
+                    onChange={(e) => {
+                      const teachingMethods = e.target.checked
+                        ? [...profileData.teachingMethods, method.label]
+                        : profileData.teachingMethods.filter(
+                            (m) => m !== method.label
+                          );
+                      setProfileData({ ...profileData, teachingMethods });
+                    }
+                  }
+
+
                 />
                 <span className="text-gray-700 font-medium">
                   {method.icon} {method.label}
@@ -371,6 +401,10 @@ const TutorProfileForm = () => {
             type="text"
             className="input-field"
             placeholder="ระบุสถานที่ เช่น ออนไลน์, กรุงเทพฯ, ตามบ้านผู้เรียน ฯลฯ"
+            value={profileData.location}
+            onChange={(e) =>
+              setProfileData({...profileData, location: e.target.value })
+            }
           />
         </div>
         {/* ราคา */}
@@ -411,6 +445,15 @@ const TutorProfileForm = () => {
                   type="checkbox"
                   value={ageGroup.label}
                   className="form-checkbox text-blue-500 h-5 w-5 accent-blue-600"
+                  checked={profileData.ageGroups.includes(ageGroup.label)}
+                  onChange={(e) => {
+                    const ageGroups = e.target.checked
+                      ? [...profileData.ageGroups, ageGroup.label]
+                      : profileData.ageGroups.filter(
+                          (age) => age !== ageGroup.label
+                        );
+                    setProfileData({ ...profileData, ageGroups });
+                  }}
                 />
                 <span className="text-gray-700 font-medium">
                   {ageGroup.icon} {ageGroup.label}
