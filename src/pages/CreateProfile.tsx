@@ -37,7 +37,7 @@ const TutorProfileForm = () => {
   ) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-
+  
       // ✅ ตรวจสอบขนาดไฟล์
       const fileSizeMB = file.size / (1024 * 1024);
       if (
@@ -45,31 +45,30 @@ const TutorProfileForm = () => {
         (field === "introVideo" && fileSizeMB > MAX_VIDEO_SIZE_MB)
       ) {
         toast.error(
-          `❌ ไฟล์${
-            field === "profileImage" ? "รูป" : "วิดีโอ"
-          }มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
+          `❌ ไฟล์${field === "profileImage" ? "รูป" : "วิดีโอ"}มีขนาดใหญ่เกินไป! จำกัดไม่เกิน ${
             field === "profileImage" ? MAX_IMAGE_SIZE_MB : MAX_VIDEO_SIZE_MB
           }MB`,
           { position: "top-right" }
         );
         return;
       }
-
+  
       // ✅ ลบ URL เก่าเพื่อลด Memory Leak
       if (profileData[`${field}Preview` as keyof typeof profileData]) {
         URL.revokeObjectURL(
           profileData[`${field}Preview` as keyof typeof profileData] as string
         );
       }
-
+  
       // ✅ บันทึกไฟล์ลงใน state
       setProfileData((prev) => ({
         ...prev,
-        [field]: file,
+        [field]: file, // ✅ เก็บ `File` แทน URL
         [`${field}Preview`]: URL.createObjectURL(file),
       }));
     }
   };
+  
 
   // ✅ เพิ่ม/ลบ ค่าใน Array Fields (วิชา, คอร์ส, ตารางสอน)
   const addField = <T,>(field: keyof typeof profileData, item: T) => {
@@ -89,36 +88,39 @@ const TutorProfileForm = () => {
   // ✅ บันทึกข้อมูล (ใช้ API)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // ✅ ตรวจสอบว่าฟอร์มกรอกครบหรือไม่
     if (!validateForm()) return;
-
+  
     setLoading(true);
     const formData = new FormData();
-
+  
+    // ✅ ส่งเฉพาะข้อมูลที่จำเป็น ไม่ส่ง `profileImagePreview`
     Object.entries(profileData).forEach(([key, value]) => {
+      if (key !== "profileImagePreview" && key !== "introVideoPreview") {
         if (Array.isArray(value)) {
           formData.append(key, JSON.stringify(value));
         } else if (value instanceof File) {
           formData.append(key, value);
-        } else if (value) {
+        } else {
           formData.append(key, value as string);
         }
-      });
-    if (profileData.profileImage) formData.append("profileImage", profileData.profileImage);
-    if (profileData.introVideo) formData.append("introVideo", profileData.introVideo);
+      }
+    });
   
-
+    console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
+  
     const result = await submitTutorProfile(formData);
-
+  
     if (result.success) {
       toast.success("✅ บันทึกโปรไฟล์สำเร็จ!", { position: "top-right" });
     } else {
       toast.error("❌ เกิดข้อผิดพลาด!", { position: "top-right" });
     }
-
+  
     setLoading(false);
   };
+  
   // ✅ ล้าง URL object เมื่อเปลี่ยน preview image/video
   useEffect(() => {
     return () => {
