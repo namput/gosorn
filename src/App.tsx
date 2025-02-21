@@ -27,7 +27,7 @@ const App: React.FC = () => {
               <Route path="/select-package" element={<SelectPackage />} />
               <Route path="/create-profile" element={<CreateProfile />} />
             </Route>
-            <Route path="*" element={<NotFound />} />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </Layout>
       </Router>
