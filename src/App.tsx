@@ -12,6 +12,7 @@ import CreateProfile from "./pages/CreateProfile";
 import NotFound from "./pages/NotFound";
 import PaymentPage from "./pages/PaymentPage";
 import PendingStatus from "./pages/PendingStatus";
+import PublicRoute from "./components/PublicRoute";
 
 
 const App: React.FC = () => {
@@ -21,9 +22,13 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/login" element={<Login />} />
+           
+            <Route element={<PublicRoute />}>
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/login" element={<Login />} />
+            </Route>
+
             <Route element={<PrivateRoute />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/select-package" element={<SelectPackage />} />

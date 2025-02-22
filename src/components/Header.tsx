@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { FaHome, FaUserPlus, FaSignInAlt, FaChartBar, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaUserPlus,
+  FaSignInAlt,
+  FaChartBar,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const Header = () => {
@@ -13,7 +19,6 @@ const Header = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-    
   }, [location]);
 
   const handleLogout = () => {
@@ -22,7 +27,6 @@ const Header = () => {
     toast.info("👋 ออกจากระบบเรียบร้อย!", { position: "top-right" });
     navigate("/login"); // ✅ กลับไปหน้า Login
   };
-  
 
   // ✅ เช็คว่าหน้าไหนถูกเลือก (Active)
   const getActiveClass = (path: string) =>
@@ -34,18 +38,38 @@ const Header = () => {
     <header className="bg-white shadow-md py-4 px-6 sticky top-0 z-50">
       <div className="flex justify-between items-center">
         {/* ✅ โลโก้ */}
-        <Link to="/" className="text-3xl font-bold text-blue-900 flex items-center gap-x-2">
-          <FaHome /> <span>GuSorn</span>
+        <Link
+          to="/"
+          className="text-3xl font-bold text-blue-900 flex items-center gap-x-3"
+        >
+          <img
+            src="/logo.png"
+            alt="GuSorn Logo"
+            className="h-10 w-10 object-contain transition-all duration-300 hover:rotate-6 hover:scale-110"
+          />
+          <span className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent transition-all duration-300 hover:scale-110 hover:from-indigo-500 hover:to-blue-500">
+            GuSorn
+          </span>
         </Link>
 
         {/* ✅ เมนูในจอใหญ่ */}
         <nav className="hidden md:flex space-x-4 items-center">
-          <Link to="/" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/")}`}>
+          <Link
+            to="/"
+            className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+              "/"
+            )}`}
+          >
             <FaHome /> <span>หน้าแรก</span>
           </Link>
           {isLoggedIn ? (
             <>
-              <Link to="/dashboard" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/dashboard")}`}>
+              <Link
+                to="/dashboard"
+                className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                  "/dashboard"
+                )}`}
+              >
                 <FaChartBar /> <span>แดชบอร์ด</span>
               </Link>
               <button
@@ -57,10 +81,20 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/register" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/register")}`}>
+              <Link
+                to="/register"
+                className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                  "/register"
+                )}`}
+              >
                 <FaUserPlus /> <span>ลงทะเบียน</span>
               </Link>
-              <Link to="/login" className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass("/login")}`}>
+              <Link
+                to="/login"
+                className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                  "/login"
+                )}`}
+              >
                 <FaSignInAlt /> <span>เข้าสู่ระบบ</span>
               </Link>
             </>
@@ -81,14 +115,24 @@ const Header = () => {
           >
             <Menu.Items className="absolute right-0 mt-3 w-56 bg-white shadow-xl rounded-lg flex flex-col items-start py-4 px-4 text-gray-700 backdrop-blur-lg">
               <Menu.Item>
-                <Link to="/" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/")}`}>
+                <Link
+                  to="/"
+                  className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                    "/"
+                  )}`}
+                >
                   <FaHome /> <span>หน้าแรก</span>
                 </Link>
               </Menu.Item>
               {isLoggedIn ? (
                 <>
                   <Menu.Item>
-                    <Link to="/dashboard" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/dashboard")}`}>
+                    <Link
+                      to="/dashboard"
+                      className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                        "/dashboard"
+                      )}`}
+                    >
                       <FaChartBar /> <span>แดชบอร์ด</span>
                     </Link>
                   </Menu.Item>
@@ -104,12 +148,22 @@ const Header = () => {
               ) : (
                 <>
                   <Menu.Item>
-                    <Link to="/register" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/register")}`}>
+                    <Link
+                      to="/register"
+                      className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                        "/register"
+                      )}`}
+                    >
                       <FaUserPlus /> <span>ลงทะเบียน</span>
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="/login" className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass("/login")}`}>
+                    <Link
+                      to="/login"
+                      className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                        "/login"
+                      )}`}
+                    >
                       <FaSignInAlt /> <span>เข้าสู่ระบบ</span>
                     </Link>
                   </Menu.Item>
