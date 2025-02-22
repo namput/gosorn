@@ -14,12 +14,12 @@ const PendingStatus = () => {
     try {
       setLoading(true);
       const status = await checkPaymentStatus();
+      
 
       if (status === "pending") {
         
       } else if (status === "approved") {
         const data = await getSubscriptionStatus();
-        console.log("Checking status", data);
         
               if (data.hasSubscription) {
                 setStatus(data.status);
@@ -36,7 +36,7 @@ const PendingStatus = () => {
               } else {
                 navigate("/select-package"); // ✅ ถ้าไม่มีแพ็กเกจ → กลับไปเลือกแพ็กเกจ
               }
-      } else if (status === "rejected") {
+      } else{
         navigate("/select-package");
       }
   

@@ -7,7 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<AuthData>({ email: "", password: "" });
+  const [formData, setFormData] = useState<AuthData>({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,14 +22,17 @@ const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
+
     try {
       const data = await loginUser(formData); // 🔥 ส่งคำขอ Login ไปที่ API
       localStorage.setItem("token", data.token); // ✅ บันทึก Token ลง LocalStorage
       localStorage.setItem("user", JSON.stringify(data.user)); // ✅ บันทึกข้อมูลผู้ใช้
-  
+
       toast.success("✅ ล็อกอินสำเร็จ!", { position: "top-right" });
-  
+
+      if (data.redirectPath) {
+        navigate(data.redirectPath);
+      }
       // ✅ ตรวจสอบว่าผู้ใช้เลือกแพ็กเกจหรือยัง
       if (!data.user.package) {
         navigate("/pending-status"); // 👉 ถ้ายังไม่ได้เลือกแพ็กเกจ → ไปเลือกแพ็กเกจ
@@ -37,15 +43,12 @@ const Login: React.FC = () => {
       } else {
         navigate("/dashboard"); // 👉 ถ้าเป็น Standard (199 บาทขึ้นไป) → ไปที่ Dashboard
       }
-  
     } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -54,21 +57,29 @@ const Login: React.FC = () => {
         <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
         <div className="relative z-10">
           <h1 className="text-5xl font-bold animate-fadeIn">เข้าสู่ระบบ</h1>
-          <p className="text-lg mt-4 animate-slideInUp">กรุณากรอกข้อมูลของคุณเพื่อเข้าสู่ระบบ</p>
+          <p className="text-lg mt-4 animate-slideInUp">
+            กรุณากรอกข้อมูลของคุณเพื่อเข้าสู่ระบบ
+          </p>
         </div>
       </section>
 
       {/* ✅ Login Form Section */}
       <section className="py-16 px-10">
         <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl">
-          <h2 className="text-3xl font-semibold text-center text-gray-800">เข้าสู่ระบบ</h2>
-          <p className="text-center text-gray-600 mt-2">กรอกอีเมลและรหัสผ่านของคุณ</p>
+          <h2 className="text-3xl font-semibold text-center text-gray-800">
+            เข้าสู่ระบบ
+          </h2>
+          <p className="text-center text-gray-600 mt-2">
+            กรอกอีเมลและรหัสผ่านของคุณ
+          </p>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             <div>
-              <label className="block text-gray-700 font-semibold">อีเมล *</label>
+              <label className="block text-gray-700 font-semibold">
+                อีเมล *
+              </label>
               <input
                 type="email"
                 name="email"
@@ -80,7 +91,9 @@ const Login: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-semibold">รหัสผ่าน *</label>
+              <label className="block text-gray-700 font-semibold">
+                รหัสผ่าน *
+              </label>
               <input
                 type="password"
                 name="password"
@@ -104,7 +117,10 @@ const Login: React.FC = () => {
           <div className="text-center mt-6">
             <p className="text-gray-600">
               ยังไม่มีบัญชี?{" "}
-              <Link to="/register" className="text-blue-500 font-semibold hover:underline">
+              <Link
+                to="/register"
+                className="text-blue-500 font-semibold hover:underline"
+              >
                 สมัครสมาชิก
               </Link>
             </p>

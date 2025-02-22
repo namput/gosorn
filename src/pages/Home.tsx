@@ -14,11 +14,18 @@ const Home = () => {
             สมัครติวเตอร์ ค้นหาคนสอนพิเศษ หรือสร้างเว็บไซต์ส่วนตัวได้ง่าย ๆ ในที่เดียว
           </p>
           <Link
-            to="/register"
-            className="mt-6 inline-block bg-white text-blue-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition-all animate-bounce"
-          >
-            สมัครติวเตอร์ฟรี
-          </Link>
+  to="/register"
+  className="mt-6 inline-block px-8 py-4 text-2xl font-extrabold text-white 
+            bg-gradient-to-r from-blue-700 via-purple-600 to-red-500 
+            rounded-2xl shadow-2xl shadow-red-500/50 
+            transition-all duration-500 transform hover:scale-125 
+            hover:shadow-red-500/70 
+            hover:from-red-500 hover:via-yellow-500 hover:to-orange-500
+            animate-pulse border-4 border-white"
+>
+  🚀 สมัครติวเตอร์ฟรี 🚀
+</Link>
+
         </div>
       </section>
 
