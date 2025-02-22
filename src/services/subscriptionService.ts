@@ -54,3 +54,33 @@ export const uploadPaymentProof = async (formData: FormData) => {
     }
   };
   
+
+export const checkPaymentStatus = async (): Promise<string | null> => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("❌ Token ไม่พบใน localStorage");
+      return null;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/payment/payment-status`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // ✅ ใช้เมื่อ Backend ใช้ Cookie หรือ Session
+    });
+
+    if (!response.ok) {
+      console.error("❌ ไม่สามารถดึงสถานะการชำระเงินได้");
+      return null;
+    }
+
+    const data = await response.json();
+    return data.status || null;
+  } catch (error) {
+    console.error("❌ Error fetching payment status:", error);
+    return null;
+  }
+};
