@@ -29,16 +29,9 @@ const Login: React.FC = () => {
   
       // ✅ ตรวจสอบว่าผู้ใช้เลือกแพ็กเกจหรือยัง
       if (!data.user.package) {
-        navigate("/select-package"); // 👉 ถ้ายังไม่ได้เลือกแพ็กเกจ → ไปเลือกแพ็กเกจ
+        navigate("/pending-status"); // 👉 ถ้ายังไม่ได้เลือกแพ็กเกจ → ไปเลือกแพ็กเกจ
         return;
       }
-  
-      // ✅ ตรวจสอบสถานะแพ็กเกจ
-      if (data.user.status === "pending") {
-        navigate("/pending-status"); // 👉 ถ้ายังรอตรวจสอบ → ไปหน้า "รอตรวจสอบ"
-        return;
-      }
-  
       // ✅ นำทางตามแพ็กเกจที่สมัคร
       if (data.user.package === "basic") {
         navigate("/create-profile"); // 👉 ถ้าเป็น Basic (99 บาท) → ไปที่หน้า Create Profile
