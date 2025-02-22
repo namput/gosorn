@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../services/authService";
+// import { logoutUser } from "../services/authService";
 
 const LogoutButton: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logoutUser(); // ✅ ล้าง Token
+    // logoutUser(); // ✅ ล้าง Token
     navigate("/login"); // ✅ Redirect ไปหน้า Login
   };
 
