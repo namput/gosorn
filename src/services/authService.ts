@@ -25,16 +25,30 @@ export const registerTutor = async (userData: RegisterData) => {
 };
 
 export const loginUser = async (userData: AuthData) => {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-  if (!response.ok) throw new Error("เข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง");
-  const data = await response.json();
-  localStorage.setItem("token", data.token);
-  return data;
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error("เข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role); // ✅ บันทึก Role ลง LocalStorage
+
+    return data;
+  } catch (error) {
+    const err = error as Error;
+    throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้");
+  }
 };
+
 
 export const verifyEmail = async (token: string) => {
   const response = await fetch(`${API_BASE_URL}/auth/verify-email?token=${token}`, {
