@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { FaCheck, FaTimes, FaSpinner, FaUserShield } from "react-icons/fa";
 import { getPendingPayments, approvePayment, rejectPayment } from "../services/adminService";
-
+// ✅ กำหนด API_BASE_URL ให้รองรับจาก `.env`
+const API_BASE_URL =
+  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 // 📌 กำหนด Type ของข้อมูลการสมัครแพ็กเกจ
 interface Payment {
   id: string;
@@ -19,14 +21,17 @@ const AdminDashboard: React.FC = () => {
   const loadPendingPayments = async () => {
     setLoading(true);
     try {
-      const data: Payment[] = await getPendingPayments();
-      setPendingPayments(data);
+      const response = await getPendingPayments();
+      console.log("📦 ข้อมูลการชำระเงินที่รอดำเนินการ:", response); // ✅ ตรวจสอบโครงสร้างข้อมูล
+  
+      setPendingPayments(response.data); // ✅ ใช้ `response.data` แทน `response`
     } catch (error) {
       console.error("❌ Error fetching pending payments:", error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     loadPendingPayments();
@@ -86,15 +91,14 @@ const AdminDashboard: React.FC = () => {
                     <td className="p-2">{payment.packageId.toUpperCase()}</td>
                     <td className="p-2 text-yellow-400">รอตรวจสอบ</td>
                     <td className="p-2">
-                      <a
-                        href={payment.proofUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:underline"
-                      >
-                        ดูหลักฐาน
-                      </a>
-                    </td>
+  <img
+    src={`${API_BASE_URL}${payment.proofUrl}`} // ✅ แสดงรูปโดยตรง
+    alt="หลักฐานการชำระเงิน"
+    className="h-20 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform"
+    onClick={() => window.open(`${API_BASE_URL}${payment.proofUrl}`, "_blank")} // 🔥 คลิกเพื่อดูรูปเต็ม
+  />
+</td>
+
                     <td className="p-2 flex gap-2">
                       <button
                         className="bg-green-600 px-3 py-2 rounded text-white hover:bg-green-500 flex items-center gap-1"
