@@ -29,16 +29,14 @@ const Login: React.FC = () => {
       localStorage.setItem("user", JSON.stringify(data.user)); // ✅ บันทึกข้อมูลผู้ใช้
 
       toast.success("✅ ล็อกอินสำเร็จ!", { position: "top-right" });
-
-      if (data.redirectPath) {
+   // ✅ ตรวจสอบสิทธิ์ของ **Admin**
+      if (data.user.role === "admin") {
+        navigate("/admin"); // 🔥 ถ้าเป็น Admin → ไปหน้า Admin Dashboard
+      }else if (data.redirectPath) {
         navigate(data.redirectPath);
-      }
-      // ✅ ตรวจสอบว่าผู้ใช้เลือกแพ็กเกจหรือยัง
-      if (!data.user.package) {
+      }else if (!data.user.package) {
         navigate("/pending-status"); // 👉 ถ้ายังไม่ได้เลือกแพ็กเกจ → ไปเลือกแพ็กเกจ
-      }
-      // ✅ นำทางตามแพ็กเกจที่สมัคร
-      if (data.user.package === "basic") {
+      }else if (data.user.package === "basic") {
         navigate("/create-profile"); // 👉 ถ้าเป็น Basic (99 บาท) → ไปที่หน้า Create Profile
       } else {
         navigate("/dashboard"); // 👉 ถ้าเป็น Standard (199 บาทขึ้นไป) → ไปที่ Dashboard
