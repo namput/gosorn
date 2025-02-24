@@ -20,7 +20,6 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [packages, setPackages] = useState<string>("");
-  const [user, setUser] = useState<string>("");
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
