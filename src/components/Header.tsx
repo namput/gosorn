@@ -9,6 +9,7 @@ import {
   FaChartBar,
   FaSignOutAlt,
   FaUserShield,
+  FaUserCircle,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -18,6 +19,7 @@ const Header = () => {
   const location = useLocation();
   const [packages, setPackages] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>(""); // ✅ เพิ่มตัวแปรเก็บชื่อผู้ใช้
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -28,6 +30,7 @@ const Header = () => {
 
     setPackages(userData?.package || null);
     setUserRole(userData?.role || null);
+    setUserName(userData?.name || userData?.email || "ผู้ใช้"); 
     setIsLoggedIn(!!token);
   }, [location]);
 
@@ -111,13 +114,17 @@ const Header = () => {
                   <FaUserShield /> <span>จัดการการอนุมัติ</span>
                 </Link>
               )}
-
+            
               <button
                 onClick={handleLogout}
                 className="px-5 py-2 bg-red-500 text-white rounded-md flex items-center gap-x-2 hover:bg-red-700 transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
               >
                 <FaSignOutAlt /> <span>ออกจากระบบ</span>
               </button>
+                {/* ✅ แสดงชื่อผู้ใช้ */}
+                <div className="px-5 py-2 rounded-md flex items-center gap-x-2 text-gray-700 bg-gray-200">
+                <FaUserCircle /> <span>{userName}</span>
+              </div>
             </>
           ) : (
             <>
@@ -213,6 +220,11 @@ const Header = () => {
                       onClick={handleLogout}
                       className="bg-red-500 text-white px-4 py-2 rounded-md flex items-center gap-x-2 hover:bg-red-700 w-full text-center text-lg transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
                     >
+                      <FaSignOutAlt /> <span>ออกจากระบบ</span>
+                    </button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-md flex items-center gap-x-2 hover:bg-red-700 w-full text-center text-lg transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md">
                       <FaSignOutAlt /> <span>ออกจากระบบ</span>
                     </button>
                   </Menu.Item>
