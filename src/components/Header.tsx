@@ -224,10 +224,10 @@ const Header = () => {
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                    <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-md flex items-center gap-x-2 hover:bg-red-700 w-full text-center text-lg transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md">
-                      <FaSignOutAlt /> <span>ออกจากระบบ</span>
-                    </button>
-                  </Menu.Item>
+                <div className="w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md bg-gray-200">
+                  <FaUserCircle /> <span>{userName}</span> {/* ✅ เพิ่มชื่อผู้ใช้ */}
+                </div>
+              </Menu.Item>
                 </>
               ) : (
                 <>
