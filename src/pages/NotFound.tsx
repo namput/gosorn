@@ -15,7 +15,6 @@ const NotFound = () => {
 
   // ✅ โหลด Particles ให้ทำงานแน่นอน
   const particlesInit = useCallback(async (engine: Engine) => {
-    console.log("🚀 Particles engine initialized:", engine);
     await loadSlim(engine);
   }, []);
 
