@@ -10,6 +10,9 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
+interface UserData {
+  package?: string; // ✅ package อาจจะไม่มีค่าก็ได้
+}
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
@@ -19,15 +22,22 @@ const Header = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
-    // ✅ แปลง `datax` จาก localStorage เป็น Object
-    const data = JSON.parse(localStorage.getItem("datax") || "{}");
-    if (data) {
-      const parsedData = JSON.parse(data);
-      setPackages(parsedData.package || ""); // ✅ ป้องกัน `null` หรือ `undefined`
+  
+    // ✅ ตรวจสอบค่า `datax` และป้องกัน JSON.parse() ผิดพลาด
+    const dataString = localStorage.getItem("package");
+    let parsedData: UserData = {}; // ✅ กำหนด Type
+  
+    try {
+      parsedData = dataString ? JSON.parse(dataString) : {}; // ✅ แปลง JSON หรือใช้ Object ว่าง
+    } catch (error) {
+      console.error("❌ JSON.parse error:", error);
+      parsedData = {}; // ✅ ถ้า Error ให้ใช้ Object ว่าง
     }
+  
+    setPackages(parsedData.package || ""); // ✅ ใช้ค่าที่ได้ หรือค่าเริ่มต้นเป็น ""
     setIsLoggedIn(!!token);
   }, [location]);
+  
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก Storage
