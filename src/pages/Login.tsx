@@ -27,6 +27,7 @@ const Login: React.FC = () => {
       const data = await loginUser(formData); // 🔥 ส่งคำขอ Login ไปที่ API
       localStorage.setItem("token", data.token); // ✅ บันทึก Token ลง LocalStorage
       localStorage.setItem("user", JSON.stringify(data.user)); // ✅ บันทึกข้อมูลผู้ใช้
+      localStorage.setItem("datax", JSON.stringify(data)); // ✅ บันทึกข้อมูลผู้ใช้
 
       toast.success("✅ ล็อกอินสำเร็จ!", { position: "top-right" });
    // ✅ ตรวจสอบสิทธิ์ของ **Admin**

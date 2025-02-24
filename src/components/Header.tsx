@@ -15,14 +15,25 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [packages, setPackages] = useState<string>("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+
+    // ✅ แปลง `datax` จาก localStorage เป็น Object
+    const data = JSON.parse(localStorage.getItem("datax") || "{}");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      setPackages(parsedData.package || ""); // ✅ ป้องกัน `null` หรือ `undefined`
+    }
     setIsLoggedIn(!!token);
   }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก Storage
+    localStorage.removeItem("user"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
+    localStorage.removeItem("datax"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
+    setPackages(""); // ✅ ลบข้อมูล Package ออกจาก State
     setIsLoggedIn(false); // ✅ อัปเดตสถานะล็อกเอาท์
     toast.info("👋 ออกจากระบบเรียบร้อย!", { position: "top-right" });
     navigate("/login"); // ✅ กลับไปหน้า Login
@@ -64,14 +75,28 @@ const Header = () => {
           </Link>
           {isLoggedIn ? (
             <>
-              <Link
-                to="/dashboard"
-                className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
-                  "/dashboard"
-                )}`}
-              >
-                <FaChartBar /> <span>แดชบอร์ด</span>
-              </Link>
+              {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
+              {packages !== "basic" && (
+                <Link
+                  to="/dashboard"
+                  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                    "/dashboard"
+                  )}`}
+                >
+                  <FaChartBar /> <span>แดชบอร์ด</span>
+                </Link>
+              )}
+              {packages === "basic" && (
+                <Link
+                  to="/create-profile"
+                  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                    "/create-profile"
+                  )}`}
+                >
+                  <FaUserPlus /> <span>สร้างโปรไฟล์</span>
+                </Link>
+              )}
+
               <button
                 onClick={handleLogout}
                 className="px-5 py-2 bg-red-500 text-white rounded-md flex items-center gap-x-2 hover:bg-red-700 transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
@@ -126,16 +151,31 @@ const Header = () => {
               </Menu.Item>
               {isLoggedIn ? (
                 <>
-                  <Menu.Item>
-                    <Link
-                      to="/dashboard"
-                      className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
-                        "/dashboard"
-                      )}`}
-                    >
-                      <FaChartBar /> <span>แดชบอร์ด</span>
-                    </Link>
-                  </Menu.Item>
+                  {packages !== "basic" && (
+                    <Menu.Item>
+                      <Link
+                        to="/dashboard"
+                        className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                          "/dashboard"
+                        )}`}
+                      >
+                        <FaChartBar /> <span>แดชบอร์ด</span>
+                      </Link>
+                    </Menu.Item>
+                  )}
+                  {packages === "basic" && (
+                    <Menu.Item>
+                      <Link
+                        to="/create-profile"
+                        className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                          "/create-profile"
+                        )}`}
+                      >
+                        <FaUserPlus /> <span>สร้างโปรไฟล์</span>
+                      </Link>
+                    </Menu.Item>
+                  )}
+
                   <Menu.Item>
                     <button
                       onClick={handleLogout}
