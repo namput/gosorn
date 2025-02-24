@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { FaCheck, FaTimes, FaSpinner, FaUserShield } from "react-icons/fa";
-import { getPendingPayments, approvePayment, rejectPayment } from "../services/adminService";
+import {
+  getPendingPayments,
+  approvePayment,
+  rejectPayment,
+} from "../services/adminService";
 // ✅ กำหนด API_BASE_URL ให้รองรับจาก `.env`
 const API_BASE_URL =
   import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
@@ -23,7 +27,7 @@ const AdminDashboard: React.FC = () => {
     try {
       const response = await getPendingPayments();
       console.log("📦 ข้อมูลการชำระเงินที่รอดำเนินการ:", response); // ✅ ตรวจสอบโครงสร้างข้อมูล
-  
+
       setPendingPayments(response.data); // ✅ ใช้ `response.data` แทน `response`
     } catch (error) {
       console.error("❌ Error fetching pending payments:", error);
@@ -31,7 +35,6 @@ const AdminDashboard: React.FC = () => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     loadPendingPayments();
@@ -72,7 +75,9 @@ const AdminDashboard: React.FC = () => {
       ) : (
         <div className="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
           {pendingPayments.length === 0 ? (
-            <p className="text-gray-400 text-center">✅ ไม่มีคำขอสมัครแพ็กเกจที่รอดำเนินการ</p>
+            <p className="text-gray-400 text-center">
+              ✅ ไม่มีคำขอสมัครแพ็กเกจที่รอดำเนินการ
+            </p>
           ) : (
             <table className="w-full text-left">
               <thead>
@@ -91,13 +96,18 @@ const AdminDashboard: React.FC = () => {
                     <td className="p-2">{payment.packageId.toUpperCase()}</td>
                     <td className="p-2 text-yellow-400">รอตรวจสอบ</td>
                     <td className="p-2">
-  <img
-    src={`${API_BASE_URL}${payment.proofUrl}`} // ✅ แสดงรูปโดยตรง
-    alt="หลักฐานการชำระเงิน"
-    className="h-20 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform"
-    onClick={() => window.open(`${API_BASE_URL}${payment.proofUrl}`, "_blank")} // 🔥 คลิกเพื่อดูรูปเต็ม
-  />
-</td>
+                      <img
+                        src={`${API_BASE_URL}${payment.proofUrl}`} // ✅ แสดงรูปโดยตรง
+                        alt="หลักฐานการชำระเงิน"
+                        className="h-20 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() =>
+                          window.open(
+                            `${API_BASE_URL}${payment.proofUrl}`,
+                            "_blank"
+                          )
+                        } // 🔥 คลิกเพื่อดูรูปเต็ม
+                      />
+                    </td>
 
                     <td className="p-2 flex gap-2">
                       <button
