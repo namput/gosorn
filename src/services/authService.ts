@@ -20,7 +20,7 @@ export const registerTutor = async (userData: RegisterData) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
-  if (!response.ok) throw new Error("การลงทะเบียนล้มเหลว โปรดลองอีกครั้ง");
+  if (!response.ok) throw new Error("การสมัครสร้างเว็บติวเตอร์ล้มเหลว โปรดลองอีกครั้ง");
   return await response.json();
 };
 

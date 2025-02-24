@@ -212,7 +212,7 @@ const TutorProfileForm = () => {
         สร้างโปรไฟล์ของคุณ
       </h2>
       <p className="text-center text-gray-600 mb-6">
-        กรอกข้อมูลเพื่อลงทะเบียนเป็นติวเตอร์
+        กรอกข้อมูลเพื่อสมัครสร้างเว็บติวเตอร์เป็นติวเตอร์
       </p>
 
       <form className="space-y-6" onSubmit={handleSubmit}>

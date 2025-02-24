@@ -70,7 +70,7 @@ const Register: React.FC = () => {
       <section className="relative py-20 text-center text-white bg-gradient-to-r from-blue-900 to-blue-700">
         <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
         <div className="relative z-10">
-          <h1 className="text-5xl font-bold animate-fadeIn">สมัครเป็นติวเตอร์</h1>
+          <h1 className="text-5xl font-bold animate-fadeIn">สมัครสร้างเว็บติวเตอร์</h1>
           <p className="text-lg mt-4 animate-slideInUp">สร้างโปรไฟล์ของคุณและเริ่มต้นสอนนักเรียนได้เลย</p>
         </div>
       </section>
@@ -78,7 +78,7 @@ const Register: React.FC = () => {
       {/* ✅ Register Form Section */}
       <section className="py-16 px-10">
         <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl">
-          <h2 className="text-3xl font-semibold text-center text-gray-800">สมัครเป็นติวเตอร์วันนี้!</h2>
+          <h2 className="text-3xl font-semibold text-center text-gray-800">สมัครสร้างเว็บติวเตอร์วันนี้!</h2>
           {successMessage ? (
             <p className="text-green-500 text-center">{successMessage} โปรดตรวจสอบอีเมลของคุณ</p>
           ) : (

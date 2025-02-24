@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -11,48 +11,35 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
-interface UserData {
-  package?: string; // ✅ package อาจจะไม่มีค่าก็ได้
-}
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [packages, setPackages] = useState<string>("");
+  const [packages, setPackages] = useState<string | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-  
-    const dataString = localStorage.getItem("package");
-    let parsedData: UserData = {};
-  
-    try {
-      parsedData = dataString ? JSON.parse(dataString) : {};
-    } catch (error) {
-      console.error("❌ JSON.parse error:", error);
-    }
-  
-    setPackages(parsedData.package || "");
-    setIsLoggedIn(!!token);
-  
+
+    // ✅ ดึงข้อมูล User จาก localStorage และ Parse JSON
     const userString = localStorage.getItem("user");
     let userData = userString ? JSON.parse(userString) : {};
-    setUserRole(userData.role || null);
-    
-  }, [location]);
-  
 
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก Storage
-    localStorage.removeItem("user"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
-    localStorage.removeItem("package"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
-    setPackages(""); // ✅ ลบข้อมูล Package ออกจาก State
-    setIsLoggedIn(false); // ✅ อัปเดตสถานะล็อกเอาท์
+    setPackages(userData?.package || null);
+    setUserRole(userData?.role || null);
+    setIsLoggedIn(!!token);
+  }, [location]);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setPackages(null);
+    setUserRole(null);
+    setIsLoggedIn(false);
     toast.info("👋 ออกจากระบบเรียบร้อย!", { position: "top-right" });
-    navigate("/login"); // ✅ กลับไปหน้า Login
-  };
+    navigate("/login");
+  }, [navigate]);
 
   // ✅ เช็คว่าหน้าไหนถูกเลือก (Active)
   const getActiveClass = (path: string) =>
@@ -80,18 +67,20 @@ const Header = () => {
 
         {/* ✅ เมนูในจอใหญ่ */}
         <nav className="hidden md:flex space-x-4 items-center">
-          <Link
-            to="/"
-            className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
-              "/"
-            )}`}
-          >
-            <FaHome /> <span>หน้าแรก</span>
-          </Link>
+          {!isLoggedIn && (
+            <Link
+              to="/"
+              className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                "/"
+              )}`}
+            >
+              <FaHome /> <span>หน้าแรก</span>
+            </Link>
+          )}
           {isLoggedIn ? (
             <>
               {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
-              {["standard", "premium", "business"].includes(packages) &&
+              {["standard", "premium", "business"].includes(packages ?? "") &&
                 userRole === "tutor" && (
                   <Link
                     to="/dashboard"
@@ -138,7 +127,7 @@ const Header = () => {
                   "/register"
                 )}`}
               >
-                <FaUserPlus /> <span>ลงทะเบียน</span>
+                <FaUserPlus /> <span>สมัครสร้างเว็บติวเตอร์</span>
               </Link>
               <Link
                 to="/login"
@@ -165,19 +154,23 @@ const Header = () => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="absolute right-0 mt-3 w-56 bg-white shadow-xl rounded-lg flex flex-col items-start py-4 px-4 text-gray-700 backdrop-blur-lg">
-              <Menu.Item>
-                <Link
-                  to="/"
-                  className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
-                    "/"
-                  )}`}
-                >
-                  <FaHome /> <span>หน้าแรก</span>
-                </Link>
-              </Menu.Item>
+              {!isLoggedIn && (
+                <Menu.Item>
+                  <Link
+                    to="/"
+                    className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                      "/"
+                    )}`}
+                  >
+                    <FaHome /> <span>หน้าแรก</span>
+                  </Link>
+                </Menu.Item>
+              )}
               {isLoggedIn ? (
                 <>
-                  {["standard", "premium", "business"].includes(packages) &&
+                  {["standard", "premium", "business"].includes(
+                    packages ?? ""
+                  ) &&
                     userRole === "tutor" && (
                       <Menu.Item>
                         <Link
@@ -233,7 +226,7 @@ const Header = () => {
                         "/register"
                       )}`}
                     >
-                      <FaUserPlus /> <span>ลงทะเบียน</span>
+                      <FaUserPlus /> <span>สมัครสร้างเว็บติวเตอร์</span>
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
