@@ -26,7 +26,6 @@ const AdminDashboard: React.FC = () => {
     setLoading(true);
     try {
       const response = await getPendingPayments();
-      console.log("📦 ข้อมูลการชำระเงินที่รอดำเนินการ:", response); // ✅ ตรวจสอบโครงสร้างข้อมูล
 
       setPendingPayments(response.data); // ✅ ใช้ `response.data` แทน `response`
     } catch (error) {

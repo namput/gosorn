@@ -8,6 +8,7 @@ import {
   FaSignInAlt,
   FaChartBar,
   FaSignOutAlt,
+  FaUserShield,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 interface UserData {
@@ -19,30 +20,35 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [packages, setPackages] = useState<string>("");
+  const [user, setUser] = useState<string>("");
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
   
-    // ✅ ตรวจสอบค่า `datax` และป้องกัน JSON.parse() ผิดพลาด
     const dataString = localStorage.getItem("package");
-    let parsedData: UserData = {}; // ✅ กำหนด Type
+    let parsedData: UserData = {};
   
     try {
-      parsedData = dataString ? JSON.parse(dataString) : {}; // ✅ แปลง JSON หรือใช้ Object ว่าง
+      parsedData = dataString ? JSON.parse(dataString) : {};
     } catch (error) {
       console.error("❌ JSON.parse error:", error);
-      parsedData = {}; // ✅ ถ้า Error ให้ใช้ Object ว่าง
     }
   
-    setPackages(parsedData.package || ""); // ✅ ใช้ค่าที่ได้ หรือค่าเริ่มต้นเป็น ""
+    setPackages(parsedData.package || "");
     setIsLoggedIn(!!token);
+  
+    const userString = localStorage.getItem("user");
+    let userData = userString ? JSON.parse(userString) : {};
+    setUserRole(userData.role || null);
+    
   }, [location]);
   
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // ✅ ลบ Token ออกจาก Storage
     localStorage.removeItem("user"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
-    localStorage.removeItem("datax"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
+    localStorage.removeItem("package"); // ✅ ลบข้อมูลผู้ใช้ออกจาก Storage
     setPackages(""); // ✅ ลบข้อมูล Package ออกจาก State
     setIsLoggedIn(false); // ✅ อัปเดตสถานะล็อกเอาท์
     toast.info("👋 ออกจากระบบเรียบร้อย!", { position: "top-right" });
@@ -86,17 +92,18 @@ const Header = () => {
           {isLoggedIn ? (
             <>
               {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
-              {packages !== "basic" && (
-                <Link
-                  to="/dashboard"
-                  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
-                    "/dashboard"
-                  )}`}
-                >
-                  <FaChartBar /> <span>แดชบอร์ด</span>
-                </Link>
-              )}
-              {packages === "basic" && (
+              {["standard", "premium", "business"].includes(packages) &&
+                userRole === "tutor" && (
+                  <Link
+                    to="/dashboard"
+                    className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                      "/dashboard"
+                    )}`}
+                  >
+                    <FaChartBar /> <span>แดชบอร์ด</span>
+                  </Link>
+                )}
+              {packages === "basic" && userRole === "tutor" && (
                 <Link
                   to="/create-profile"
                   className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
@@ -104,6 +111,16 @@ const Header = () => {
                   )}`}
                 >
                   <FaUserPlus /> <span>สร้างโปรไฟล์</span>
+                </Link>
+              )}
+              {userRole === "admin" && (
+                <Link
+                  to="/admin"
+                  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+                    "/admin"
+                  )}`}
+                >
+                  <FaUserShield /> <span>จัดการการอนุมัติ</span>
                 </Link>
               )}
 
@@ -161,19 +178,20 @@ const Header = () => {
               </Menu.Item>
               {isLoggedIn ? (
                 <>
-                  {packages !== "basic" && (
-                    <Menu.Item>
-                      <Link
-                        to="/dashboard"
-                        className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
-                          "/dashboard"
-                        )}`}
-                      >
-                        <FaChartBar /> <span>แดชบอร์ด</span>
-                      </Link>
-                    </Menu.Item>
-                  )}
-                  {packages === "basic" && (
+                  {["standard", "premium", "business"].includes(packages) &&
+                    userRole === "tutor" && (
+                      <Menu.Item>
+                        <Link
+                          to="/dashboard"
+                          className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                            "/dashboard"
+                          )}`}
+                        >
+                          <FaChartBar /> <span>แดชบอร์ด</span>
+                        </Link>
+                      </Menu.Item>
+                    )}
+                  {packages === "basic" && userRole === "tutor" && (
                     <Menu.Item>
                       <Link
                         to="/create-profile"
@@ -182,6 +200,18 @@ const Header = () => {
                         )}`}
                       >
                         <FaUserPlus /> <span>สร้างโปรไฟล์</span>
+                      </Link>
+                    </Menu.Item>
+                  )}
+                  {userRole === "admin" && (
+                    <Menu.Item>
+                      <Link
+                        to="/admin"
+                        className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                          "/admin"
+                        )}`}
+                      >
+                        <FaUserShield /> <span>จัดการการอนุมัติ</span>
                       </Link>
                     </Menu.Item>
                   )}
