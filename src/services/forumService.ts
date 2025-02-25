@@ -68,29 +68,36 @@ const API_BASE_URL =
       }
     },
     async addReply(threadId: number, content: string) {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
     
-        try {
-          const response = await fetch(`${API_BASE_URL}/forum/replies`, {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${token}`, // ✅ ใช้ Token ยืนยันตัวตน
-              "Content-Type": "application/json",
-            },
-            credentials: "include", // ✅ ต้องใช้เพราะ API ต้องการ Credentials
-            body: JSON.stringify({ thread_id: threadId, content }),
-          });
+      if (!token) {
+        throw new Error("❌ ไม่พบ Token กรุณาเข้าสู่ระบบก่อน");
+      }
     
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "ไม่สามารถเพิ่มความคิดเห็นได้");
-          }
+      console.log("🔹 กำลังส่ง Token:", token); // ✅ Debug Token
     
-          return await response.json();
-        } catch (error) {
-          const err = error as Error;
-          throw new Error(err.message || "เกิดข้อผิดพลาดในการเพิ่มความคิดเห็น");
+      try {
+        const response = await fetch(`${API_BASE_URL}/forum/replies`, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`, // ✅ ส่ง Token ไปที่ Backend
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ thread_id: threadId, content }),
+        });
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "❌ ไม่สามารถเพิ่มความคิดเห็นได้");
         }
-      },
+    
+        return await response.json();
+      } catch (error) {
+        const err = error as Error;
+        throw new Error(err.message || "❌ เกิดข้อผิดพลาดในการเพิ่มความคิดเห็น");
+      }
+    }
+    
   };
   

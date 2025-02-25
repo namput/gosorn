@@ -7,7 +7,7 @@ interface Reply {
   id: number;
   content: string;
   user_id: number;
-  username?: string; // ✅ แสดงชื่อผู้ใช้ ถ้ามี
+  user?: { id: number; username: string }; // ✅ เพิ่ม `user` object ลงใน Type
 }
 
 interface Thread {
@@ -83,7 +83,7 @@ const ThreadDetail = () => {
                   <div key={reply.id} className="p-4 border border-gray-200 rounded-lg shadow-sm flex items-start gap-4">
                     <FaUserCircle className="text-gray-400 text-3xl" />
                     <div>
-                      <p className="text-sm font-semibold text-gray-600">{reply.username || "ผู้ใช้งาน"}</p>
+                    <p className="text-sm font-semibold text-gray-600">{reply.user?.username || "ผู้ใช้งาน"}</p>
                       <p className="text-gray-700 whitespace-pre-line">{reply.content}</p>
                     </div>
                   </div>
