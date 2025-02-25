@@ -7,6 +7,7 @@ interface Reply {
   id: number;
   content: string;
   user_id: number;
+  username?: string; // ✅ แสดงชื่อผู้ใช้ ถ้ามี
 }
 
 interface Thread {
@@ -27,6 +28,8 @@ const ThreadDetail = () => {
     const fetchThread = async () => {
       try {
         const data = await forumService.getThreadById(Number(id));
+        console.log('data', data);
+        
         setThread(data);
       } catch (err) {
         setError("โหลดข้อมูลไม่สำเร็จ");
@@ -43,8 +46,7 @@ const ThreadDetail = () => {
     try {
       await forumService.addReply(Number(id), reply);
       setReply("");
-      // โหลดข้อมูลใหม่หลังจากเพิ่มความคิดเห็น
-      const data = await forumService.getThreadById(Number(id));
+      const data = await forumService.getThreadById(Number(id)); // โหลดใหม่
       setThread(data);
     } catch (err) {
       setError("ไม่สามารถเพิ่มความคิดเห็นได้");
@@ -55,33 +57,34 @@ const ThreadDetail = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      {/* ✅ ชื่อกระทู้ */}
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
       {thread ? (
         <>
+          {/* ✅ ชื่อกระทู้ */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 rounded-lg shadow-lg">
             <h1 className="text-3xl font-bold text-center">{thread.title}</h1>
           </div>
 
           {/* ✅ เนื้อหากระทู้ */}
           <div className="bg-white p-6 shadow-md rounded-lg text-gray-700">
-            <p className="text-lg leading-relaxed">{thread.content}</p>
+            <p className="text-lg leading-relaxed whitespace-pre-line">{thread.content}</p>
           </div>
 
           {/* ✅ ส่วนความคิดเห็น */}
           <div className="bg-white p-6 shadow-md rounded-lg">
-            <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
+            <h2 className="text-xl font-bold flex items-center gap-2 mb-4 text-gray-800">
               <FaCommentDots className="text-blue-500" /> ความคิดเห็น
             </h2>
 
-            {/* ✅ แสดงความคิดเห็น */}
+            {/* ✅ แสดงรายการความคิดเห็น */}
             {thread.replies?.length ? (
               <div className="space-y-4">
                 {thread.replies.map((reply) => (
-                  <div key={reply.id} className="p-4 border border-gray-200 rounded-lg shadow-sm flex items-start gap-3">
-                    <FaUserCircle className="text-gray-400 text-2xl" />
+                  <div key={reply.id} className="p-4 border border-gray-200 rounded-lg shadow-sm flex items-start gap-4">
+                    <FaUserCircle className="text-gray-400 text-3xl" />
                     <div>
-                      <p className="text-gray-700">{reply.content}</p>
+                      <p className="text-sm font-semibold text-gray-600">{reply.username || "ผู้ใช้งาน"}</p>
+                      <p className="text-gray-700 whitespace-pre-line">{reply.content}</p>
                     </div>
                   </div>
                 ))}

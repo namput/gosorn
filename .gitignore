@@ -24,10 +24,10 @@ dist-ssr
 *.sw?
 
 # Ignore environment variable files
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-*.env
+# .env
+# .env.local
+# .env.development
+# .env.production
+# .env.test
+# *.env
 
