@@ -10,6 +10,7 @@ import {
   FaSignOutAlt,
   FaUserShield,
   FaUserCircle,
+  FaBookOpen,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -30,7 +31,7 @@ const Header = () => {
 
     setPackages(userData?.package || null);
     setUserRole(userData?.role || null);
-    setUserName(userData?.name || userData?.email || "ผู้ใช้"); 
+    setUserName(userData?.name || userData?.email || "ผู้ใช้");
     setIsLoggedIn(!!token);
   }, [location]);
 
@@ -80,6 +81,14 @@ const Header = () => {
               <FaHome /> <span>หน้าแรก</span>
             </Link>
           )}
+  <Link
+  to="/forum"
+  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+    "/forum"
+  )}`}
+>
+<FaBookOpen /> <span>คลับติวเตอร์</span>
+</Link>
           {isLoggedIn ? (
             <>
               {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
@@ -114,15 +123,15 @@ const Header = () => {
                   <FaUserShield /> <span>จัดการการอนุมัติ</span>
                 </Link>
               )}
-            
+
               <button
                 onClick={handleLogout}
                 className="px-5 py-2 bg-red-500 text-white rounded-md flex items-center gap-x-2 hover:bg-red-700 transition-all duration-300 focus:ring-2 focus:ring-red-300 shadow-md"
               >
                 <FaSignOutAlt /> <span>ออกจากระบบ</span>
               </button>
-                {/* ✅ แสดงชื่อผู้ใช้ */}
-                <div className="px-5 py-2 rounded-md flex items-center gap-x-2 text-gray-700 bg-gray-200">
+              {/* ✅ แสดงชื่อผู้ใช้ */}
+              <div className="px-5 py-2 rounded-md flex items-center gap-x-2 text-gray-700 bg-gray-200">
                 <FaUserCircle /> <span>{userName}</span>
               </div>
             </>
@@ -173,6 +182,16 @@ const Header = () => {
                   </Link>
                 </Menu.Item>
               )}
+              <Menu.Item>
+                <Link
+                  to="/forum"
+                  className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                    "/forum"
+                  )}`}
+                >
+                  <FaBookOpen /> <span>คลับติวเตอร์</span>
+                </Link>
+              </Menu.Item>
               {isLoggedIn ? (
                 <>
                   {["standard", "premium", "business"].includes(
@@ -224,10 +243,11 @@ const Header = () => {
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                <div className="w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md bg-gray-200">
-                  <FaUserCircle /> <span>{userName}</span> {/* ✅ เพิ่มชื่อผู้ใช้ */}
-                </div>
-              </Menu.Item>
+                    <div className="w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md bg-gray-200">
+                      <FaUserCircle /> <span>{userName}</span>{" "}
+                      {/* ✅ เพิ่มชื่อผู้ใช้ */}
+                    </div>
+                  </Menu.Item>
                 </>
               ) : (
                 <>

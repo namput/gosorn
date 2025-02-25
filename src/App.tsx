@@ -15,6 +15,9 @@ import NotFound from "./pages/NotFound";
 import PaymentPage from "./pages/PaymentPage";
 import PendingStatus from "./pages/PendingStatus";
 import AdminDashboard from "./pages/AdminDashboard"; // ✅ Import หน้า Admin
+import Forum from "./pages/Forum";
+import CreateThread from "./pages/CreateThread";
+import ThreadDetail from "./pages/ThreadDetail";
 
 const App: React.FC = () => {
   return (
@@ -23,6 +26,9 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/forum" element={<Forum />} />
+            
+            <Route path="/forum/:id" element={<ThreadDetail />} />
 
             {/* ✅ Public Route */}
             <Route element={<PublicRoute />}>
@@ -38,6 +44,7 @@ const App: React.FC = () => {
               <Route path="/create-profile" element={<CreateProfile />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/pending-status" element={<PendingStatus />} />
+              <Route path="/forum/create" element={<CreateThread />} />
             </Route>
 
             {/* 👑 Admin Route (เฉพาะ Admin เท่านั้น) */}
