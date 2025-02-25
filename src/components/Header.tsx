@@ -32,6 +32,7 @@ const Header = () => {
     setPackages(userData?.package || null);
     setUserRole(userData?.role || null);
     setUserName(userData?.name || userData?.email || "ผู้ใช้");
+    
     setIsLoggedIn(!!token);
   }, [location]);
 

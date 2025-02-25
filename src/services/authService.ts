@@ -4,6 +4,7 @@ export interface AuthData {
 }
 
 export interface RegisterData extends AuthData {
+  username: string;
   name: string;
   phone: string;
   role: string;
@@ -15,13 +16,24 @@ const API_BASE_URL =
 
 // ✅ Public API: ไม่ต้องใช้ Token หรือ credentials
 export const registerTutor = async (userData: RegisterData) => {
-  const response = await fetch(`${API_BASE_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-  if (!response.ok) throw new Error("การสมัครสร้างเว็บติวเตอร์ล้มเหลว โปรดลองอีกครั้ง");
-  return await response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json(); // ✅ ดึงข้อมูล JSON จาก API
+
+    if (!response.ok) {
+      throw new Error(data.message || "การสมัครสร้างเว็บติวเตอร์ล้มเหลว โปรดลองอีกครั้ง");
+    }
+
+    return data;
+  } catch (error) {
+    const err = error as Error;
+    throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถสมัครได้");
+  }
 };
 
 export const loginUser = async (userData: AuthData) => {
@@ -34,11 +46,12 @@ export const loginUser = async (userData: AuthData) => {
       body: JSON.stringify(userData),
     });
 
+    const data = await response.json(); // ✅ ดึงข้อมูล JSON จากเซิร์ฟเวอร์
+
     if (!response.ok) {
-      throw new Error("เข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง");
+      throw new Error(data.message || "เข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง");
     }
 
-    const data = await response.json();
     localStorage.setItem("token", data.token);
     localStorage.setItem("role", data.user.role); // ✅ บันทึก Role ลง LocalStorage
 
@@ -48,6 +61,7 @@ export const loginUser = async (userData: AuthData) => {
     throw new Error(err.message || "เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้");
   }
 };
+
 
 
 export const verifyEmail = async (token: string) => {
