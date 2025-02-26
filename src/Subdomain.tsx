@@ -23,7 +23,12 @@ const TemplateComponent = template ? templates[template] : null;
 
 const Subdomain: React.FC = () => {
   useEffect(() => {
-    document.title = template ? `${subdomain.toUpperCase()} - Gusorn` : "Gusorn";
+    if (!template) {
+      // ✅ Redirect ไปหน้า 404 ถ้าไม่มี Template
+      window.location.href = "https://www.gusorn.com/404";
+      return;
+    }
+    document.title = `${subdomain.toUpperCase()} - Gusorn`;
   }, [subdomain, template]);
 
   return TemplateComponent ? (

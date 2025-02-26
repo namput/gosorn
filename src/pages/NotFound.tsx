@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaHome, FaRocket } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Particles from "react-tsparticles";
@@ -7,7 +6,6 @@ import { loadSlim } from "tsparticles-slim";
 import type { Engine } from "tsparticles-engine"; // ✅ Import Type
 
 const NotFound = () => {
-  const navigate = useNavigate();
   const [countdown, setCountdown] = useState(20);
 
   const glitchSoundUrl = "https://freesound.org/data/previews/523/523408_1015240-lq.mp3";
@@ -49,7 +47,7 @@ const NotFound = () => {
       clearTimeout(redirectTimeout);
       document.removeEventListener("click", playAudio);
     };
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="relative flex items-center justify-center h-screen bg-black text-white overflow-hidden">

@@ -1,34 +1,86 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaRedo, FaSave, FaTrash, FaUpload } from "react-icons/fa";
-import { submitTutorProfile } from "../services/tutorProfileService";
+import { getTutorProfile, submitTutorProfile } from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
 
+
+
 const TutorProfileForm = () => {
+  const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
+  const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
+    tutorId: "",
     fullName: "",
     phone: "",
     email: "",
     introduction: "",
     location: "",
-    profileImage: null as File | null, // ✅ เปลี่ยนเป็น File | null
-    introVideo: null as File | null, // ✅ เปลี่ยนเป็น File | null
-    profileImagePreview: null as string | null,
-    introVideoPreview: null as string | null,
+    subdomain: "",
+    profileImage: null as File | null, // ✅ แก้เป็น File | null
+    introVideo: null as File | null, // ✅ แก้เป็น File | null
+    profileImagePreview: null as string | null, // ✅ แยกตัวแสดงผล
+    introVideoPreview: null as string | null, // ✅ แยกตัวแสดงผล
     teachingMethods: [] as string[],
     ageGroups: [] as string[],
     subjects: [""],
     courses: [{ name: "", details: "", duration: "", price: "" }],
     schedule: [{ day: "", time: "" }],
-    price: "", // ✅ เพิ่มช่องราคาหลัก
+    price: "",
   });
+  
 
-  const [loading, setLoading] = useState(false);
+  const loadProfile = async () => {
+    setLoading(true);
+    try {
+      const response = await getTutorProfile(); // ✅ เรียก API โหลดข้อมูล
+      if (response.success && response.data) {
+        setProfileData((prev) => ({
+          ...prev,
+          profileImagePreview: response.data?.profileImage || null, // ✅ ใช้แสดงรูป
+          introVideoPreview: response.data?.introVideo || null, // ✅ ใช้แสดงวิดีโอ
+          profileImage: null, // ✅ ไฟล์ยังไม่ถูกอัปโหลด ต้องให้ผู้ใช้เลือกใหม่
+          introVideo: null, // ✅ ไฟล์ยังไม่ถูกอัปโหลด ต้องให้ผู้ใช้เลือกใหม่
+        }));
+        
+        setIsEditing(true);
+      }
+    } catch (error) {
+      console.error("❌ โหลดข้อมูลโปรไฟล์ล้มเหลว:", error);
+    }
+    setLoading(false);
+  };
+  
+  
+  useEffect(() => {
+    loadProfile();
+  }, []);
+  
 
-  // ✅ จัดการการอัปโหลดไฟล์
+  // ✅ ตรวจสอบชื่อ subdomain
+  const validateSubdomain = (subdomain: string) => {
+    const domainRegex = /^[a-zA-Z][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]$/;
+    return domainRegex.test(subdomain);
+  };
+
+  // ✅ ตรวจสอบค่า subdomain เมื่อกรอกข้อมูล
+  const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSubdomain = e.target.value.toLowerCase().trim(); // ✅ แปลงเป็นพิมพ์เล็กและลบช่องว่าง
+    setProfileData({ ...profileData, subdomain: newSubdomain });
+  };
+
+  // ✅ แจ้งเตือนเมื่อ subdomain ไม่ถูกต้อง
+  const checkSubdomainValidity = () => {
+    if (!profileData.subdomain || !validateSubdomain(profileData.subdomain)) {
+      toast.error(
+        "❌ ชื่อ Subdomain ไม่ถูกต้อง! ควรใช้เฉพาะตัวอักษร (a-z), ตัวเลข (0-9), และ (-) ห้ามขึ้นต้น/ลงท้ายด้วย (-)",
+        { position: "top-right" }
+      );
+    }
+  };
   // ✅ จัดการการอัปโหลดไฟล์
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -88,14 +140,12 @@ const TutorProfileForm = () => {
   // ✅ บันทึกข้อมูล (ใช้ API)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // ✅ ตรวจสอบว่าฟอร์มกรอกครบหรือไม่
-    if (!validateForm()) return;
-
+  
+    if (!validateForm()) return; // ✅ ตรวจสอบความถูกต้องของฟอร์ม
+  
     setLoading(true);
     const formData = new FormData();
-
-    // ✅ ส่งเฉพาะข้อมูลที่จำเป็น ไม่ส่ง `profileImagePreview`
+  
     Object.entries(profileData).forEach(([key, value]) => {
       if (key !== "profileImagePreview" && key !== "introVideoPreview") {
         if (Array.isArray(value)) {
@@ -107,19 +157,33 @@ const TutorProfileForm = () => {
         }
       }
     });
-
-    console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
-
-    const result = await submitTutorProfile(formData);
-
-    if (result.success) {
-      toast.success("✅ บันทึกโปรไฟล์สำเร็จ!", { position: "top-right" });
-    } else {
-      toast.error("❌ เกิดข้อผิดพลาด!", { position: "top-right" });
+  
+    // ✅ กรณีเป็นโหมดแก้ไข ให้เพิ่ม `tutorId`
+    if (isEditing && profileData.tutorId) {
+      formData.append("tutorId", profileData.tutorId);
     }
-
+  
+    console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
+  
+    try {
+      const result = await submitTutorProfile(formData);
+  
+      if (result.success) {
+        toast.success(
+          isEditing ? "✅ อัปเดตโปรไฟล์สำเร็จ!" : "✅ บันทึกโปรไฟล์สำเร็จ!",
+          { position: "top-right" }
+        );
+      } else {
+        toast.error("❌ เกิดข้อผิดพลาด!", { position: "top-right" });
+      }
+    } catch (error) {
+      console.error("❌ เกิดข้อผิดพลาดในการส่งข้อมูล:", error);
+      toast.error("❌ บันทึกข้อมูลล้มเหลว!", { position: "top-right" });
+    }
+  
     setLoading(false);
   };
+  
 
   // ✅ ล้าง URL object เมื่อเปลี่ยน preview image/video
   useEffect(() => {
@@ -134,6 +198,13 @@ const TutorProfileForm = () => {
   const validateForm = () => {
     if (!profileData.profileImage) {
       toast.error("❌ กรุณาอัปโหลดรูปโปรไฟล์", { position: "top-right" });
+      return false;
+    }
+    if (!profileData.subdomain || !validateSubdomain(profileData.subdomain)) {
+      toast.error(
+        "❌ ชื่อ Subdomain ไม่ถูกต้อง! ควรใช้เฉพาะตัวอักษร (a-z), ตัวเลข (0-9), และ (-) ห้ามขึ้นต้น/ลงท้ายด้วย (-)",
+        { position: "top-right" }
+      );
       return false;
     }
     if (!profileData.fullName.trim()) {
@@ -162,7 +233,6 @@ const TutorProfileForm = () => {
       });
       return false;
     }
-
     if (!profileData.teachingMethods.length) {
       toast.error("❌ กรุณาเลือกอย่างน้อย 1 รูปแบบการสอน", {
         position: "top-right",
@@ -202,7 +272,6 @@ const TutorProfileForm = () => {
       });
       return false;
     }
-
     return true;
   };
 
@@ -301,6 +370,32 @@ const TutorProfileForm = () => {
               </div>
             )}
           </label>
+        </div>
+        {/* ✅ ชื่อ Subdomain */}
+        <div>
+          <label className="block font-semibold">
+            ชื่อ Subdomain (ภาษาอังกฤษเท่านั้น){" "}
+            <span className="text-red-500 text-xl">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="กรอกชื่อ subdomain (ตัวอย่าง: mytutor)"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all"
+              value={profileData.subdomain}
+              onChange={handleSubdomainChange}
+              onBlur={checkSubdomainValidity} // ✅ เช็คความถูกต้องเมื่อคลิกออกจากช่อง
+              disabled={isEditing} // ✅ ถ้ามีโปรไฟล์อยู่แล้ว ห้ามแก้ไข Subdomain
+            />
+            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+              .gusorn.com
+            </span>
+          </div>
+          {isEditing && (
+            <p className="text-gray-500 text-sm mt-1">
+              ⚠️ ไม่สามารถเปลี่ยนแปลง Subdomain ได้หลังจากสมัครแล้ว
+            </p>
+          )}
         </div>
 
         {/* ✅ ข้อมูลพื้นฐาน */}
@@ -656,11 +751,11 @@ const TutorProfileForm = () => {
             <button
               type="submit"
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all shadow-md
-      ${
-        loading
-          ? "bg-gray-400 cursor-not-allowed"
-          : "bg-blue-600 hover:bg-blue-700 hover:scale-105 hover:shadow-xl"
-      }`}
+    ${
+      loading
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-blue-600 hover:bg-blue-700 hover:scale-105 hover:shadow-xl"
+    }`}
               disabled={loading}
             >
               {loading ? (
@@ -685,25 +780,30 @@ const TutorProfileForm = () => {
                       d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 11-8 8h4l-3.5 3.5L0 12h4z"
                     ></path>
                   </svg>
-                  <span>กำลังบันทึก...</span>
+                  <span>{isEditing ? "กำลังอัปเดต..." : "กำลังบันทึก..."}</span>
+                  {/* ✅ เปลี่ยนข้อความตามโหมด */}
                 </>
               ) : (
                 <>
                   <FaSave className="h-5 w-5" />
-                  <span>บันทึกโปรไฟล์</span>
+                  <span>{isEditing ? "อัปเดตโปรไฟล์" : "บันทึกโปรไฟล์"}</span>
+                  {/* ✅ เปลี่ยนข้อความตามโหมด */}
                 </>
               )}
             </button>
+
             {/* ✅ ปุ่มรีเซ็ตฟอร์ม */}
             <button
               type="button"
               onClick={() => {
                 setProfileData({
+                  tutorId: "",
                   fullName: "",
                   phone: "",
                   email: "",
                   introduction: "",
                   location: "",
+                  subdomain: "",
                   profileImage: null, // ✅ รีเซ็ตตรงนี้เลย
                   introVideo: null, // ✅ รีเซ็ตตรงนี้เลย
                   profileImagePreview: null as string | null,
