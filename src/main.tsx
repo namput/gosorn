@@ -11,7 +11,7 @@ const parts = hostname.split(".");
 
 // ✅ ตรวจจับ Subdomain สำหรับทั้ง localhost และโดเมนจริง
 const isLocalhost = hostname.includes("localhost");
-const isSubdomain = (!isLocalhost && parts.length > 2) || (isLocalhost && parts.length === 2);
+const isSubdomain = (!isLocalhost && parts.length > 2) || (isLocalhost && parts.length === 2 && parts[0] !== "www");
 
 console.log("🔍 Hostname:", hostname);
 console.log("🔍 Is Subdomain:", isSubdomain);
