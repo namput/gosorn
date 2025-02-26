@@ -6,12 +6,13 @@ import App from "./App.tsx";
 import Subdomain from "./Subdomain.tsx"; // ✅ Import ไฟล์ Subdomain
 import "./index.css";
 
-const hostname = window.location.hostname;
+// const hostname = window.location.hostname;
+const hostname = "www.gusorn.com"
 const parts = hostname.split(".");
 
 // ✅ ตรวจจับ Subdomain สำหรับทั้ง localhost และโดเมนจริง
 const isLocalhost = hostname.includes("localhost");
-const isSubdomain = (!isLocalhost && parts.length > 2) || (isLocalhost && parts.length === 2 && parts[0] !== "www");
+const isSubdomain = (!isLocalhost && parts.length > 2) && (isLocalhost && parts.length === 2 && parts[0] !== "www");
 
 console.log("🔍 Hostname:", hostname);
 console.log("🔍 Is Subdomain:", isSubdomain);
