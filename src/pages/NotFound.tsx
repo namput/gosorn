@@ -39,9 +39,9 @@ const NotFound = () => {
       setCountdown((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
-    // ✅ Redirect เมื่อครบ 60 วินาที
+    // ✅ ใช้ `navigate()` หลังจาก 20 วินาที
     const redirectTimeout = setTimeout(() => {
-      navigate("/");
+      window.location.href = "https://www.gusorn.com";
     }, 20000);
 
     return () => {
@@ -50,7 +50,7 @@ const NotFound = () => {
       document.removeEventListener("click", playAudio);
     };
   }, [navigate]);
-  
+
   return (
     <div className="relative flex items-center justify-center h-screen bg-black text-white overflow-hidden">
       {/* 🎇 เอฟเฟกต์ Particle ดวงดาว */}
@@ -104,15 +104,15 @@ const NotFound = () => {
         </p>
 
         {/* 🚀 ปุ่มกลับหน้าแรก */}
-        <motion.button
-          onClick={() => navigate("/")}
+        <motion.a
+          href="https://www.gusorn.com/"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
           className="mt-6 px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-blue-500 rounded-lg shadow-lg flex items-center gap-2 hover:shadow-2xl hover:animate-pulse"
         >
           <FaHome className="text-xl" />
-          กลับหน้าแรก
-        </motion.button>
+          พัฒนาเว็บกับ Gusorn
+        </motion.a>
 
         {/* 🚀 ปุ่มไป Neuatech */}
         <motion.a
@@ -124,12 +124,12 @@ const NotFound = () => {
           className="mt-4 px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg shadow-lg flex items-center gap-2 hover:shadow-2xl hover:animate-pulse"
         >
           <FaRocket className="text-xl" />
-          พัฒนาเว็บกับ Neuatech 🚀
+          ติดต่อทีม Neuatech
         </motion.a>
 
         {/* ⏳ Countdown Timer */}
         <p className="text-gray-400 mt-4 animate-pulse">
-          ระบบจะนำคุณกลับไปที่หน้าแรกใน{" "}
+          ระบบจะนำคุณไปที่ Gusorn ใน{" "}
           <span className="font-bold text-white">{countdown}</span> วินาที...
         </p>
       </motion.div>
