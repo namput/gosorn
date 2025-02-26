@@ -7,8 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
 
-
-
 const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
   const [loading, setLoading] = useState(false);
@@ -37,15 +35,30 @@ const TutorProfileForm = () => {
     setLoading(true);
     try {
       const response = await getTutorProfile(); // ✅ เรียก API โหลดข้อมูล
-      if (response.success && response.data) {
+      
+      if (response.success && response.data) { // ✅ ตรวจสอบ `response.data`
+        const profile = response.data; // ✅ ดึง data ชั้นในสุด
+  
         setProfileData((prev) => ({
           ...prev,
-          profileImagePreview: response.data?.profileImage || null, // ✅ ใช้แสดงรูป
-          introVideoPreview: response.data?.introVideo || null, // ✅ ใช้แสดงวิดีโอ
-          profileImage: null, // ✅ ไฟล์ยังไม่ถูกอัปโหลด ต้องให้ผู้ใช้เลือกใหม่
-          introVideo: null, // ✅ ไฟล์ยังไม่ถูกอัปโหลด ต้องให้ผู้ใช้เลือกใหม่
+          fullName: profile?.name || "",
+          email: profile?.email || "",
+          phone: profile?.phone || "",
+          introduction: profile?.bio || "",
+          location: profile?.location || "",
+          subdomain: profile?.subdomain || "",
+          price: profile?.price?.toString() || "",
+          profileImagePreview: profile?.profileImage || null,
+          introVideoPreview: profile?.introVideo || null,
+          profileImage: null,
+          introVideo: null,
+          teachingMethods: profile?.teachingMethods || [],
+          ageGroups: profile?.ageGroups || [],
+          subjects: profile?.subjects || [""],
+          courses: profile?.courses || [{ name: "", details: "", duration: "", price: "" }],
+          schedule: profile?.schedule || [{ day: "", time: "" }],
         }));
-        
+        console.log("🚀 โหลดข้อมูลโปรไฟล์สำเร็จ:", profile);
         setIsEditing(true);
       }
     } catch (error) {
@@ -53,6 +66,8 @@ const TutorProfileForm = () => {
     }
     setLoading(false);
   };
+  
+  
   
   
   useEffect(() => {

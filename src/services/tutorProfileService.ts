@@ -1,21 +1,38 @@
 const API_BASE_URL =
   import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000"; // ✅ กำหนด API URL
-  interface TutorProfile {
-    fullName: string;
-    phone: string;
-    email: string;
-    introduction: string;
-    location: string;
-    subdomain: string;
-    profileImage?: string;
-    introVideo?: string;
-    teachingMethods: string[];
-    ageGroups: string[];
-    subjects: string[];
-    courses: { name: string; details: string; duration: string; price: string }[];
-    schedule: { day: string; time: string }[];
-    price: string;
+  export interface TutorProfileResponse {
+    success: boolean;
+    data: {
+      subjects: string[];
+      levels: string[];
+      teachingMethods: string[];
+      ageGroups: string[];
+      courses: { name: string; details: string; duration: string; price: string }[];
+      schedule: { day: string; time: string }[];
+      id: number;
+      userId: number;
+      name: string;
+      email: string;
+      profileImage?: string;
+      introVideo?: string;
+      phone: string;
+      location: string;
+      subdomain: string;
+      bio?: string;
+      price: number;
+      createdAt: string;
+      updatedAt: string;
+      User: {
+        id: number;
+        email: string;
+        username: string;
+      };
+    } | null;  // ✅ ให้ data รองรับ `null`
   }
+  
+  
+
+  
   
   export const submitTutorProfile = async (formData: FormData): Promise<{ success: boolean; message: string }> => {
     const token = localStorage.getItem("token");
@@ -50,28 +67,27 @@ const API_BASE_URL =
     }
   };
   
-export const getTutorProfile = async (): Promise<{ success: boolean; data: TutorProfile | null }> => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("❌ ผู้ใช้ไม่ได้เข้าสู่ระบบ");
-
-    const response = await fetch(`${API_BASE_URL}/tutor/profile`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("❌ ไม่สามารถโหลดข้อมูลโปรไฟล์ติวเตอร์ได้");
+  export const getTutorProfile = async (): Promise<TutorProfileResponse> => {
+    try {
+      const token = localStorage.getItem("token"); 
+      if (!token) throw new Error("❌ ผู้ใช้ไม่ได้เข้าสู่ระบบ");
+  
+      const response = await fetch(`${API_BASE_URL}/tutor/profile`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`, 
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error("❌ ไม่สามารถโหลดข้อมูลโปรไฟล์ติวเตอร์ได้");
+      }
+  
+      return await response.json(); 
+    } catch (error) {
+      console.error("❌ เกิดข้อผิดพลาดในการโหลดโปรไฟล์:", error);
+      return { success: false, data: null } as TutorProfileResponse;
     }
-
-    const data: TutorProfile = await response.json();
-    return { success: true, data };
-  } catch (error) {
-    console.error("❌ เกิดข้อผิดพลาดในการโหลดโปรไฟล์:", error);
-    return { success: false, data: null };
-  }
-};
+  };
