@@ -71,10 +71,9 @@ const API_BASE_URL =
       const token = localStorage.getItem("token");
     
       if (!token) {
-        throw new Error("❌ ไม่พบ Token กรุณาเข้าสู่ระบบก่อน");
+        window.location.href = "/login";
+        return; // หยุดการทำงานต่อไป
       }
-    
-      console.log("🔹 กำลังส่ง Token:", token); // ✅ Debug Token
     
       try {
         const response = await fetch(`${API_BASE_URL}/forum/replies`, {
