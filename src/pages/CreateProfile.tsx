@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaRedo, FaSave, FaTrash, FaUpload } from "react-icons/fa";
-import { getTutorProfile, submitTutorProfile } from "../services/tutorProfileService";
+import {
+  getTutorProfile,
+  submitTutorProfile,
+} from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
-
+const API_BASE_URL =
+  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
   const [loading, setLoading] = useState(false);
@@ -29,16 +33,16 @@ const TutorProfileForm = () => {
     schedule: [{ day: "", time: "" }],
     price: "",
   });
-  
 
   const loadProfile = async () => {
     setLoading(true);
     try {
       const response = await getTutorProfile(); // ✅ เรียก API โหลดข้อมูล
-      
-      if (response.success && response.data) { // ✅ ตรวจสอบ `response.data`
+
+      if (response.success && response.data) {
+        // ✅ ตรวจสอบ `response.data`
         const profile = response.data; // ✅ ดึง data ชั้นในสุด
-  
+
         setProfileData((prev) => ({
           ...prev,
           fullName: profile?.name || "",
@@ -55,7 +59,9 @@ const TutorProfileForm = () => {
           teachingMethods: profile?.teachingMethods || [],
           ageGroups: profile?.ageGroups || [],
           subjects: profile?.subjects || [""],
-          courses: profile?.courses || [{ name: "", details: "", duration: "", price: "" }],
+          courses: profile?.courses || [
+            { name: "", details: "", duration: "", price: "" },
+          ],
           schedule: profile?.schedule || [{ day: "", time: "" }],
         }));
         console.log("🚀 โหลดข้อมูลโปรไฟล์สำเร็จ:", profile);
@@ -66,14 +72,10 @@ const TutorProfileForm = () => {
     }
     setLoading(false);
   };
-  
-  
-  
-  
+
   useEffect(() => {
     loadProfile();
   }, []);
-  
 
   // ✅ ตรวจสอบชื่อ subdomain
   const validateSubdomain = (subdomain: string) => {
@@ -155,12 +157,12 @@ const TutorProfileForm = () => {
   // ✅ บันทึกข้อมูล (ใช้ API)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!validateForm()) return; // ✅ ตรวจสอบความถูกต้องของฟอร์ม
-  
+
     setLoading(true);
     const formData = new FormData();
-  
+
     Object.entries(profileData).forEach(([key, value]) => {
       if (key !== "profileImagePreview" && key !== "introVideoPreview") {
         if (Array.isArray(value)) {
@@ -172,17 +174,17 @@ const TutorProfileForm = () => {
         }
       }
     });
-  
+
     // ✅ กรณีเป็นโหมดแก้ไข ให้เพิ่ม `tutorId`
     if (isEditing && profileData.tutorId) {
       formData.append("tutorId", profileData.tutorId);
     }
-  
+
     console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
-  
+
     try {
       const result = await submitTutorProfile(formData);
-  
+
       if (result.success) {
         toast.success(
           isEditing ? "✅ อัปเดตโปรไฟล์สำเร็จ!" : "✅ บันทึกโปรไฟล์สำเร็จ!",
@@ -195,10 +197,9 @@ const TutorProfileForm = () => {
       console.error("❌ เกิดข้อผิดพลาดในการส่งข้อมูล:", error);
       toast.error("❌ บันทึกข้อมูลล้มเหลว!", { position: "top-right" });
     }
-  
+
     setLoading(false);
   };
-  
 
   // ✅ ล้าง URL object เมื่อเปลี่ยน preview image/video
   useEffect(() => {
@@ -316,7 +317,7 @@ const TutorProfileForm = () => {
             {profileData.profileImagePreview ? (
               <div className="relative w-36 h-36">
                 <img
-                  src={profileData.profileImagePreview}
+                  src={`${API_BASE_URL}${profileData.profileImagePreview}`} // ✅ แสดงรูปโดยตรง
                   className="w-full h-full rounded-full object-cover border-2 border-gray-300"
                 />
                 <button
@@ -361,7 +362,7 @@ const TutorProfileForm = () => {
                   className="w-full h-full rounded-lg object-cover"
                 >
                   <source
-                    src={profileData.introVideoPreview}
+                    src={`${API_BASE_URL}${profileData.introVideoPreview}`} // ✅ แสดงรูปโดยตรง
                     type="video/mp4"
                   />
                 </video>
