@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaCheck, FaTimes, FaSpinner, FaUserShield, FaMoneyCheckAlt } from "react-icons/fa";
+import { FaSpinner, FaUserShield, FaMoneyCheckAlt, FaClipboardList, FaBars } from "react-icons/fa";
 import {
   getPendingPayments,
   approvePayment,
@@ -10,7 +10,6 @@ import {
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
-// 📌 กำหนด Type ของข้อมูลการสมัครแพ็กเกจ
 interface Payment {
   id: string;
   userId: number;
@@ -19,7 +18,6 @@ interface Payment {
   status: "pending" | "approved" | "rejected";
 }
 
-// 📌 กำหนด Type ของค่าคอมมิชชั่น
 interface Commission {
   id: string;
   referrerId: number;
@@ -31,9 +29,17 @@ const AdminDashboard: React.FC = () => {
   const [pendingPayments, setPendingPayments] = useState<Payment[]>([]);
   const [pendingCommissions, setPendingCommissions] = useState<Commission[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [view, setView] = useState<"payments" | "commissions">("payments"); // ✅ เพิ่มตัวเลือกเมนู
+  const [view, setView] = useState<"payments" | "commissions">("payments");
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false); // ✅ เพิ่ม Toggle Sidebar สำหรับมือถือ
 
-  // 📌 โหลดรายการสมัครที่รออนุมัติ
+  useEffect(() => {
+    if (view === "payments") {
+      loadPendingPayments();
+    } else {
+      loadPendingCommissions();
+    }
+  }, [view]);
+
   const loadPendingPayments = async () => {
     setLoading(true);
     try {
@@ -46,7 +52,6 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  // 📌 โหลดค่าคอมมิชชั่นที่รอการจ่าย
   const loadPendingCommissions = async () => {
     setLoading(true);
     try {
@@ -59,134 +64,85 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (view === "payments") {
-      loadPendingPayments();
-    } else {
-      loadPendingCommissions();
-    }
-  }, [view]);
-
-  // ✅ อนุมัติแพ็กเกจ
-  const handleApprove = async (id: string) => {
-    try {
-      await approvePayment(id);
-      alert("✅ อนุมัติแพ็กเกจเรียบร้อย!");
-      loadPendingPayments();
-    } catch (error) {
-      console.error("❌ Error approving payment:", error);
-    }
-  };
-
-  // ❌ ปฏิเสธแพ็กเกจ
-  const handleReject = async (id: string) => {
-    try {
-      await rejectPayment(id);
-      alert("❌ ปฏิเสธแพ็กเกจเรียบร้อย!");
-      loadPendingPayments();
-    } catch (error) {
-      console.error("❌ Error rejecting payment:", error);
-    }
-  };
-
-  // 💰 จ่ายค่าคอมมิชชั่น
-  const handlePayCommission = async (id: string) => {
-    try {
-      await payCommission(id);
-      alert("💰 จ่ายค่าคอมมิชชั่นเรียบร้อย!");
-      loadPendingCommissions();
-    } catch (error) {
-      console.error("❌ Error paying commission:", error);
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-6">
-      <h1 className="text-4xl font-bold mb-6 flex items-center gap-2">
-        <FaUserShield /> Admin Dashboard
-      </h1>
+    <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
+      {/* Sidebar (มือถือซ่อนได้) */}
+      <aside className={`fixed md:static top-0 left-0 w-64 bg-gray-900 text-white p-6 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 z-50`}>
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <FaUserShield /> Admin Dashboard
+        </h2>
+        <nav className="mt-6">
+          <button className={`w-full text-left p-3 rounded-lg flex items-center gap-2 ${view === "payments" ? "bg-blue-600" : "bg-gray-700 hover:bg-gray-600"}`} onClick={() => setView("payments")}>
+            <FaClipboardList /> อนุมัติแพ็กเกจ
+          </button>
+          <button className={`w-full text-left p-3 rounded-lg flex items-center gap-2 mt-2 ${view === "commissions" ? "bg-green-600" : "bg-gray-700 hover:bg-gray-600"}`} onClick={() => setView("commissions")}>
+            <FaMoneyCheckAlt /> จ่ายค่าคอมฯ
+          </button>
+        </nav>
+      </aside>
 
-      {/* ✅ เมนูเลือกแสดงข้อมูล */}
-      <div className="flex gap-4 mb-6">
-        <button
-          className={`px-4 py-2 rounded-lg ${view === "payments" ? "bg-blue-600" : "bg-gray-700"}`}
-          onClick={() => setView("payments")}
-        >
-          📝 อนุมัติแพ็กเกจ
-        </button>
-        <button
-          className={`px-4 py-2 rounded-lg ${view === "commissions" ? "bg-green-600" : "bg-gray-700"}`}
-          onClick={() => setView("commissions")}
-        >
-          💰 จ่ายค่าคอมฯ
-        </button>
-      </div>
+      {/* ปุ่มเปิด Sidebar บนมือถือ */}
+      <button className="md:hidden fixed top-4 left-4 bg-gray-900 text-white p-3 rounded-lg z-50" onClick={() => setSidebarOpen(!isSidebarOpen)}>
+        <FaBars />
+      </button>
 
-      {loading ? (
-        <FaSpinner className="animate-spin text-3xl text-yellow-400" />
-      ) : view === "payments" ? (
-        // ✅ ตารางอนุมัติแพ็กเกจ
-        <div className="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
-          {pendingPayments.length === 0 ? (
-            <p className="text-gray-400 text-center">✅ ไม่มีคำขอสมัครแพ็กเกจที่รอดำเนินการ</p>
-          ) : (
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-gray-600">
-                  <th className="p-2">ผู้ใช้</th>
-                  <th className="p-2">แพ็กเกจ</th>
-                  <th className="p-2">สถานะ</th>
-                  <th className="p-2">หลักฐาน</th>
-                  <th className="p-2">จัดการ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingPayments.map((payment) => (
-                  <tr key={payment.id} className="border-b border-gray-700">
-                    <td className="p-2">{payment.userId}</td>
-                    <td className="p-2">{payment.packageId.toUpperCase()}</td>
-                    <td className="p-2 text-yellow-400">รอตรวจสอบ</td>
-                    <td className="p-2">
-                      <img
-                        src={`${API_BASE_URL}${payment.proofUrl}`}
-                        alt="หลักฐานการชำระเงิน"
-                        className="h-20 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => window.open(`${API_BASE_URL}${payment.proofUrl}`, "_blank")}
-                      />
-                    </td>
-                    <td className="p-2 flex gap-2">
-                      <button className="bg-green-600 px-3 py-2 rounded text-white hover:bg-green-500 flex items-center gap-1" onClick={() => handleApprove(payment.id)}>
-                        <FaCheck /> อนุมัติ
-                      </button>
-                      <button className="bg-red-600 px-3 py-2 rounded text-white hover:bg-red-500 flex items-center gap-1" onClick={() => handleReject(payment.id)}>
-                        <FaTimes /> ปฏิเสธ
-                      </button>
-                    </td>
+      {/* Main Content */}
+      <main className="flex-1 p-4 md:p-6">
+        <h1 className="text-2xl font-bold mb-4">{view === "payments" ? "📋 รายการสมัครที่รออนุมัติ" : "💰 รายการค่าคอมมิชชั่นที่ต้องจ่าย"}</h1>
+
+        {loading ? (
+          <div className="flex justify-center">
+            <FaSpinner className="animate-spin text-3xl text-yellow-500" />
+          </div>
+        ) : view === "payments" ? (
+          <div className="bg-white shadow-md p-4 md:p-6 rounded-lg overflow-x-auto">
+            {pendingPayments.length === 0 ? (
+              <p className="text-gray-500 text-center">✅ ไม่มีคำขอสมัครแพ็กเกจที่รอดำเนินการ</p>
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-300">
+                    <th className="p-2 text-sm md:text-base">ผู้ใช้</th>
+                    <th className="p-2 text-sm md:text-base">แพ็กเกจ</th>
+                    <th className="p-2 text-sm md:text-base">หลักฐาน</th>
+                    <th className="p-2 text-sm md:text-base">จัดการ</th>
                   </tr>
+                </thead>
+                <tbody>
+                  {pendingPayments.map((payment) => (
+                    <tr key={payment.id} className="border-b border-gray-300">
+                      <td className="p-2 text-sm md:text-base">{payment.userId}</td>
+                      <td className="p-2 text-sm md:text-base">{payment.packageId.toUpperCase()}</td>
+                      <td className="p-2">
+                        <img src={`${API_BASE_URL}${payment.proofUrl}`} alt="หลักฐาน" className="h-16 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform" onClick={() => window.open(`${API_BASE_URL}${payment.proofUrl}`, "_blank")} />
+                      </td>
+                      <td className="p-2 flex gap-2">
+                        <button className="bg-green-500 px-2 md:px-3 py-1 md:py-2 rounded text-white text-xs md:text-base hover:bg-green-400" onClick={() => approvePayment(payment.id)}>✅ อนุมัติ</button>
+                        <button className="bg-red-500 px-2 md:px-3 py-1 md:py-2 rounded text-white text-xs md:text-base hover:bg-red-400" onClick={() => rejectPayment(payment.id)}>❌ ปฏิเสธ</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        ) : (
+          <div className="bg-white shadow-md p-4 md:p-6 rounded-lg">
+            {pendingCommissions.length === 0 ? (
+              <p className="text-gray-500 text-center">✅ ไม่มีค่าคอมฯ ที่รอดำเนินการ</p>
+            ) : (
+              <ul>
+                {pendingCommissions.map((commission) => (
+                  <li key={commission.id} className="flex justify-between items-center border-b border-gray-300 p-3">
+                    <span>💰 ผู้ใช้ {commission.referrerId} ได้รับค่าคอมฯ {commission.commission} บาท</span>
+                    <button className="bg-green-500 px-3 py-2 rounded text-white hover:bg-green-400" onClick={() => payCommission(commission.id)}>จ่ายค่าคอมฯ</button>
+                  </li>
                 ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      ) : (
-        // ✅ ตารางค่าคอมมิชชั่น
-        <div className="w-full max-w-4xl bg-gray-800 p-6 rounded-lg shadow-lg">
-          {pendingCommissions.length === 0 ? (
-            <p className="text-gray-400 text-center">✅ ไม่มีค่าคอมฯ ที่รอดำเนินการ</p>
-          ) : (
-            <ul>
-              {pendingCommissions.map((commission) => (
-                <li key={commission.id} className="flex justify-between items-center border-b border-gray-700 p-3">
-                  <span>💰 ผู้ใช้ {commission.referrerId} ได้รับค่าคอมฯ {commission.commission} บาท</span>
-                  <button className="bg-green-600 px-3 py-2 rounded text-white hover:bg-green-500" onClick={() => handlePayCommission(commission.id)}>
-                    จ่ายค่าคอมฯ
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+              </ul>
+            )}
+          </div>
+        )}
+      </main>
     </div>
   );
 };
