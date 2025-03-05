@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
   const [pendingCommissions, setPendingCommissions] = useState<Commission[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [view, setView] = useState<"payments" | "commissions">("payments");
-  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false); // ✅ เพิ่ม Toggle Sidebar สำหรับมือถือ
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (view === "payments") {
@@ -64,9 +64,39 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleApprove = async (id: string) => {
+    try {
+      await approvePayment(id);
+      alert("✅ อนุมัติแพ็กเกจเรียบร้อย!");
+      setPendingPayments((prev) => prev.filter((payment) => payment.id !== id));
+    } catch (error) {
+      console.error("❌ Error approving payment:", error);
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    try {
+      await rejectPayment(id);
+      alert("❌ ปฏิเสธแพ็กเกจเรียบร้อย!");
+      setPendingPayments((prev) => prev.filter((payment) => payment.id !== id));
+    } catch (error) {
+      console.error("❌ Error rejecting payment:", error);
+    }
+  };
+
+  const handlePayCommission = async (id: string) => {
+    try {
+      await payCommission(id);
+      alert("💰 จ่ายค่าคอมมิชชั่นเรียบร้อย!");
+      setPendingCommissions((prev) => prev.filter((commission) => commission.id !== id));
+    } catch (error) {
+      console.error("❌ Error paying commission:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-100">
-      {/* Sidebar (มือถือซ่อนได้) */}
+      {/* Sidebar */}
       <aside className={`fixed md:static top-0 left-0 w-64 bg-gray-900 text-white p-6 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 z-50`}>
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <FaUserShield /> Admin Dashboard
@@ -117,8 +147,8 @@ const AdminDashboard: React.FC = () => {
                         <img src={`${API_BASE_URL}${payment.proofUrl}`} alt="หลักฐาน" className="h-16 w-auto rounded shadow-lg cursor-pointer hover:scale-105 transition-transform" onClick={() => window.open(`${API_BASE_URL}${payment.proofUrl}`, "_blank")} />
                       </td>
                       <td className="p-2 flex gap-2">
-                        <button className="bg-green-500 px-2 md:px-3 py-1 md:py-2 rounded text-white text-xs md:text-base hover:bg-green-400" onClick={() => approvePayment(payment.id)}>✅ อนุมัติ</button>
-                        <button className="bg-red-500 px-2 md:px-3 py-1 md:py-2 rounded text-white text-xs md:text-base hover:bg-red-400" onClick={() => rejectPayment(payment.id)}>❌ ปฏิเสธ</button>
+                        <button className="bg-green-500 px-3 py-2 rounded text-white hover:bg-green-400" onClick={() => handleApprove(payment.id)}>✅ อนุมัติ</button>
+                        <button className="bg-red-500 px-3 py-2 rounded text-white hover:bg-red-400" onClick={() => handleReject(payment.id)}>❌ ปฏิเสธ</button>
                       </td>
                     </tr>
                   ))}
@@ -135,7 +165,7 @@ const AdminDashboard: React.FC = () => {
                 {pendingCommissions.map((commission) => (
                   <li key={commission.id} className="flex justify-between items-center border-b border-gray-300 p-3">
                     <span>💰 ผู้ใช้ {commission.referrerId} ได้รับค่าคอมฯ {commission.commission} บาท</span>
-                    <button className="bg-green-500 px-3 py-2 rounded text-white hover:bg-green-400" onClick={() => payCommission(commission.id)}>จ่ายค่าคอมฯ</button>
+                    <button className="bg-green-500 px-3 py-2 rounded text-white hover:bg-green-400" onClick={() => handlePayCommission(commission.id)}>จ่ายค่าคอมฯ</button>
                   </li>
                 ))}
               </ul>
