@@ -16,6 +16,7 @@ const Register: React.FC = () => {
     password: "",
     phone: "",
     role: "tutor",
+    referralCode: "", // ✅ เพิ่มฟิลด์ referralCode
   });
 
   const [loading, setLoading] = useState(false);
@@ -167,6 +168,20 @@ const Register: React.FC = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200"
                   required
+                />
+              </div>
+                        {/* ✅ ช่องกรอกรหัสเชิญ */}
+                        <div>
+                <label className="block text-gray-700 font-semibold">
+                  รหัสเชิญ (ถ้ามี)
+                </label>
+                <input
+                  type="text"
+                  name="referralCode"
+                  placeholder="กรอกรหัสเชิญจากเพื่อน"
+                  value={formData.referralCode}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border rounded-lg focus:ring focus:ring-blue-200"
                 />
               </div>
               <button

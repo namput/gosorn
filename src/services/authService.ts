@@ -8,6 +8,7 @@ export interface RegisterData extends AuthData {
   name: string;
   phone: string;
   role: string;
+  referralCode: string; // ✅ เพิ่มฟิลด์ referralCode
 }
 
 // ✅ กำหนด API_BASE_URL ให้รองรับจาก `.env`

@@ -62,6 +62,7 @@ const handlePayment = async () => {
       formData.append("packageId", packageId as string);
       formData.append("paymentMethod", selectedMethod);
       formData.append("proof", proofFile);
+      formData.append("amount", selectedPackage.price.toString());
   
       console.log("🔹 Data Sent to API:", formData);
   
