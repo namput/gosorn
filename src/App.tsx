@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/AdminDashboard"; // ✅ Import หน้า 
 import Forum from "./pages/Forum";
 import CreateThread from "./pages/CreateThread";
 import ThreadDetail from "./pages/ThreadDetail";
+import Profile from "./pages/Profile";
 
 const App: React.FC = () => {
   return (
@@ -45,11 +46,13 @@ const App: React.FC = () => {
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/pending-status" element={<PendingStatus />} />
               <Route path="/forum/create" element={<CreateThread />} />
+              <Route path="/profile" element={<Profile />} /> {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
             </Route>
 
             {/* 👑 Admin Route (เฉพาะ Admin เท่านั้น) */}
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/profile" element={<Profile />} /> {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
             </Route>
 
             <Route path="/*" element={<NotFound />} />

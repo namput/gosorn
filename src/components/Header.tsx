@@ -32,7 +32,7 @@ const Header = () => {
     setPackages(userData?.package || null);
     setUserRole(userData?.role || null);
     setUserName(userData?.name || userData?.email || "ผู้ใช้");
-    
+
     setIsLoggedIn(!!token);
   }, [location]);
 
@@ -82,14 +82,14 @@ const Header = () => {
               <FaHome /> <span>หน้าแรก</span>
             </Link>
           )}
-  <Link
-  to="/forum"
-  className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
-    "/forum"
-  )}`}
->
-<FaBookOpen /> <span>คลับติวเตอร์</span>
-</Link>
+          <Link
+            to="/forum"
+            className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+              "/forum"
+            )}`}
+          >
+            <FaBookOpen /> <span>คลับติวเตอร์</span>
+          </Link>
           {isLoggedIn ? (
             <>
               {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
@@ -132,9 +132,12 @@ const Header = () => {
                 <FaSignOutAlt /> <span>ออกจากระบบ</span>
               </button>
               {/* ✅ แสดงชื่อผู้ใช้ */}
-              <div className="px-5 py-2 rounded-md flex items-center gap-x-2 text-gray-700 bg-gray-200">
+              <Link
+                to="/profile" // ✅ เมื่อคลิกจะไปที่หน้าโปรไฟล์
+                className="px-5 py-2 rounded-md flex items-center gap-x-2 text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all cursor-pointer"
+              >
                 <FaUserCircle /> <span>{userName}</span>
-              </div>
+              </Link>
             </>
           ) : (
             <>
@@ -244,10 +247,13 @@ const Header = () => {
                     </button>
                   </Menu.Item>
                   <Menu.Item>
-                    <div className="w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md bg-gray-200">
+                    <Link
+                      to="/profile" // ✅ เมื่อคลิกจะไปที่ /profile (Profile.tsx)
+                      className="w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md bg-gray-200 hover:bg-gray-300 transition-all cursor-pointer"
+                    >
                       <FaUserCircle /> <span>{userName}</span>{" "}
-                      {/* ✅ เพิ่มชื่อผู้ใช้ */}
-                    </div>
+                      {/* ✅ แสดงชื่อผู้ใช้ */}
+                    </Link>
                   </Menu.Item>
                 </>
               ) : (
