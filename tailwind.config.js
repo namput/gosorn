@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         sans: ["Sarabun", "sans-serif"], // ✅ เนื้อหาใช้ Sarabun
         heading: ["Prompt", "sans-serif"], // ✅ หัวข้อใช้ Prompt
+        inter: ["Inter", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
+        noto: ["Noto Sans Thai", "sans-serif"],
       },
     },
   },

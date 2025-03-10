@@ -2,8 +2,8 @@ import { lazy, Suspense } from "react";
 
 // 📌 โหลด Component ตามชื่อ Template ที่ระบุ
 const templates: Record<string, any> = {
-  demo1: lazy(() => import("../templates/Demo1")),
-  demo2: lazy(() => import("../templates/Demo2")),
+  demo1: lazy(() => import("../templates/demo1/App").then((mod) => ({ default: mod.default }))),
+  demo2: lazy(() => import("../templates/demo2/App").then((mod) => ({ default: mod.default }))),
 };
 
 const DynamicTemplate: React.FC<{ template: string }> = ({ template }) => {

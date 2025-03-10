@@ -9,9 +9,10 @@ const subdomainConfig: Record<string, string> = {
 
 // 🔹 โหลด Component ตามชื่อ Template
 const templates: Record<string, any> = {
-  demo1: lazy(() => import("./templates/Demo1")),
-  demo2: lazy(() => import("./templates/Demo2")),
+  demo1: lazy(() => import("./templates/demo1/App").then((mod) => ({ default: mod.default }))),
+  demo2: lazy(() => import("./templates/demo2/App").then((mod) => ({ default: mod.default }))),
 };
+
 
 // 📌 ดึงค่า Subdomain
 const hostname = window.location.hostname;
@@ -19,6 +20,9 @@ const subdomain = hostname.split(".")[0];
 
 // 📌 ตรวจสอบว่า Subdomain มี Template หรือไม่
 const template = subdomainConfig[subdomain] || null;
+console.log("🔍 Subdomain:", subdomain);
+console.log("🔍 Template:", template);
+
 const TemplateComponent = template ? templates[template] : null;
 
 const Subdomain: React.FC = () => {
