@@ -11,7 +11,7 @@ function Demo1() {
   const [data, setData] = useState<TutorData | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:3000/demo/tutor/data")
+    fetch("https://apigusorn.neuatech.com/demo/tutor/data")
       .then((res) => res.json())
       .then((response) => setData(response.data));
   }, []);
