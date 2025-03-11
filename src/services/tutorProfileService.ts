@@ -27,6 +27,7 @@ const API_BASE_URL =
         email: string;
         username: string;
       };
+      template: string; // ค่าเริ่มต้นเป็นแทมแพลตแรก
     } | null;  // ✅ ให้ data รองรับ `null`
   }
   
