@@ -9,12 +9,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
-const API_BASE_URL =
-  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
-  const TEMPLATE_OPTIONS = [
-    { id: "aaa", name: "https://aaa.gusorn.com/", preview: "https://aaa.gusorn.com/preview.png" },
-    { id: "bbb", name: "https://bbb.gusorn.com/", preview: "https://bbb.gusorn.com/preview.png" },
-  ];
+const TEMPLATE_OPTIONS = [
+  {
+    id: "aaa",
+    name: "https://aaa.gusorn.com/",
+    preview: "https://aaa.gusorn.com/preview.png",
+  },
+  {
+    id: "bbb",
+    name: "https://bbb.gusorn.com/",
+    preview: "https://bbb.gusorn.com/preview.png",
+  },
+];
 const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
   const [loading, setLoading] = useState(false);
@@ -38,7 +44,9 @@ const TutorProfileForm = () => {
     price: "",
     template: TEMPLATE_OPTIONS[0].id, // ค่าเริ่มต้นเป็นแทมแพลตแรก
   });
-  const selectedTemplate = TEMPLATE_OPTIONS.find(t => t.id === profileData.template);
+  const selectedTemplate = TEMPLATE_OPTIONS.find(
+    (t) => t.id === profileData.template
+  );
   const loadProfile = async () => {
     setLoading(true);
     try {
@@ -97,7 +105,7 @@ const TutorProfileForm = () => {
   const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setProfileData({ ...profileData, template: e.target.value });
   };
-  
+
   // ✅ แจ้งเตือนเมื่อ subdomain ไม่ถูกต้อง
   const checkSubdomainValidity = () => {
     if (!profileData.subdomain || !validateSubdomain(profileData.subdomain)) {
@@ -326,7 +334,7 @@ const TutorProfileForm = () => {
             {profileData.profileImagePreview ? (
               <div className="relative w-36 h-36">
                 <img
-                  src={`${API_BASE_URL}${profileData.profileImagePreview}`} // ✅ แสดงรูปโดยตรง
+                  src={profileData.profileImagePreview} // ✅ แสดงรูปโดยตรง
                   className="w-full h-full rounded-full object-cover border-2 border-gray-300"
                 />
                 <button
@@ -371,7 +379,7 @@ const TutorProfileForm = () => {
                   className="w-full h-full rounded-lg object-cover"
                 >
                   <source
-                    src={`${API_BASE_URL}${profileData.introVideoPreview}`} // ✅ แสดงรูปโดยตรง
+                    src={profileData.introVideoPreview} // ✅ แสดงรูปโดยตรง
                     type="video/mp4"
                   />
                 </video>
@@ -778,7 +786,9 @@ const TutorProfileForm = () => {
             disabled={isEditing} // ✅ ถ้ามีโปรไฟล์อยู่แล้ว ห้ามแก้ไข Subdomain
           >
             {TEMPLATE_OPTIONS.map((template) => (
-              <option key={template.id} value={template.id}>{template.name}</option>
+              <option key={template.id} value={template.id}>
+                {template.name}
+              </option>
             ))}
           </select>
         </div>
