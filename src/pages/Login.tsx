@@ -102,6 +102,15 @@ const Login: React.FC = () => {
                 required
               />
             </div>
+             {/* ✅ เพิ่มลิงก์ "ลืมรหัสผ่าน" */}
+             <div className="text-right">
+              <Link
+                to="/forgot-password"
+                className="text-blue-500 text-sm hover:underline"
+              >
+                ลืมรหัสผ่าน?
+              </Link>
+            </div>
             <button
               type="submit"
               disabled={loading}

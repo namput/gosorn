@@ -19,6 +19,8 @@ import Forum from "./pages/Forum";
 import CreateThread from "./pages/CreateThread";
 import ThreadDetail from "./pages/ThreadDetail";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App: React.FC = () => {
   return (
@@ -30,6 +32,8 @@ const App: React.FC = () => {
             <Route path="/forum" element={<Forum />} />
             
             <Route path="/forum/:id" element={<ThreadDetail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* ✅ Public Route */}
             <Route element={<PublicRoute />}>
