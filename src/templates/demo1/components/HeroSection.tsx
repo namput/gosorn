@@ -82,8 +82,6 @@ const HeroSection: React.FC<Props> = ({ data }) => {
             className="w-full rounded-lg"
             src={data.introVideo}
             poster={data.profileImage}
-            autoPlay
-           
             playsInline
           />
           {/* ปุ่ม Play/Pause */}
