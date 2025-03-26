@@ -3,6 +3,7 @@ const API_BASE_URL =
   export interface TutorProfileResponse {
     success: boolean;
     data: {
+      tutorId: number;
       subjects: string[];
       levels: string[];
       teachingMethods: string[];

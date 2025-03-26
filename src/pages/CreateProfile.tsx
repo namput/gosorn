@@ -25,7 +25,7 @@ const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
   const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
-    tutorId: "",
+    id: null as number | null, // ✅ เพิ่ม `id` สำหรับแก้ไขโปรไฟล์
     fullName: "",
     phone: "",
     email: "",
@@ -58,6 +58,7 @@ const TutorProfileForm = () => {
 
         setProfileData((prev) => ({
           ...prev,
+          id: profile?.id || null,
           fullName: profile?.name || "",
           email: profile?.email || "",
           phone: profile?.phone || "",
@@ -191,10 +192,12 @@ const TutorProfileForm = () => {
         }
       }
     });
+console.log('isEditing', isEditing);
+console.log('profileData', profileData);
 
     // ✅ กรณีเป็นโหมดแก้ไข ให้เพิ่ม `tutorId`
-    if (isEditing && profileData.tutorId) {
-      formData.append("tutorId", profileData.tutorId);
+    if (isEditing && profileData.id) {
+      formData.append("tutorId", profileData.id.toString());
     }
 
     console.log("📤 FormData ก่อนส่ง:", Object.fromEntries(formData.entries()));
@@ -854,7 +857,7 @@ const TutorProfileForm = () => {
               type="button"
               onClick={() => {
                 setProfileData({
-                  tutorId: "",
+                  id: null,
                   fullName: "",
                   phone: "",
                   email: "",
