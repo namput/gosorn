@@ -192,8 +192,6 @@ const TutorProfileForm = () => {
         }
       }
     });
-console.log('isEditing', isEditing);
-console.log('profileData', profileData);
 
     // ✅ กรณีเป็นโหมดแก้ไข ให้เพิ่ม `tutorId`
     if (isEditing && profileData.id) {
@@ -232,7 +230,7 @@ console.log('profileData', profileData);
   }, [profileData.profileImagePreview, profileData.introVideoPreview]);
 
   const validateForm = () => {
-    if (!profileData.profileImage) {
+    if (!profileData.profileImage && !profileData.id) {
       toast.error("❌ กรุณาอัปโหลดรูปโปรไฟล์", { position: "top-right" });
       return false;
     }
