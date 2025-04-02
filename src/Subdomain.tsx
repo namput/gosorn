@@ -5,12 +5,14 @@ import NotFound from "./pages/NotFound";
 const subdomainConfig: Record<string, string> = {
   aaa: "demo1",
   bbb: "demo2",
+  ccc: "demo3",
 };
 
 // 🔹 โหลด Component ตามชื่อ Template
 const templates: Record<string, any> = {
   demo1: lazy(() => import("./templates/demo1/App").then((mod) => ({ default: mod.default }))),
   demo2: lazy(() => import("./templates/demo2/App").then((mod) => ({ default: mod.default }))),
+  demo3: lazy(() => import("./templates/demo3/App").then((mod) => ({ default: mod.default }))),
 };
 
 

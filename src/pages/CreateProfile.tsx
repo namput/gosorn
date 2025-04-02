@@ -11,14 +11,20 @@ const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
 const TEMPLATE_OPTIONS = [
   {
-    id: "aaa",
-    name: "https://aaa.gusorn.com/",
-    preview: "https://aaa.gusorn.com/preview.png",
+    id: "temp1",
+    name: "แทมแพลตที่ 1",
+    preview: "https://aaa.gusorn.com",
+
   },
   {
-    id: "bbb",
-    name: "https://bbb.gusorn.com/",
-    preview: "https://bbb.gusorn.com/preview.png",
+    id: "temp2",
+    name: "แทมแพลตที่ 2",
+    preview: "https://bbb.gusorn.com",
+  },
+  {
+    id: "temp3",
+    name: "แทมแพลตที่ 3",
+    preview: "https://ccc.gusorn.com",
   },
 ];
 const TutorProfileForm = () => {
@@ -797,7 +803,7 @@ const TutorProfileForm = () => {
           <div className="mt-4">
             <label className="block font-semibold">ตัวอย่างแทมแพลต</label>
             <iframe
-              src={selectedTemplate.name}
+              src={selectedTemplate.preview}
               className="w-full h-96 rounded-lg shadow-md border"
               title="Template Preview"
             ></iframe>

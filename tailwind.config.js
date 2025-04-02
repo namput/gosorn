@@ -9,6 +9,7 @@ export default {
         inter: ["Inter", "sans-serif"],
         poppins: ["Poppins", "sans-serif"],
         noto: ["Noto Sans Thai", "sans-serif"],
+        kanit: ['Kanit', 'sans-serif'],
       },
     },
   },
