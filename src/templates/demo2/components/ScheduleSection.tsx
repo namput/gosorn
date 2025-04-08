@@ -20,35 +20,44 @@ const ScheduleSection: React.FC<Props> = ({ data }) => {
 
         {/* ตารางตารางสอน */}
         <div className="mt-8 overflow-x-auto">
-          <table className="w-full border-collapse text-white text-opacity-90">
-            <thead>
-              <tr className="bg-white bg-opacity-20">
-                <th className="p-4 border border-white/30 text-lg">📅 วัน</th>
-                <th className="p-4 border border-white/30 text-lg">⏰ เวลา</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.schedule.map((item, index) => (
-                <motion.tr
-                  key={index}
-                  className="border border-white/30 transition duration-300 ease-in-out hover:bg-white hover:bg-opacity-20"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <td className="p-4 border border-white/30 flex items-center justify-center gap-2 text-lg">
-                    <Calendar size={24} className="text-yellow-400" />
-                    {item.day}
-                  </td>
-                  <td className="p-4 border border-white/30 flex items-center justify-center gap-2 text-lg">
-                    <Clock size={24} className="text-green-400" />
-                    {item.time}
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+  <table className="w-full border-collapse text-white text-opacity-90">
+    <thead>
+      <tr className="bg-white bg-opacity-20">
+        <th className="p-4 border border-white/30 text-lg text-center">📅 วัน</th>
+        <th className="p-4 border border-white/30 text-lg text-center">⏰ เวลา</th>
+      </tr>
+    </thead>
+    <tbody>
+      {data.schedule.map((item, index) => (
+        <motion.tr
+          key={index}
+          className="border border-white/30 transition duration-300 ease-in-out hover:bg-white hover:bg-opacity-20"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          <td className="p-4 border border-white/30 text-lg text-center">
+            <div className="flex flex-col items-center gap-2">
+              <Calendar size={24} className="text-yellow-400" />
+              <span>{item.day}</span>
+            </div>
+          </td>
+          <td className="p-4 border border-white/30 text-lg text-center">
+            <div className="flex flex-col items-center gap-2">
+              <Clock size={24} className="text-green-400" />
+              <div className="flex flex-col">
+                {item.time.split(',').map((t, i) => (
+                  <span key={i}>{t.trim()}</span>
+                ))}
+              </div>
+            </div>
+          </td>
+        </motion.tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
       </motion.div>
     </section>
   );
