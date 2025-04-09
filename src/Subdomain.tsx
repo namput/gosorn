@@ -1,10 +1,61 @@
 import { useEffect, Suspense, useState } from "react";
 import { getWebSite } from "./services/webSiteService";
+// 🔹 Template
+export interface Template {
+  id: number;
+  templateName: string;
+  templateUrl: string;
+  createdAt?: string | null;
+  updatedAt?: string | null;
+}
 
-// 🔹 Types...
-export interface Template { /* ... */ }
-export interface TutorWebsite { /* ... */ }
-export interface TemplateResponse { /* ... */ }
+// 🔹 Course
+export interface Course {
+  name: string;
+  details: string;
+  duration: string;
+  price: string;
+}
+
+// 🔹 Schedule
+export interface Schedule {
+  day: string;
+  time: string;
+}
+
+// 🔹 TutorWebsite
+export interface TutorWebsite {
+  id: number;
+  userId: number;
+  subdomain: string;
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  bio: string;
+  profileImage: string;
+  introVideo: string;
+  templateId: number;
+  template: Template;
+  price: number;
+  experience?: string | null;
+  subjects: string[];
+  levels: string[];
+  teachingMethods: string[];
+  ageGroups: string[];
+  courses: Course[];
+  schedule: Schedule[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// 🔹 TemplateResponse
+export interface TemplateResponse {
+  success: boolean;
+  website?: TutorWebsite;
+  message?: string;
+}
+
 
 // 🔹 Fancy Loading Component
 const FancyLoader = () => (
@@ -27,18 +78,29 @@ const Subdomain: React.FC = () => {
   useEffect(() => {
     const fetchWebsite = async () => {
       try {
-        const loadWeb = await getWebSite(subdomain);
+        if(subdomain === "demo1" || subdomain === "demo2" || subdomain === "demo3") {
+          const templateId = subdomain === "demo1" ? 1 : subdomain === "demo2" ? 2 : 3;
+          const loadWeb = await getWebSite(subdomain);
+          const websiteData = loadWeb.website as TutorWebsite;
+          setWebsite(websiteData);
+  
+          const mod = await import( /* @vite-ignore */ `./templates/demo${templateId}/App`);
+          setTemplateComponent(() => mod.default);
+        }else{
+          const loadWeb = await getWebSite(subdomain);
 
-        if (!loadWeb || !loadWeb.success || !loadWeb.website) {
-          window.location.href = "https://www.gusorn.com/404";
-          return;
+          if (!loadWeb || !loadWeb.success || !loadWeb.website) {
+            window.location.href = "https://www.gusorn.com/404";
+            return;
+          }
+  
+          const websiteData = loadWeb.website as TutorWebsite;
+          setWebsite(websiteData);
+  
+          const mod = await import( /* @vite-ignore */ `./templates/demo${websiteData.templateId}/App`);
+          setTemplateComponent(() => mod.default);
         }
-
-        const websiteData = loadWeb.website;
-        setWebsite(websiteData);
-
-        const mod = await import( /* @vite-ignore */ `./templates/demo${websiteData.templateId}/App`);
-        setTemplateComponent(() => mod.default);
+    
 
         // 🕐 Delay เล็กน้อยเพื่อโชว์ loader อย่าง smooth
         setTimeout(() => setIsLoading(false), 500);
@@ -57,7 +119,7 @@ const Subdomain: React.FC = () => {
 
   return (
     <Suspense fallback={<FancyLoader />}>
-      <TemplateComponent website={website} />
+      <TemplateComponent website={website} subdomain={subdomain} />
     </Suspense>
   );
 };
