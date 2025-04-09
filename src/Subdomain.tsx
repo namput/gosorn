@@ -79,27 +79,35 @@ const Subdomain: React.FC = () => {
     const fetchWebsite = async () => {
       try {
         if(subdomain === "demo1" || subdomain === "demo2" || subdomain === "demo3") {
+          console.log("11111");
+          
           const templateId = subdomain === "demo1" ? 1 : subdomain === "demo2" ? 2 : 3;
           const loadWeb = await getWebSite(subdomain);
+          console.log("22222");
+          
           const websiteData = loadWeb.website as TutorWebsite;
           setWebsite(websiteData);
+  console.log("33333");
   
           const mod = await import( /* @vite-ignore */ `./templates/demo${templateId}/App`);
+          console.log("44444",mod);
           setTemplateComponent(() => mod.default);
         }else{
           const loadWeb = await getWebSite(subdomain);
+console.log("55555");
 
           if (!loadWeb || !loadWeb.success || !loadWeb.website) {
-            // window.location.href = "https://www.gusorn.com/404";
-            console.log("ไม่พบ template:");
-            
+            window.location.href = "https://www.gusorn.com/404";
             return;
           }
+  console.log("66666");
   
           const websiteData = loadWeb.website as TutorWebsite;
           setWebsite(websiteData);
+  console.log("77777");
   
           const mod = await import( /* @vite-ignore */ `./templates/demo${websiteData.templateId}/App`);
+          console.log("88888",mod);
           setTemplateComponent(() => mod.default);
         }
     
@@ -108,8 +116,6 @@ const Subdomain: React.FC = () => {
         setTimeout(() => setIsLoading(false), 500);
       } catch (error) {
         console.error("ไม่พบ template:", error);
-        console.log("ไม่พบ template:2222", error);
-        
         // window.location.href = "https://www.gusorn.com/404";
       }
     };
