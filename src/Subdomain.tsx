@@ -3,9 +3,9 @@ import NotFound from "./pages/NotFound";
 
 // 🔹 Mapping Subdomain -> Template
 const subdomainConfig: Record<string, string> = {
-  aaa: "demo1",
-  bbb: "demo2",
-  ccc: "demo3",
+  demo1: "demo1",
+  demo2: "demo2",
+  demo3: "demo3",
 };
 
 // 🔹 โหลด Component ตามชื่อ Template

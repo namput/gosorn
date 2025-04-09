@@ -28,10 +28,22 @@ const API_BASE_URL =
         email: string;
         username: string;
       };
-      template: string; // ค่าเริ่มต้นเป็นแทมแพลตแรก
+      templateId: number; // ค่าเริ่มต้นเป็นแทมแพลตแรก
     } | null;  // ✅ ให้ data รองรับ `null`
   }
   
+  export interface Template {
+    id: number;
+    templateName: string;
+    templateUrl: string;
+    createdAt?: string | null;
+    updatedAt?: string | null;
+  }
+  
+  export interface TemplateResponse {
+    success: boolean;
+    templates: Template[];
+  }
   
 
   
@@ -93,3 +105,35 @@ const API_BASE_URL =
       return { success: false, data: null } as TutorProfileResponse;
     }
   };
+
+
+  export const getTemplates = async (): Promise<TemplateResponse> => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("❌ ผู้ใช้ไม่ได้เข้าสู่ระบบ");
+  
+      const response = await fetch(`${API_BASE_URL}/templates`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      if (!response.ok) {
+        throw new Error("❌ ไม่สามารถโหลดข้อมูลแทมแพลตได้");
+      }
+  
+      const json = await response.json();
+      console.log("🔍 Templates Loaded:", json);
+      return json as TemplateResponse;
+    } catch (error) {
+      console.error("❌ เกิดข้อผิดพลาดในการโหลดแทมแพลต:", error);
+      return {
+        success: false,
+        templates: [],
+      };
+    }
+  };
+  

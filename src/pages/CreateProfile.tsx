@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaRedo, FaSave, FaTrash, FaUpload } from "react-icons/fa";
 import {
+  getTemplates,
   getTutorProfile,
   submitTutorProfile,
+  Template,
 } from "../services/tutorProfileService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,18 +15,17 @@ const TEMPLATE_OPTIONS = [
   {
     id: "temp1",
     name: "แทมแพลตที่ 1",
-    preview: "https://aaa.gusorn.com",
-
+    preview: "https://demo1.gusorn.com",
   },
   {
     id: "temp2",
     name: "แทมแพลตที่ 2",
-    preview: "https://bbb.gusorn.com",
+    preview: "https://demo2.gusorn.com",
   },
   {
     id: "temp3",
     name: "แทมแพลตที่ 3",
-    preview: "https://ccc.gusorn.com",
+    preview: "https://demo3.gusorn.com",
   },
 ];
 const TutorProfileForm = () => {
@@ -48,15 +49,21 @@ const TutorProfileForm = () => {
     courses: [{ name: "", details: "", duration: "", price: "" }],
     schedule: [{ day: "", time: "" }],
     price: "",
-    template: TEMPLATE_OPTIONS[0].id, // ค่าเริ่มต้นเป็นแทมแพลตแรก
+    templateId: 1, // ค่าเริ่มต้นเป็นแทมแพลตแรก
   });
-  const selectedTemplate = TEMPLATE_OPTIONS.find(
-    (t) => t.id === profileData.template
-  );
+  const [templates, setTemplates] = useState<Template[]>([]);
+
   const loadProfile = async () => {
     setLoading(true);
     try {
+      // ✅ เรียก API โหลดข้อมูลโปรไฟล์
+      const loadTemplate = await getTemplates(); // ✅ เรียก API โหลดข้อมูล
       const response = await getTutorProfile(); // ✅ เรียก API โหลดข้อมูล
+
+      if (loadTemplate.success && loadTemplate.templates) {
+        const loadTemplates = loadTemplate.templates;
+        setTemplates(loadTemplates);
+      }
 
       if (response.success && response.data) {
         // ✅ ตรวจสอบ `response.data`
@@ -83,7 +90,7 @@ const TutorProfileForm = () => {
             { name: "", details: "", duration: "", price: "" },
           ],
           schedule: profile?.schedule || [{ day: "", time: "" }],
-          template: profile?.template || TEMPLATE_OPTIONS[0].id,
+          templateId: profile?.templateId || 1,
         }));
         console.log("🚀 โหลดข้อมูลโปรไฟล์สำเร็จ:", profile);
         setIsEditing(true);
@@ -110,7 +117,7 @@ const TutorProfileForm = () => {
     setProfileData({ ...profileData, subdomain: newSubdomain });
   };
   const handleTemplateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setProfileData({ ...profileData, template: e.target.value });
+    setProfileData({ ...profileData, templateId: Number(e.target.value) });
   };
 
   // ✅ แจ้งเตือนเมื่อ subdomain ไม่ถูกต้อง
@@ -314,7 +321,9 @@ const TutorProfileForm = () => {
     }
     return true;
   };
-
+  const selectedTemplate = templates.find(
+    (t) => t.id === profileData.templateId
+  );
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg">
       <h2 className="text-3xl font-bold text-center text-blue-800">
@@ -785,30 +794,32 @@ const TutorProfileForm = () => {
           </button>
         </div>
         <div>
-          <label className="block font-semibold">เลือกแทมแพลตเว็บไซต์</label>
-          <select
-            className="w-full px-4 py-2 border rounded-lg"
-            value={profileData.template}
-            onChange={handleTemplateChange}
-            disabled={isEditing} // ✅ ถ้ามีโปรไฟล์อยู่แล้ว ห้ามแก้ไข Subdomain
-          >
-            {TEMPLATE_OPTIONS.map((template) => (
-              <option key={template.id} value={template.id}>
-                {template.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedTemplate && (
-          <div className="mt-4">
-            <label className="block font-semibold">ตัวอย่างแทมแพลต</label>
-            <iframe
-              src={selectedTemplate.preview}
-              className="w-full h-96 rounded-lg shadow-md border"
-              title="Template Preview"
-            ></iframe>
-          </div>
-        )}
+  <label className="block font-semibold">เลือกแทมแพลตเว็บไซต์</label>
+  <select
+    className="w-full px-4 py-2 border rounded-lg"
+    value={profileData.templateId}
+    onChange={handleTemplateChange}
+    disabled={isEditing}
+  >
+    {templates.map((template) => (
+      <option key={template.id} value={template.id}>
+        {template.templateName}
+      </option>
+    ))}
+  </select>
+</div>
+
+{selectedTemplate && (
+  <div className="mt-4">
+    <label className="block font-semibold">ตัวอย่างแทมแพลต {selectedTemplate.templateUrl}</label>
+    <iframe
+      src={selectedTemplate.templateUrl}
+      className="w-full h-96 rounded-lg shadow-md border"
+      title="Template Preview"
+    ></iframe>
+  </div>
+)}
+
         <div className="flex justify-center gap-4 mt-6">
           <div className="flex justify-center gap-4 mt-6">
             {/* ✅ ปุ่มบันทึกโปรไฟล์ */}
@@ -878,7 +889,7 @@ const TutorProfileForm = () => {
                   courses: [{ name: "", details: "", duration: "", price: "" }],
                   schedule: [{ day: "", time: "" }],
                   price: "",
-                  template: TEMPLATE_OPTIONS[0].id, // ค่าเริ่มต้นเป็นแทมแพลตแรก
+                  templateId: 1, // ค่าเริ่มต้นเป็นแทมแพลตแรก
                 });
               }}
               className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all shadow-md bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-xl"
