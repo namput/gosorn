@@ -1,9 +1,9 @@
-import { TutorData } from "../types";
 import { motion } from "framer-motion";
 import { Calendar, Clock } from "lucide-react";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface Props {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const ScheduleSection: React.FC<Props> = ({ data }) => {

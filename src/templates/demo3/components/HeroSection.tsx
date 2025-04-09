@@ -1,9 +1,9 @@
 // HeroSection.tsx
 import React from "react";
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface HeroSectionProps {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ data }) => {

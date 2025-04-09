@@ -1,9 +1,9 @@
 // CoursesSection.tsx
 import React from "react";
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface CoursesSectionProps {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const CoursesSection: React.FC<CoursesSectionProps> = ({ data }) => {

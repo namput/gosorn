@@ -1,9 +1,9 @@
 // ContactSection.tsx
 import React from "react";
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface ContactSectionProps {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const ContactSection: React.FC<ContactSectionProps> = ({ data }) => {

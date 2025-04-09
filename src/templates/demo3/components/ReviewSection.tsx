@@ -1,9 +1,9 @@
 // ReviewSection.tsx
 import React, { useState } from "react";
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface ReviewSectionProps {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const ReviewSection: React.FC<ReviewSectionProps> = ({ data }) => {

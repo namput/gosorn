@@ -1,9 +1,9 @@
 // CalendarSection.tsx
 import React from "react";
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface CalendarSectionProps {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const CalendarSection: React.FC<CalendarSectionProps> = ({ data }) => {

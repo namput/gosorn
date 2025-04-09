@@ -1,9 +1,9 @@
-import { TutorData } from "../types";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface Props {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const ContactSection: React.FC<Props> = ({ data }) => {

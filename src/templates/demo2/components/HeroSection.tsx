@@ -1,8 +1,8 @@
-import { TutorData } from "../types";
+import { TutorWebsite } from "../../../Subdomain";
 import { motion } from "framer-motion";
 
 interface Props {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const HeroSection: React.FC<Props> = ({ data }) => {

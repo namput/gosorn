@@ -1,10 +1,10 @@
-import { TutorData } from "../types";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { PlayCircle, PauseCircle } from "lucide-react";
+import { TutorWebsite } from "../../../Subdomain";
 
 interface Props {
-  data: TutorData;
+  data: TutorWebsite;
 }
 
 const HeroSection: React.FC<Props> = ({ data }) => {
