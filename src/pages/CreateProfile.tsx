@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
-const MAX_VIDEO_SIZE_MB = 1024; // 50MB
+const MAX_VIDEO_SIZE_MB = 900; // 50MB
 
 const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
