@@ -795,7 +795,7 @@ const TutorProfileForm = () => {
 
 {selectedTemplate && (
   <div className="mt-4">
-    <label className="block font-semibold">ตัวอย่างแทมแพลต {selectedTemplate.templateUrl}</label>
+    <label className="block font-semibold">ตัวอย่างแทมแพลต</label>
     <iframe
       src={selectedTemplate.templateUrl}
       className="w-full h-96 rounded-lg shadow-md border"
