@@ -11,23 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const MAX_IMAGE_SIZE_MB = 5; // 2MB
 const MAX_VIDEO_SIZE_MB = 1024; // 50MB
-const TEMPLATE_OPTIONS = [
-  {
-    id: "temp1",
-    name: "แทมแพลตที่ 1",
-    preview: "https://demo1.gusorn.com",
-  },
-  {
-    id: "temp2",
-    name: "แทมแพลตที่ 2",
-    preview: "https://demo2.gusorn.com",
-  },
-  {
-    id: "temp3",
-    name: "แทมแพลตที่ 3",
-    preview: "https://demo3.gusorn.com",
-  },
-];
+
 const TutorProfileForm = () => {
   const [isEditing, setIsEditing] = useState(false); // ✅ เช็คว่าเป็นโหมดแก้ไขหรือไม่
   const [loading, setLoading] = useState(false);
