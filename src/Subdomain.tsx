@@ -84,8 +84,19 @@ const Subdomain: React.FC = () => {
           const websiteData = loadWeb.website as TutorWebsite;
           setWebsite(websiteData);
   
-          const mod = await import( `./templates/demo${templateId}/App`);
+          const templateModules = import.meta.glob("./templates/demo*/App.tsx");
+
+          const path = `./templates/demo${templateId}/App.tsx`;
+          
+          const mod = await templateModules[path]?.() as { default: React.ComponentType<any> };
+
+          if (!mod || !mod.default) {
+            throw new Error(`Template not found: ${path}`);
+          }
+          
           setTemplateComponent(() => mod.default);
+        
+          
         }else{
           const loadWeb = await getWebSite(subdomain);
 
@@ -97,8 +108,20 @@ const Subdomain: React.FC = () => {
           const websiteData = loadWeb.website as TutorWebsite;
           setWebsite(websiteData);
   
-          const mod = await import( `./templates/demo${websiteData.templateId}/App`);
+          const templateModules = import.meta.glob("./templates/demo*/App.tsx");
+
+          const path = `./templates/demo${websiteData.templateId}/App.tsx`;
+          
+          const mod = await templateModules[path]?.() as { default: React.ComponentType<any> };
+
+          if (!mod || !mod.default) {
+            throw new Error(`Template not found: ${path}`);
+          }
+          
           setTemplateComponent(() => mod.default);
+          
+          
+          
         }
     
 
