@@ -21,6 +21,17 @@ import ThreadDetail from "./pages/ThreadDetail";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import StudentDashboard from "./pages/student";
+import StudentLoginVerify from "./pages/student/login-verify";
+import StudentLoginRequest from "./pages/student/login-request";
+import StudentLogout from "./pages/student/logout";
+import StartSearchTutor from "./pages/student/search-tutor/start";
+import StudentDetailsForm from "./pages/student/search-tutor/details";
+import MatchTutorPage from "./pages/student/search-tutor/match";
+import BookingPage from "./pages/student/booking/[tutorId]";
+import BookingConfirmPage from "./pages/student/booking/confirm";
+import MessagesPage from "./pages/student/messages";
+import StudentProfilePage from "./pages/student/profile";
 
 const App: React.FC = () => {
   return (
@@ -40,6 +51,19 @@ const App: React.FC = () => {
               <Route path="/register" element={<Register />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/login" element={<Login />} />
+
+                   {/* 🎯 หน้า Student */}
+              <Route path="/student/login-request" element={<StudentLoginRequest />} />
+              <Route path="/student/login-verify" element={<StudentLoginVerify />} />
+              <Route path="/student/logout" element={<StudentLogout />} />
+              <Route path="/student" element={<StudentDashboard />} />
+              <Route path="/student/search-tutor/start" element={<StartSearchTutor />} />
+              <Route path="/student/search-tutor/details" element={<StudentDetailsForm />} />
+              <Route path="/student/search-tutor/match" element={<MatchTutorPage/>} />
+              <Route path="/student/booking/:tutorId" element={<BookingPage />} />
+              <Route path="/student/booking/confirm" element={<BookingConfirmPage />} />
+              <Route path="/student/messages" element={<MessagesPage />} />
+              <Route path="/student/profile" element={<StudentProfilePage />} />
             </Route>
 
             {/* 🔐 Private Route (เฉพาะผู้ใช้ทั่วไป) */}
