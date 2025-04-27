@@ -2,194 +2,180 @@ import { useState } from "react";
 import {
   FaBars,
   FaTimes,
-  FaChalkboardTeacher,
-  FaBook,
+  FaChalkboard,
+  FaUser,
   FaCalendarAlt,
+  FaEnvelope,
+  FaBookOpen,
+  FaStar,
+  FaBullseye,
   FaMoneyBillWave,
-  FaCog,
+  FaFileAlt,
+  FaLifeRing,
   FaSignOutAlt,
   FaBell,
-  FaEnvelope,
   FaMoon,
   FaSun,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import DashboardHome from "./dashboard/index";
+import ProfileManagement from "./profile/index";
+import CalendarManagement from "./calendar/index";
+import MessagesCenter from "./messages";
+import CoursesManagement from "./courses";
+import ReviewsManagement from "./reviews";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
   const tabs = [
-    { id: "overview", label: "ภาพรวม", icon: <FaChalkboardTeacher /> },
-    { id: "courses", label: "คอร์สของฉัน", icon: <FaBook /> },
-    { id: "schedule", label: "ตารางสอน", icon: <FaCalendarAlt /> },
+    { id: "dashboard", label: "Dashboard", icon: <FaChalkboard /> },
+    { id: "profile", label: "โปรไฟล์", icon: <FaUser /> },
+    { id: "calendar", label: "ปฏิทิน/การจอง", icon: <FaCalendarAlt /> },
     { id: "messages", label: "ข้อความ", icon: <FaEnvelope /> },
-    { id: "earnings", label: "รายได้", icon: <FaMoneyBillWave /> },
-    { id: "settings", label: "ตั้งค่า", icon: <FaCog /> },
+    { id: "courses", label: "คอร์สเรียน", icon: <FaBookOpen /> },
+    { id: "reviews", label: "รีวิว", icon: <FaStar /> },
+    { id: "promotions", label: "โปรโมชั่น", icon: <FaBullseye /> },
+    { id: "payments", label: "การเงิน", icon: <FaMoneyBillWave /> },
+    { id: "terms", label: "ข้อกำหนด", icon: <FaFileAlt /> },
+    { id: "help", label: "ศูนย์ช่วยเหลือ", icon: <FaLifeRing /> },
   ];
 
   return (
-    <div
-      className={`flex h-screen transition-all ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-800"
-      }`}
-    >
-      {/* Sidebar (Collapsible) */}
-      <motion.div
-        animate={{ width: isSidebarOpen ? 250 : 102 }}
-        className={`h-full shadow-lg p-4 flex flex-col transition-all ${
-          darkMode ? "bg-gray-800" : "bg-white"
-        }`}
-      >
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className={`mb-6 text-gray-700 ${isSidebarOpen?'self-end':'self-center'}`}
-        >
-          {isSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-        </button>
-
-        <nav
-          className={`flex flex-col ${
-            isSidebarOpen ? "items-start" : "items-center"
-          } space-y-3 mt-4`}
-        >
-          {tabs.map((tab) => (
-            <motion.button
-              key={tab.id}
-              className={`flex items-center w-full px-4 py-3 rounded-lg transition-all ${
-                activeTab === tab.id
-                  ? darkMode
-                    ? "bg-gray-700 text-white"
-                    : "bg-blue-600 text-white"
-                  : "hover:bg-gray-200 text-gray-700"
-              }`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {/* ✅ ปรับไอคอนให้เป็นวงกลมเมื่อ Sidebar ถูกย่อ */}
-              <span
-                className={`flex items-center justify-center ${
-                  isSidebarOpen
-                    ? "text-xl w-6"
-                    : "text-lg w-10 h-10 bg-gray-200 rounded-full"
-                }`}
-              >
-                {tab.icon}
-              </span>
-              {/* ✅ แสดงชื่อเมนูเมื่อ Sidebar เปิด */}
-              {isSidebarOpen && (
-                <span className="ml-3 text-base">{tab.label}</span>
-              )}
-            </motion.button>
-          ))}
-        </nav>
-
-        {/* Logout Button */}
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          className="mt-auto text-red-600 px-4 py-3 rounded-lg hover:bg-red-100 flex items-center gap-2"
-        >
-          <FaSignOutAlt /> {isSidebarOpen && "ออกจากระบบ"}
-        </motion.button>
-      </motion.div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6">
-        {/* Title & Notifications */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">
-            {tabs.find((t) => t.id === activeTab)?.label}
-          </h1>
-          <div className="flex items-center gap-4">
-            {/* Notification Button */}
-            <button
-              className={`p-3 rounded-full ${
-                darkMode
-                  ? "bg-gray-700 hover:bg-gray-600"
-                  : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              <FaBell />
-            </button>
-
-            {/* Toggle Dark Mode */}
-            <button
-              className="p-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-all"
-              onClick={() => setDarkMode(!darkMode)}
-            >
-              {darkMode ? <FaSun /> : <FaMoon />}
-            </button>
-          </div>
-        </div>
-
-        {/* Content Cards */}
-        <div
-          className={`p-6 rounded-lg shadow-lg transition-all ${
-            darkMode ? "bg-gray-800 text-white" : "bg-white"
+    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 transition-all">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <motion.div
+          animate={{ width: isSidebarOpen ? 250 : 80 }}
+          className={`min-h-screen p-4 flex flex-col justify-between shadow-md transition-all ${
+            darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-700"
           }`}
         >
-          {activeTab === "overview" && <OverviewSection darkMode={darkMode} />}
-          {activeTab === "courses" && <CoursesSection />}
-          {activeTab === "schedule" && <ScheduleSection />}
-          {activeTab === "messages" && <MessagesSection />}
-          {activeTab === "earnings" && <EarningsSection />}
-          {activeTab === "settings" && <SettingsSection />}
-        </div>
+          {/* Top Section */}
+          <div>
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={`mb-8 transition-all ${isSidebarOpen ? "self-end" : "self-center"}`}
+            >
+              {isSidebarOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+            </button>
+
+            <nav className={`flex flex-col gap-2 ${isSidebarOpen ? "items-start" : "items-center"}`}>
+              {tabs.map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  whileHover={{ scale: 1.05 }}
+                  className={`flex items-center w-full px-3 py-3 rounded-2xl transition-all ${
+                    activeTab === tab.id
+                      ? darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-blue-600 text-white"
+                      : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  <div
+                    className={`flex items-center justify-center ${
+                      isSidebarOpen
+                        ? "text-xl w-8 h-8"
+                        : "text-xl w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full"
+                    }`}
+                  >
+                    {tab.icon}
+                  </div>
+                  {isSidebarOpen && (
+                    <span className="ml-4 text-sm font-medium">{tab.label}</span>
+                  )}
+                </motion.button>
+              ))}
+            </nav>
+          </div>
+
+          {/* Bottom Section: Logout */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center justify-center text-red-500 w-full mt-6"
+          >
+            <FaSignOutAlt size={20} />
+            {isSidebarOpen && <span className="ml-3 text-sm font-medium">ออกจากระบบ</span>}
+          </motion.button>
+        </motion.div>
+
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col">
+          <div className="flex-1 p-6">
+            {/* Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+                {tabs.find((t) => t.id === activeTab)?.label}
+              </h1>
+
+              {/* Notifications and Dark Mode */}
+              <div className="flex items-center gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  className={`p-3 rounded-full ${
+                    darkMode
+                      ? "bg-gray-700 hover:bg-gray-600 text-white"
+                      : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                  }`}
+                >
+                  <FaBell />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ rotate: 180 }}
+                  className="p-3 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-all"
+                  onClick={() => setDarkMode(!darkMode)}
+                >
+                  {darkMode ? <FaSun /> : <FaMoon />}
+                </motion.button>
+              </div>
+            </div>
+
+            {/* Main Section Content */}
+            <div className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-xl transition-all">
+              <SectionContent activeTab={activeTab} darkMode={darkMode} />
+            </div>
+          </div>
+
+  
+        </main>
       </div>
     </div>
   );
 };
 
-// 📌 Section Components
-const OverviewSection = ({ darkMode }: { darkMode: boolean }) => (
-  <div>
-    <h2 className="text-xl font-semibold mb-4">📊 ภาพรวม</h2>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <Card title="📚 คอร์สที่เปิดสอน" value="10 คอร์ส" darkMode={darkMode} />
-      <Card title="👨‍🎓 จำนวนนักเรียน" value="250 คน" darkMode={darkMode} />
-      <Card title="💰 รายได้รวม" value="฿15,000" darkMode={darkMode} />
-    </div>
-  </div>
-);
-
-const CoursesSection = () => <SectionTemplate title="📚 คอร์สของฉัน" />;
-const ScheduleSection = () => <SectionTemplate title="📅 ตารางสอน" />;
-const MessagesSection = () => <SectionTemplate title="💬 ข้อความ" />;
-const EarningsSection = () => <SectionTemplate title="💰 รายได้และการเงิน" />;
-const SettingsSection = () => <SectionTemplate title="⚙️ ตั้งค่าบัญชี" />;
-
-const SectionTemplate = ({ title }: { title: string }) => (
-  <div>
-    <h2 className="text-xl font-semibold">{title}</h2>
-    <p className="text-gray-400">กำลังดำเนินการ...</p>
-  </div>
-);
-
-// 📌 Card Component
-const Card = ({
-  title,
-  value,
-  darkMode,
-}: {
-  title: string;
-  value: string;
-  darkMode: boolean;
-}) => (
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className={`p-5 rounded-2xl shadow-inner text-center transition-all ${
-      darkMode ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-800"
-    }`}
-  >
-    <h3 className="text-lg font-semibold">{title}</h3>
-    <p
-      className={`text-2xl font-bold ${
-        darkMode ? "text-blue-400" : "text-blue-600"
-      } mt-2`}
-    >
-      {value}
-    </p>
-  </motion.div>
-);
+const SectionContent = ({ activeTab, darkMode }: { activeTab: string; darkMode: boolean }) => {
+  const sections: { [key: string]: string } = {
+    dashboard: "แดชบอร์ดภาพรวม",
+    profile: "ข้อมูลโปรไฟล์ของคุณ",
+    calendar: "จัดการปฏิทินการสอน",
+    messages: "การสื่อสารกับนักเรียน",
+    courses: "คอร์สที่คุณเปิดสอน",
+    reviews: "รีวิวจากนักเรียน",
+    promotions: "โปรโมชันและการตลาด",
+    payments: "รายได้และการเงิน",
+    terms: "ข้อกำหนดการใช้งาน",
+    help: "ติดต่อศูนย์ช่วยเหลือ",
+  };
+    return (
+      <div>
+        {activeTab === "dashboard" && <DashboardHome darkMode={darkMode} />}
+        {activeTab === "profile" && <ProfileManagement darkMode={darkMode} />}
+        {activeTab === "calendar" && <CalendarManagement darkMode={darkMode} />}
+        {activeTab === "messages" && <MessagesCenter darkMode={darkMode} />}
+        {activeTab === "courses" && <CoursesManagement darkMode={darkMode} />}
+        {activeTab === "reviews" && <ReviewsManagement darkMode={darkMode} />}
+        {/* {activeTab === "promotions" && <PromotionsManagement darkMode={darkMode} />} */}
+        {/* {activeTab === "payments" && <PaymentsManagement darkMode={darkMode} />} */}
+        {/* {activeTab === "terms" && <TermsAndConditions darkMode={darkMode} />} */}
+        {/* {activeTab === "help" && <HelpCenter darkMode={darkMode} />} */}
+      </div>
+    );
+  
+};
 
 export default Dashboard;
