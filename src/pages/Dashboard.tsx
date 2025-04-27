@@ -24,6 +24,10 @@ import CalendarManagement from "./calendar/index";
 import MessagesCenter from "./messages";
 import CoursesManagement from "./courses";
 import ReviewsManagement from "./reviews";
+import PromotionsManagement from "./promotions";
+import PaymentsManagement from "./payments";
+import TermsAndConditions from "./Terms";
+import HelpCenter from "./help";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -93,14 +97,6 @@ const Dashboard = () => {
             </nav>
           </div>
 
-          {/* Bottom Section: Logout */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            className="flex items-center justify-center text-red-500 w-full mt-6"
-          >
-            <FaSignOutAlt size={20} />
-            {isSidebarOpen && <span className="ml-3 text-sm font-medium">ออกจากระบบ</span>}
-          </motion.button>
         </motion.div>
 
         {/* Main Content */}
@@ -169,10 +165,10 @@ const SectionContent = ({ activeTab, darkMode }: { activeTab: string; darkMode: 
         {activeTab === "messages" && <MessagesCenter darkMode={darkMode} />}
         {activeTab === "courses" && <CoursesManagement darkMode={darkMode} />}
         {activeTab === "reviews" && <ReviewsManagement darkMode={darkMode} />}
-        {/* {activeTab === "promotions" && <PromotionsManagement darkMode={darkMode} />} */}
-        {/* {activeTab === "payments" && <PaymentsManagement darkMode={darkMode} />} */}
-        {/* {activeTab === "terms" && <TermsAndConditions darkMode={darkMode} />} */}
-        {/* {activeTab === "help" && <HelpCenter darkMode={darkMode} />} */}
+        {activeTab === "promotions" && <PromotionsManagement darkMode={darkMode} />}
+        {activeTab === "payments" && <PaymentsManagement darkMode={darkMode} />}
+        {activeTab === "terms" && <TermsAndConditions darkMode={darkMode} />}
+        {activeTab === "help" && <HelpCenter darkMode={darkMode} />}
       </div>
     );
   
