@@ -50,17 +50,17 @@ const Messages = ({ darkMode }: { darkMode: boolean }) => {
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    // const updatedConversations = conversations.map((c) =>
-    //   c.id === activeConversationId
-    //     ? {
-    //         ...c,
-    //         messages: [...c.messages, { sender: "me", text: newMessage, timestamp: new Date().toLocaleTimeString() }],
-    //         lastMessage: newMessage,
-    //       }
-    //     : c
-    // );
+    const updatedConversations:any = conversations.map((c) =>
+      c.id === activeConversationId
+        ? {
+            ...c,
+            messages: [...c.messages, { sender: "me", text: newMessage, timestamp: new Date().toLocaleTimeString() }],
+            lastMessage: newMessage,
+          }
+        : c
+    );
 
-    // setConversations(updatedConversations);
+    setConversations(updatedConversations);
     setNewMessage("");
   };
 

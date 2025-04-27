@@ -149,18 +149,18 @@ const Dashboard = () => {
 };
 
 const SectionContent = ({ activeTab, darkMode }: { activeTab: string; darkMode: boolean }) => {
-  const sections: { [key: string]: string } = {
-    dashboard: "แดชบอร์ดภาพรวม",
-    profile: "ข้อมูลโปรไฟล์ของคุณ",
-    calendar: "จัดการปฏิทินการสอน",
-    messages: "การสื่อสารกับนักเรียน",
-    courses: "คอร์สที่คุณเปิดสอน",
-    reviews: "รีวิวจากนักเรียน",
-    promotions: "โปรโมชันและการตลาด",
-    payments: "รายได้และการเงิน",
-    terms: "ข้อกำหนดการใช้งาน",
-    help: "ติดต่อศูนย์ช่วยเหลือ",
-  };
+  // const sections: { [key: string]: string } = {
+  //   dashboard: "แดชบอร์ดภาพรวม",
+  //   profile: "ข้อมูลโปรไฟล์ของคุณ",
+  //   calendar: "จัดการปฏิทินการสอน",
+  //   messages: "การสื่อสารกับนักเรียน",
+  //   courses: "คอร์สที่คุณเปิดสอน",
+  //   reviews: "รีวิวจากนักเรียน",
+  //   promotions: "โปรโมชันและการตลาด",
+  //   payments: "รายได้และการเงิน",
+  //   terms: "ข้อกำหนดการใช้งาน",
+  //   help: "ติดต่อศูนย์ช่วยเหลือ",
+  // };
     return (
       <div>
         {activeTab === "dashboard" && <DashboardHome darkMode={darkMode} />}
