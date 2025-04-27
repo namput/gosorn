@@ -12,7 +12,6 @@ import {
   FaMoneyBillWave,
   FaFileAlt,
   FaLifeRing,
-  FaSignOutAlt,
   FaBell,
   FaMoon,
   FaSun,
