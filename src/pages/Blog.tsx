@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { FaBookOpen, FaCalendarAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-interface BlogItem {
+interface Article {
   keyword: string;
   slug: string;
   html: string;
@@ -10,19 +10,19 @@ interface BlogItem {
 }
 
 const Blog = () => {
-  const [articles, setArticles] = useState<BlogItem[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await fetch("https://apicontent.neuatech.com/api/articles/");
+        const res = await fetch("https://apicontent.neuatech.com/api/articles");
+        if (!res.ok) throw new Error("โหลดบทความไม่สำเร็จ");
         const data = await res.json();
         setArticles(data);
-      } catch (err) {
-        console.error(err);
-        setError("เกิดข้อผิดพลาดในการโหลดบทความ");
+      } catch (err: any) {
+        setError(err.message || "เกิดข้อผิดพลาด");
       } finally {
         setLoading(false);
       }
@@ -32,49 +32,38 @@ const Blog = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-blue-700 flex justify-center items-center gap-2">
-          <FaBookOpen /> บทความจาก GuSon
-        </h1>
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-bold text-blue-700 mb-2">📚 บทความจาก GuSorn</h1>
         <p className="text-gray-600">บทความ SEO ช่วยให้ติวเตอร์มีคนค้นเจอมากขึ้น</p>
       </div>
 
-      {loading && <p className="text-center text-gray-500">⏳ กำลังโหลด...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+      {loading && <p className="text-center text-gray-500">⏳ กำลังโหลดบทความ...</p>}
+      {error && <p className="text-center text-red-600">❌ {error}</p>}
 
-      {!loading && !error && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <a
-              key={article.slug}
-              href={`https://apicontent.neuatech.com/api/articles/${article.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white rounded-lg shadow hover:shadow-xl transition-all overflow-hidden"
-            >
+      {!loading && !error && articles.length === 0 && (
+        <p className="text-center text-gray-500">🚫 ยังไม่มีบทความในขณะนี้</p>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {articles.map((article) => (
+          <Link to={`/blog/${article.slug}`} key={article.slug}>
+            <div className="border rounded-lg shadow hover:shadow-xl transition overflow-hidden bg-white">
               <img
                 src={`https://apicontent.neuatech.com/${article.image}`}
                 alt={article.keyword}
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                <h2 className="text-lg font-bold text-blue-800 mb-2 line-clamp-2">{article.keyword}</h2>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <FaCalendarAlt /> {new Date(article.createdAt).toLocaleDateString("th-TH")}
-                </div>
+                <h2 className="text-lg font-bold text-blue-600">{article.keyword}</h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  เผยแพร่เมื่อ {new Date(article.createdAt).toLocaleDateString("th-TH")}
+                </p>
               </div>
-            </a>
-          ))}
-        </div>
-      )}
-
-      {!loading && articles.length === 0 && (
-        <div className="text-center text-gray-500 mt-20">
-          <img src="/empty-state.svg" alt="ไม่มีบทความ" className="w-32 mx-auto mb-4" />
-          ❌ ยังไม่มีบทความในขณะนี้
-        </div>
-      )}
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
-import AdminRoute from "./components/AdminRoute";  // ✅ เพิ่มเส้นทางสำหรับ Admin
+import AdminRoute from "./components/AdminRoute"; // ✅ เพิ่มเส้นทางสำหรับ Admin
 import PublicRoute from "./components/PublicRoute";
 import ThemeProvider from "./components/ThemeProvider";
 import Layout from "./components/Layout";
@@ -33,62 +33,94 @@ import BookingConfirmPage from "./pages/student/booking/confirm";
 import MessagesPage from "./pages/student/messages";
 import StudentProfilePage from "./pages/student/profile";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
+import { HelmetProvider } from "react-helmet-async";
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/forum" element={<Forum />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/forum/:id" element={<ThreadDetail />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
+    <HelmetProvider>
+      <ThemeProvider>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/forum" element={<Forum />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogDetail />} />
 
-            {/* ✅ Public Route */}
-            <Route element={<PublicRoute />}>
-              <Route path="/register" element={<Register />} />
-              <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/forum/:id" element={<ThreadDetail />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
-                   {/* 🎯 หน้า Student */}
-              <Route path="/student/login-request" element={<StudentLoginRequest />} />
-              <Route path="/student/login-verify" element={<StudentLoginVerify />} />
-              <Route path="/student/logout" element={<StudentLogout />} />
-              <Route path="/student" element={<StudentDashboard />} />
-              <Route path="/student/search-tutor/start" element={<StartSearchTutor />} />
-              <Route path="/student/search-tutor/details" element={<StudentDetailsForm />} />
-              <Route path="/student/search-tutor/match" element={<MatchTutorPage/>} />
-              <Route path="/student/booking/:tutorId" element={<BookingPage />} />
-              <Route path="/student/booking/confirm" element={<BookingConfirmPage />} />
-              <Route path="/student/messages" element={<MessagesPage />} />
-              <Route path="/student/profile" element={<StudentProfilePage />} />
-            </Route>
+              {/* ✅ Public Route */}
+              <Route element={<PublicRoute />}>
+                <Route path="/register" element={<Register />} />
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route path="/login" element={<Login />} />
 
-            {/* 🔐 Private Route (เฉพาะผู้ใช้ทั่วไป) */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/select-package" element={<SelectPackage />} />
-              <Route path="/create-profile" element={<CreateProfile />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/pending-status" element={<PendingStatus />} />
-              <Route path="/forum/create" element={<CreateThread />} />
-              <Route path="/profile" element={<Profile />} /> {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
-            </Route>
+                {/* 🎯 หน้า Student */}
+                <Route
+                  path="/student/login-request"
+                  element={<StudentLoginRequest />}
+                />
+                <Route
+                  path="/student/login-verify"
+                  element={<StudentLoginVerify />}
+                />
+                <Route path="/student/logout" element={<StudentLogout />} />
+                <Route path="/student" element={<StudentDashboard />} />
+                <Route
+                  path="/student/search-tutor/start"
+                  element={<StartSearchTutor />}
+                />
+                <Route
+                  path="/student/search-tutor/details"
+                  element={<StudentDetailsForm />}
+                />
+                <Route
+                  path="/student/search-tutor/match"
+                  element={<MatchTutorPage />}
+                />
+                <Route
+                  path="/student/booking/:tutorId"
+                  element={<BookingPage />}
+                />
+                <Route
+                  path="/student/booking/confirm"
+                  element={<BookingConfirmPage />}
+                />
+                <Route path="/student/messages" element={<MessagesPage />} />
+                <Route
+                  path="/student/profile"
+                  element={<StudentProfilePage />}
+                />
+              </Route>
 
-            {/* 👑 Admin Route (เฉพาะ Admin เท่านั้น) */}
-            <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/profile" element={<Profile />} /> {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
-            </Route>
+              {/* 🔐 Private Route (เฉพาะผู้ใช้ทั่วไป) */}
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/select-package" element={<SelectPackage />} />
+                <Route path="/create-profile" element={<CreateProfile />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/pending-status" element={<PendingStatus />} />
+                <Route path="/forum/create" element={<CreateThread />} />
+                <Route path="/profile" element={<Profile />} />{" "}
+                {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
+              </Route>
 
-            <Route path="/*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </Router>
-    </ThemeProvider>
+              {/* 👑 Admin Route (เฉพาะ Admin เท่านั้น) */}
+              <Route element={<AdminRoute />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/profile" element={<Profile />} />{" "}
+                {/* ✅ เพิ่มเส้นทางไปยังหน้าโปรไฟล์ */}
+              </Route>
+
+              <Route path="/*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 };
 
