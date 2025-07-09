@@ -39,7 +39,7 @@ const NotFound = () => {
 
     // ✅ ใช้ `navigate()` หลังจาก 20 วินาที
     const redirectTimeout = setTimeout(() => {
-      window.location.href = "https://www.gusorn.com";
+      window.location.href = "https://www.Guson.com";
     }, 20000);
 
     return () => {
@@ -103,13 +103,13 @@ const NotFound = () => {
 
         {/* 🚀 ปุ่มกลับหน้าแรก */}
         <motion.a
-          href="https://www.gusorn.com/"
+          href="https://www.Guson.com/"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
           className="mt-6 px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-blue-500 rounded-lg shadow-lg flex items-center gap-2 hover:shadow-2xl hover:animate-pulse"
         >
           <FaHome className="text-xl" />
-          พัฒนาเว็บกับ Gusorn
+          พัฒนาเว็บกับ Guson
         </motion.a>
 
         {/* 🚀 ปุ่มไป Neuatech */}
@@ -127,7 +127,7 @@ const NotFound = () => {
 
         {/* ⏳ Countdown Timer */}
         <p className="text-gray-400 mt-4 animate-pulse">
-          ระบบจะนำคุณไปที่ Gusorn ใน{" "}
+          ระบบจะนำคุณไปที่ Guson ใน{" "}
           <span className="font-bold text-white">{countdown}</span> วินาที...
         </p>
       </motion.div>

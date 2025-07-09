@@ -34,8 +34,8 @@ const Blog = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-blue-700 mb-2">📚 บทความจาก GuSorn</h1>
-        <p className="text-gray-600">บทความ SEO ช่วยให้ติวเตอร์มีคนค้นเจอมากขึ้น</p>
+        <h1 className="text-3xl font-bold text-blue-700 mb-2">📚 บทความจาก Guson</h1>
+        {/* <p className="text-gray-600">บทความ SEO ช่วยให้ติวเตอร์มีคนค้นเจอมากขึ้น</p> */}
       </div>
 
       {loading && <p className="text-center text-gray-500">⏳ กำลังโหลดบทความ...</p>}

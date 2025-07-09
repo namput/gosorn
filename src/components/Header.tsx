@@ -62,11 +62,11 @@ const Header = () => {
         >
           <img
             src="/logo.png"
-            alt="GuSorn Logo"
+            alt="Guson Logo"
             className="h-10 w-10 object-contain transition-all duration-300 hover:rotate-6 hover:scale-110"
           />
           <span className="bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent transition-all duration-300 hover:scale-110 hover:from-indigo-500 hover:to-blue-500">
-            GuSorn
+            Guson
           </span>
         </Link>
 

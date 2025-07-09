@@ -9,10 +9,10 @@ const Home = () => {
         <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10">
           {/* <h1 className="text-5xl font-bold animate-fadeIn">
-            Gusorn — แพลตฟอร์มสำหรับติวเตอร์และนักเรียน
+            Guson — แพลตฟอร์มสำหรับติวเตอร์และนักเรียน
           </h1> */}
           <h1 className="text-5xl font-bold animate-fadeIn">
-            Gusorn —{" "}
+            Guson —{" "}
             <span className="text-yellow-300">
               <Typewriter
                 words={[
@@ -103,7 +103,7 @@ const Home = () => {
             {
               name: "อาจารย์พิมพ์",
               quote:
-                "หลังจากสร้างเว็บกับ Gusorn ฉันมีนักเรียนใหม่เพิ่มขึ้นกว่า 50%!",
+                "หลังจากสร้างเว็บกับ Guson ฉันมีนักเรียนใหม่เพิ่มขึ้นกว่า 50%!",
             },
             {
               name: "น้องเจ",
@@ -127,7 +127,7 @@ const Home = () => {
       {/* ✅ Call to Action (CTA) */}
       <section className="py-16 text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <h2 className="text-3xl font-semibold mb-4">
-          พร้อมเริ่มต้นกับ Gusorn แล้วหรือยัง?
+          พร้อมเริ่มต้นกับ Guson แล้วหรือยัง?
         </h2>
         <p className="text-lg mb-6">
           ไม่ว่าคุณจะเป็นติวเตอร์หรือนักเรียน เริ่มต้นใช้งานได้ทันที ฟรี!

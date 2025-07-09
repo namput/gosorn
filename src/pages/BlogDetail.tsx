@@ -30,7 +30,7 @@ const BlogDetail = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <Helmet>
-        <title>{slug} | GuSorn Blog</title>
+        <title>{slug} | Guson Blog</title>
         <meta name="description" content={`อ่านบทความ "${slug}" พร้อมความคิดเห็นจากผู้อ่าน`} />
       </Helmet>
 
