@@ -90,6 +90,14 @@ const Header = () => {
           >
             <FaBookOpen /> <span>คลับติวเตอร์</span>
           </Link>
+           <Link
+            to="/blog"
+            className={`px-5 py-2 rounded-md flex items-center gap-x-2 ${getActiveClass(
+              "/blog"
+            )}`}
+          >
+            <FaBookOpen /> <span>Blog</span>
+          </Link>
           {isLoggedIn ? (
             <>
               {/* ✅ ซ่อนแดชบอร์ดถ้าเป็น Basic */}
@@ -194,6 +202,16 @@ const Header = () => {
                   )}`}
                 >
                   <FaBookOpen /> <span>คลับติวเตอร์</span>
+                </Link>
+              </Menu.Item>
+                <Menu.Item>
+                <Link
+                  to="/blog"
+                  className={`w-full text-lg px-4 py-2 flex items-center gap-x-2 rounded-md ${getActiveClass(
+                    "/blog"
+                  )}`}
+                >
+                  <FaBookOpen /> <span>Blog</span>
                 </Link>
               </Menu.Item>
               {isLoggedIn ? (

@@ -32,6 +32,7 @@ import BookingPage from "./pages/student/booking/[tutorId]";
 import BookingConfirmPage from "./pages/student/booking/confirm";
 import MessagesPage from "./pages/student/messages";
 import StudentProfilePage from "./pages/student/profile";
+import Blog from "./pages/Blog";
 
 const App: React.FC = () => {
   return (
@@ -41,7 +42,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/forum" element={<Forum />} />
-            
+            <Route path="/blog" element={<Blog />} />
             <Route path="/forum/:id" element={<ThreadDetail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
