@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
+import ShortLinkPage from "./ShortLinkPage";
 
 const Home = () => {
   return (
@@ -123,7 +124,12 @@ const Home = () => {
           ))}
         </div>
       </section>
-
+      {/* ✅ Short Link Section */}
+      <section id="shortlink" className="py-16 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <ShortLinkPage />
+        </div>
+      </section>
       {/* ✅ Call to Action (CTA) */}
       <section className="py-16 text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <h2 className="text-3xl font-semibold mb-4">
