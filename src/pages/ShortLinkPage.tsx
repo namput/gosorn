@@ -21,7 +21,7 @@ export default function ShortLinkPage(): JSX.Element {
     setShortCode('');
 
     try {
-      const res = await fetch('http://localhost:3000/api/shorten', {
+      const res = await fetch('https://apicontent.neuatech.com/api/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
@@ -52,7 +52,7 @@ export default function ShortLinkPage(): JSX.Element {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="url"
-            placeholder="วางลิงก์ที่นี่ เช่น https://gusorn.com"
+            placeholder="วางลิงก์ที่นี่ เช่น https://guson.co.th"
             value={url}
             required
             onChange={(e: ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
