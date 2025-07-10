@@ -3,24 +3,23 @@ import "react-toastify/dist/ReactToastify.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import Subdomain from "./Subdomain.tsx"; // ✅ Import ไฟล์ Subdomain
+import Subdomain from "./Subdomain.tsx";
 import "./index.css";
 
-// ✅ ตรวจจับ Subdomain สำหรับทั้ง localhost และโดเมนจริง
+// ✅ ตรวจจับ Subdomain ที่แท้จริง
 const hostname = window.location.hostname;
-const parts = hostname.split(".");
 const isLocalhost = hostname.includes("localhost");
 
-// ✅ ตรวจจับว่าเป็น Subdomain หรือไม่ (ยกเว้น www)
-const isSubdomain = (isLocalhost && parts.length === 2 && parts[0] !== "www") 
-                  || (!isLocalhost && parts.length > 2 && parts[0] !== "www");
+// ✅ โดเมนหลักที่ไม่ถือว่าเป็น subdomain
+const isMainDomain = /^(www\.)?(guson\.in\.th|guson\.co\.th)$/.test(hostname);
 
+// ✅ ถ้าไม่ใช่ main domain และไม่ใช่ localhost → ถือว่าเป็น subdomain
+const isSubdomain = !isMainDomain && !isLocalhost;
 
-// 📌 ถ้าเป็น Subdomain → ใช้ <Subdomain /> ถ้าไม่ใช่ → ใช้ <App />
+// 📌 เรนเดอร์ component ตามประเภท hostname
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     {isSubdomain ? <Subdomain /> : <App />}
     <ToastContainer position="top-right" autoClose={5000} />
   </StrictMode>
 );
-
