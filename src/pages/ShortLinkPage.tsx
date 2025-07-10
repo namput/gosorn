@@ -15,17 +15,22 @@ export default function ShortLinkPage(): JSX.Element {
       setError('กรุณาใส่ลิงก์ก่อนครับ');
       return;
     }
+
     setLoading(true);
     setError('');
+    setShortCode('');
+
     try {
-      const res = await fetch('/api/shorten', {
+      const res = await fetch('https://กูสอน.ไทย/api/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),
       });
+
       if (!res.ok) {
-        throw new Error('เกิดข้อผิดพลาดในการสร้างลิงค์');
+        throw new Error('เกิดข้อผิดพลาดในการสร้างลิงก์');
       }
+
       const data: { code: string } = await res.json();
       setShortCode(data.code);
     } catch (err: unknown) {
@@ -43,10 +48,11 @@ export default function ShortLinkPage(): JSX.Element {
     <Card className="mt-8">
       <CardContent>
         <h2 className="text-2xl font-bold mb-4">สร้างลิงค์สั้น</h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="url"
-            placeholder="วางลิงก์ที่นี่"
+            placeholder="วางลิงก์ที่นี่ เช่น https://gusorn.com"
             value={url}
             required
             onChange={(e: ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
@@ -60,14 +66,14 @@ export default function ShortLinkPage(): JSX.Element {
 
         {shortCode && (
           <div className="mt-4">
-            <p className="font-medium">ลิงค์สั้นของคุณ:</p>
+            <p className="font-medium">✅ ลิงค์สั้นของคุณ:</p>
             <a
-              href={`${window.location.origin}/${shortCode}`}
+              href={`https://กูสอน.ไทย/${shortCode}`}
               target="_blank"
               className="text-blue-600 underline"
               rel="noopener noreferrer"
             >
-              {`${window.location.origin}/${shortCode}`}
+              กูสอน.ไทย/{shortCode}
             </a>
           </div>
         )}
