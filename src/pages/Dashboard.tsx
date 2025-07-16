@@ -166,7 +166,7 @@ const SectionContent = ({ activeTab, darkMode }: { activeTab: string; darkMode: 
         {activeTab === "reviews" && <ReviewsManagement darkMode={darkMode} />}
         {activeTab === "promotions" && <PromotionsManagement darkMode={darkMode} />}
         {activeTab === "payments" && <PaymentsManagement darkMode={darkMode} />}
-        {activeTab === "terms" && <TermsAndConditions darkMode={darkMode} />}
+        {activeTab === "terms" && <TermsAndConditions  />}
         {activeTab === "help" && <HelpCenter darkMode={darkMode} />}
       </div>
     );

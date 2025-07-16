@@ -35,6 +35,7 @@ import StudentProfilePage from "./pages/student/profile";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import { HelmetProvider } from "react-helmet-async";
+import TermsAndConditions from "./pages/Terms"
 
 const App: React.FC = () => {
   return (
@@ -47,6 +48,7 @@ const App: React.FC = () => {
               <Route path="/forum" element={<Forum />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
 
               <Route path="/forum/:id" element={<ThreadDetail />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
