@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function ShortLinkPage(): JSX.Element {
   const [url, setUrl] = useState<string>('');
   const [shortCode, setShortCode] = useState<string>('');
+  const [shortName, setShortName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
@@ -19,6 +20,7 @@ export default function ShortLinkPage(): JSX.Element {
     setLoading(true);
     setError('');
     setShortCode('');
+    setShortName('');
 
     try {
       const res = await fetch('https://กูสอน.ไทย/api/shorten', {
@@ -31,8 +33,9 @@ export default function ShortLinkPage(): JSX.Element {
         throw new Error('เกิดข้อผิดพลาดในการสร้างลิงก์');
       }
 
-      const data: { code: string } = await res.json();
+      const data: { code: string, name: string } = await res.json();
       setShortCode(data.code);
+      setShortName(data.name);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -52,7 +55,7 @@ export default function ShortLinkPage(): JSX.Element {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="url"
-            placeholder="วางลิงก์ที่นี่ เช่น https://guson.co.th"
+            placeholder="วางลิงก์ที่นี่ เช่น https://guson.co"
             value={url}
             required
             onChange={(e: ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
@@ -73,7 +76,7 @@ export default function ShortLinkPage(): JSX.Element {
               className="text-blue-600 underline"
               rel="noopener noreferrer"
             >
-              กูสอน.ไทย/{shortCode}
+              กูสอน.ไทย/{shortName}
             </a>
           </div>
         )}
