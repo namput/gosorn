@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-
+const API_BASE_URL =
+  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 const BlogDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate(); // ✅ ใช้ navigate สำหรับย้อนกลับ
@@ -12,10 +13,10 @@ const BlogDetail = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await fetch(`https://apicontent.neuatech.com/api/articles/${slug}`);
+        const res = await fetch(`${API_BASE_URL}/api/articles/${slug}`);
         if (!res.ok) throw new Error("โหลดบทความไม่สำเร็จ");
         const html = await res.text();
-        const fixedHtml = html.replace(/src="\//g, 'src="https://apicontent.neuatech.com/output/');
+        const fixedHtml = html.replace(/src="\//g, `src="${API_BASE_URL}/output/`);
         setHtmlContent(fixedHtml);
       } catch (err: any) {
         setError(err.message || "เกิดข้อผิดพลาด");

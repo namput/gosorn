@@ -21,7 +21,7 @@ export default function ShortLinkPage(): JSX.Element {
     setShortCode('');
 
     try {
-      const res = await fetch('https://apicontent.neuatech.com/api/shorten', {
+      const res = await fetch('https://กูสอน.ไทย/api/shorten', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url }),

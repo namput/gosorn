@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+const API_BASE_URL =
+  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 interface Article {
   keyword: string;
   slug: string;
@@ -17,7 +18,7 @@ const Blog = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await fetch("https://apicontent.neuatech.com/api/articles");
+        const res = await fetch(API_BASE_URL+"/api/articles");
         if (!res.ok) throw new Error("โหลดบทความไม่สำเร็จ");
         const data = await res.json();
         setArticles(data);
