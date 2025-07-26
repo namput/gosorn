@@ -11,7 +11,6 @@ const hostname = window.location.hostname;
 
 const isLocalhost = hostname.includes("localhost");
 
-
 // ✅ โดเมนหลักที่ไม่ถือว่าเป็น subdomain
 const isMainDomain = /^(www\.)?(guson\.in\.th)$/.test(hostname);
 
