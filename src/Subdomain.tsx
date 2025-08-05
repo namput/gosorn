@@ -101,7 +101,7 @@ const Subdomain: React.FC = () => {
           const loadWeb = await getWebSite(subdomain);
 
           if (!loadWeb || !loadWeb.success || !loadWeb.website) {
-            window.location.href = "https://www.guson.in.th/404";
+            window.location.href = "https://www.guson.co/404";
             return;
           }
   
@@ -129,7 +129,7 @@ const Subdomain: React.FC = () => {
         setTimeout(() => setIsLoading(false), 500);
       } catch (error) {
         console.error("ไม่พบ template:", error);
-        window.location.href = "https://www.guson.in.th/404";
+        window.location.href = "https://www.guson.co/404";
       }
     };
 
