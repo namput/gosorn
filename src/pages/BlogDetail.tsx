@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม us
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 const API_BASE_URL =
-  import.meta.env.API_CONTENT || "http://localhost:3000";
+  import.meta.env.VITE_API_CONTENT || "http://localhost:3000";
 const BlogDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate(); // ✅ ใช้ navigate สำหรับย้อนกลับ
