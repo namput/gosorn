@@ -99,9 +99,9 @@ const Subdomain: React.FC = () => {
           
         }else{
           const loadWeb = await getWebSite(subdomain);
-
+          console.log("loadWeb", loadWeb);
           if (!loadWeb || !loadWeb.success || !loadWeb.website) {
-            window.location.href = "https://www.guson.co/404";
+            window.location.href = "https://guson.co/404";
             return;
           }
   
@@ -119,8 +119,6 @@ const Subdomain: React.FC = () => {
           }
           
           setTemplateComponent(() => mod.default);
-          
-          
           
         }
     
