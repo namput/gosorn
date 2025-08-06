@@ -13,7 +13,7 @@ const Home = () => {
             Guson — แพลตฟอร์มสำหรับติวเตอร์และนักเรียน
           </h1> */}
           <h1 className="text-5xl font-bold animate-fadeIn">
-            Guson —{" "}
+            Guson(กูสอน) —{" "}
             <span className="text-yellow-300">
               <Typewriter
                 words={[
