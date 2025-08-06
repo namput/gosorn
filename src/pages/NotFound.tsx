@@ -6,7 +6,7 @@ import { loadSlim } from "tsparticles-slim";
 import type { Engine } from "tsparticles-engine"; // ✅ Import Type
 
 const NotFound = () => {
-  const [countdown, setCountdown] = useState(20);
+  const [countdown, setCountdown] = useState(10);
 
   const glitchSoundUrl = "https://freesound.org/data/previews/523/523408_1015240-lq.mp3";
   const bgMusicUrl = "https://cdn.pixabay.com/download/audio/2022/03/23/audio_56e4448078.mp3";
@@ -114,7 +114,7 @@ const NotFound = () => {
 
         {/* 🚀 ปุ่มไป Neuatech */}
         <motion.a
-          href="https://neuatech.com/"
+          href="https://nueatech.co.th/"
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.2 }}
@@ -122,7 +122,7 @@ const NotFound = () => {
           className="mt-4 px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg shadow-lg flex items-center gap-2 hover:shadow-2xl hover:animate-pulse"
         >
           <FaRocket className="text-xl" />
-          ติดต่อทีม Neuatech
+          ติดต่อทีม Nueatech
         </motion.a>
 
         {/* ⏳ Countdown Timer */}
