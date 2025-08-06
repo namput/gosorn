@@ -8,6 +8,7 @@ import "./index.css";
 
 // ✅ ตรวจจับ Subdomain ที่แท้จริง
 const hostname = window.location.hostname;
+
 const isLocalhost = hostname.includes("localhost");
 
 // ✅ โดเมนหลักที่ไม่ถือว่าเป็น subdomain
@@ -15,6 +16,7 @@ const isMainDomain = /^(www\.)?(guson\.co)$/.test(hostname);
 
 // ✅ ถ้าไม่ใช่ main domain และไม่ใช่ localhost → ถือว่าเป็น subdomain
 const isSubdomain = !isMainDomain && !isLocalhost;
+alert(isSubdomain + " isSubdomain");
 // 📌 เรนเดอร์ component ตามประเภท hostname
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

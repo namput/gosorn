@@ -99,8 +99,6 @@ const Subdomain: React.FC = () => {
           
         }else{
           const loadWeb = await getWebSite(subdomain);
-          console.log("loadWeb", loadWeb);
-          alert(loadWeb+ " loadWeb")
           if (!loadWeb || !loadWeb.success || !loadWeb.website) {
             window.location.href = "https://guson.co/404";
             return;
