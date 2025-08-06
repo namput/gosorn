@@ -8,11 +8,12 @@ import "./index.css";
 
 // ✅ ตรวจจับ Subdomain ที่แท้จริง
 const hostname = window.location.hostname;
+alert(hostname)
 const isLocalhost = hostname.includes("localhost");
 
 // ✅ โดเมนหลักที่ไม่ถือว่าเป็น subdomain
 const isMainDomain = /^(www\.)?(guson\.co)$/.test(hostname);
-alert(hostname)
+
 alert(isMainDomain+" isMainDomain")
 alert(isLocalhost+" isLocalhost")
 
