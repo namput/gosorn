@@ -40,7 +40,7 @@ const NotFound = () => {
     // ✅ ใช้ `navigate()` หลังจาก 20 วินาที
     const redirectTimeout = setTimeout(() => {
       window.location.href = "https://www.guson.co";
-    }, 20000);
+    }, 10000);
 
     return () => {
       clearInterval(timer);
