@@ -9,6 +9,10 @@
       "destination": "/sitemap.xml"
     },
     {
+      "source": "/blog/:match*",
+      "destination": "/blog/:match*.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
