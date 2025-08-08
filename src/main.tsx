@@ -5,6 +5,8 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import Subdomain from "./Subdomain.tsx";
 import "./index.css";
+import { HelmetProvider } from "react-helmet-async";
+import Layout from "./Layout";
 
 // ✅ ตรวจจับ Subdomain ที่แท้จริง
 const hostname = window.location.hostname;
@@ -18,8 +20,12 @@ const isMainDomain = /^(www\.)?(guson\.co)$/.test(hostname);
 const isSubdomain = !isMainDomain && !isLocalhost;
 // 📌 เรนเดอร์ component ตามประเภท hostname
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    {isSubdomain ? <Subdomain /> : <App />}
-    <ToastContainer position="top-right" autoClose={5000} />
-  </StrictMode>
+  <HelmetProvider>
+    <Layout>
+      <StrictMode>
+        {isSubdomain ? <Subdomain /> : <App />}
+        <ToastContainer position="top-right" autoClose={5000} />
+      </StrictMode>
+    </Layout>
+  </HelmetProvider>
 );
