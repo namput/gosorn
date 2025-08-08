@@ -61,7 +61,7 @@ const Header = () => {
           className="text-3xl font-bold text-blue-900 flex items-center gap-x-3"
         >
           <img
-            src="/logo.png"
+            src="/Guson1.png"
             alt="Guson Logo"
             className="h-10 w-10 object-contain transition-all duration-300 hover:rotate-6 hover:scale-110"
           />

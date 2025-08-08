@@ -10,7 +10,7 @@
     },
     {
       "source": "/blog/:match*",
-      "destination": "/blog/:match*.html"
+      "destination": "/blog/:match*"
     },
     {
       "source": "/(.*)",

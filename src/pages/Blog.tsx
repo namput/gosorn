@@ -48,21 +48,22 @@ const Blog = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {articles.map((article) => (
-          <Link to={`/blog/${article.slug}`} key={article.slug}>
-            <div className="border rounded-lg shadow hover:shadow-xl transition overflow-hidden bg-white">
-              <img
-                src={`https://apicontent.neuatech.com/${article.image}`}
-                alt={article.keyword}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-lg font-bold text-blue-600">{article.keyword}</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  เผยแพร่เมื่อ {new Date(article.createdAt).toLocaleDateString("th-TH")}
-                </p>
-              </div>
+          <a href={`/blog/${article.slug}`} key={article.slug}>
+          <div className="border rounded-lg shadow hover:shadow-xl transition overflow-hidden bg-white">
+            <img
+              src={`https://apicontent.neuatech.com/${article.image}`}
+              alt={article.keyword}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="text-lg font-bold text-blue-600">{article.keyword}</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                เผยแพร่เมื่อ {new Date(article.createdAt).toLocaleDateString("th-TH")}
+              </p>
             </div>
-          </Link>
+          </div>
+        </a>
+
         ))}
       </div>
     </div>
