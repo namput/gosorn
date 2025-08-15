@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Typewriter } from "react-simple-typewriter";
-import ShortLinkPage from "./ShortLinkPage";
 
 const Home = () => {
   return (
@@ -35,13 +34,24 @@ const Home = () => {
             สร้างเว็บไซต์ติวเตอร์ของคุณ หรือ
             ค้นหาคนสอนพิเศษที่เหมาะสมกับคุณได้ง่าย ๆ ที่นี่
           </p>
-          <div className="mt-8 flex flex-col md:flex-row justify-center gap-6">
+          <div className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:justify-center">
             <Link
               to="/register"
-              className="px-8 py-4 bg-green-500 hover:bg-green-600 text-white rounded-lg font-bold transition-all"
+              aria-label="สมัครเป็นติวเตอร์บน Guson"
+              className="
+      inline-flex items-center justify-center
+      w-full sm:w-auto
+      min-h-[48px] px-5 py-3
+      rounded-2xl font-semibold tracking-tight text-white
+      bg-green-700 hover:bg-green-800 active:bg-green-900
+      transition
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2
+      shadow-sm
+    "
             >
               👨‍🏫 ฉันคือติวเตอร์
             </Link>
+
             <Link
               to="/student/login-request"
               className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-blue-900 rounded-lg font-bold transition-all"
@@ -69,7 +79,17 @@ const Home = () => {
             </ul>
             <Link
               to="/register"
-              className="mt-4 inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold transition-all"
+              aria-label="สมัครเป็นติวเตอร์บน Guson"
+              className="
+    mt-4 inline-flex items-center justify-center
+    w-full sm:w-auto
+    min-h-[48px] px-6 py-3
+    rounded-xl font-semibold tracking-tight text-white
+    bg-green-700 hover:bg-green-800 active:bg-green-900
+    transition
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2
+    shadow-sm
+  "
             >
               สมัครติวเตอร์
             </Link>
@@ -84,12 +104,22 @@ const Home = () => {
               <li>✅ ส่งข้อความหาติวเตอร์ได้ง่าย</li>
               <li>✅ เลือกเรียนตัวต่อตัว หรือออนไลน์</li>
             </ul>
-            <Link
-              to="/search-tutor"
-              className="mt-4 inline-block bg-yellow-400 hover:bg-yellow-500 text-blue-900 px-6 py-3 rounded-lg font-bold transition-all"
-            >
-              ค้นหาติวเตอร์
-            </Link>
+ <Link
+  to="/search-tutor"
+  aria-label="ค้นหาติวเตอร์บน Guson"
+  className="
+    w-full sm:w-auto
+    min-h-[48px] px-6 py-3
+    rounded-xl font-semibold tracking-tight
+    bg-white text-pink-800 hover:bg-gray-100
+    transition
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
+    shadow-sm
+  "
+>
+  ค้นหาติวเตอร์
+</Link>
+
           </div>
         </div>
       </section>
@@ -112,24 +142,28 @@ const Home = () => {
                 "หาเรียนพิเศษง่ายกว่าเดิมมาก หาติวเตอร์ดี ๆ ได้ในไม่กี่นาที!",
             },
           ].map((testimonial, index) => (
-            <div
+            <figure
               key={index}
-              className="bg-white p-6 rounded-lg shadow-md max-w-md"
+              className="
+    w-full max-w-md mx-auto
+    bg-white rounded-2xl shadow-md
+    p-5 sm:p-6
+  "
             >
-              <p className="text-gray-700 italic">"{testimonial.quote}"</p>
-              <h4 className="text-blue-500 font-semibold mt-4">
-                - {testimonial.name}
-              </h4>
-            </div>
+              <blockquote className="text-gray-800 italic leading-relaxed text-base sm:text-lg">
+                “{testimonial.quote}”
+              </blockquote>
+
+              <figcaption className="mt-4">
+                <h4 className="font-semibold text-blue-700 text-sm sm:text-base">
+                  — {testimonial.name}
+                </h4>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </section>
-      {/* ✅ Short Link Section */}
-      <section id="shortlink" className="py-16 bg-white">
-        <div className="max-w-2xl mx-auto">
-          <ShortLinkPage />
-        </div>
-      </section>
+
       {/* ✅ Call to Action (CTA) */}
       <section className="py-16 text-center bg-gradient-to-r from-purple-500 to-pink-500 text-white">
         <h2 className="text-3xl font-semibold mb-4">
@@ -138,20 +172,46 @@ const Home = () => {
         <p className="text-lg mb-6">
           ไม่ว่าคุณจะเป็นติวเตอร์หรือนักเรียน เริ่มต้นใช้งานได้ทันที ฟรี!
         </p>
-        <div className="flex flex-col md:flex-row justify-center gap-6">
-          <Link
-            to="/register"
-            className="px-6 py-3 bg-white text-purple-700 hover:bg-gray-100 rounded-lg font-bold transition-all"
-          >
-            สมัครติวเตอร์
-          </Link>
-          <Link
-            to="/search-tutor"
-            className="px-6 py-3 bg-white text-pink-700 hover:bg-gray-100 rounded-lg font-bold transition-all"
-          >
-            ค้นหาติวเตอร์
-          </Link>
-        </div>
+<div
+  role="group"
+  aria-label="การกระทำหลักบนหน้าแรก Guson"
+  className="mt-4 flex flex-col items-stretch gap-4 md:mt-6 md:flex-row md:justify-center md:items-center md:gap-6"
+>
+  <Link
+    to="/register"
+    aria-label="สมัครเป็นติวเตอร์บน Guson"
+    className="
+      inline-flex items-center justify-center
+      w-full md:w-auto
+      min-h-[48px] px-6 py-3
+      rounded-xl font-semibold tracking-tight text-white
+      bg-green-700 hover:bg-green-800 active:bg-green-900
+      transition
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2
+      shadow-sm
+    "
+  >
+    สมัครติวเตอร์
+  </Link>
+
+  <Link
+    to="/search-tutor"
+    aria-label="ค้นหาติวเตอร์บน Guson"
+    className="
+      inline-flex items-center justify-center
+      w-full md:w-auto
+      min-h-[48px] px-6 py-3
+      rounded-xl font-semibold tracking-tight
+      bg-white text-pink-800 hover:bg-gray-100 active:bg-gray-200
+      transition
+      focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2
+      shadow-sm
+    "
+  >
+    ค้นหาติวเตอร์
+  </Link>
+</div>
+
       </section>
     </div>
   );

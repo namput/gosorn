@@ -1,117 +1,195 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const ageGroups = ["ประถม", "มัธยม", "มหาวิทยาลัย", "คนทำงาน"];
-const availableTimes = ["จันทร์เย็น", "เสาร์เช้า", "อาทิตย์บ่าย"];
-const urgencyOptions = ["ทันที", "เร็ว ๆ นี้", "ยังไม่แน่ใจ"];
+const ageGroups = ["ประถม", "มัธยม", "มหาวิทยาลัย", "คนทำงาน"] as const;
+const availableTimes = ["จันทร์เย็น", "เสาร์เช้า", "อาทิตย์บ่าย"] as const;
+const urgencyOptions = ["ทันที", "เร็ว ๆ นี้", "ยังไม่แน่ใจ"] as const;
+
+type Age = typeof ageGroups[number];
+type TimeOpt = typeof availableTimes[number];
+type Urgency = typeof urgencyOptions[number];
+
+const chipBase =
+  "inline-flex items-center justify-center rounded-full px-4 py-2 min-h-[44px] text-sm sm:text-base transition select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+const chipOn  = `${chipBase} bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-400`;
+const chipOff = `${chipBase} bg-gray-200 text-gray-800 hover:bg-gray-300 focus-visible:ring-gray-400`;
 
 const SearchDetailsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { subject } = location.state || {};
+  const { subject } = (location.state as { subject?: string }) || {};
 
-  const [age, setAge] = useState("");
-  const [times, setTimes] = useState<string[]>([]);
+  // โหลดค่าที่เคยเลือก (ช่วยเวลา back/refresh)
+  const [age, setAge] = useState<Age | "">("");
+  const [times, setTimes] = useState<TimeOpt[]>([]);
   const [startDate, setStartDate] = useState("");
-  const [urgency, setUrgency] = useState("");
+  const [urgency, setUrgency] = useState<Urgency | "">("");
+  const [error, setError] = useState<string | null>(null);
 
-  const toggleTime = (time: string) => {
+  // today สำหรับ min ของ date (กันเลือกย้อนหลัง)
+  const today = useMemo(() => {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${mm}-${dd}`;
+  }, []);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("guson.searchDetails");
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.age) setAge(s.age);
+        if (Array.isArray(s.times)) setTimes(s.times);
+        if (s.startDate) setStartDate(s.startDate);
+        if (s.urgency) setUrgency(s.urgency);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "guson.searchDetails",
+      JSON.stringify({ age, times, startDate, urgency })
+    );
+  }, [age, times, startDate, urgency]);
+
+  const toggleTime = (time: TimeOpt) => {
     setTimes((prev) =>
       prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
     );
   };
 
-  const handleSearch = () => {
-    navigate("/search-tutor/match", {
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!age || !urgency) {
+      setError("กรุณาเลือกช่วงวัยและความเร่งด่วน");
+      return;
+    }
+    setError(null);
+
+    // สร้าง query string ให้แชร์ลิงก์ได้/บันทึกใน analytics
+    const params = new URLSearchParams();
+    if (subject) params.set("subject", subject);
+    params.set("age", String(age));
+    if (times.length) params.set("times", times.join(","));
+    if (startDate) params.set("startDate", startDate);
+    params.set("urgency", String(urgency));
+
+    navigate(`/search-tutor/match?${params.toString()}`, {
       state: { subject, age, times, startDate, urgency },
     });
   };
 
   return (
-    <div className="min-h-screen p-6 space-y-10 bg-gradient-to-b from-blue-50 to-white">
-      <h1 className="text-3xl font-bold text-gray-800 text-center">
+    <main className="min-h-screen p-6 sm:p-8 bg-gradient-to-b from-blue-50 to-white">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">
         บอกข้อมูลเพิ่มเติม
       </h1>
 
-      <div className="max-w-3xl mx-auto space-y-8">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto mt-8 space-y-8"
+        aria-labelledby="search-details-form"
+      >
         {/* ช่วงวัย */}
-        <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700">ช่วงวัยของคุณ</h2>
-          <div className="flex flex-wrap gap-3">
+        <fieldset className="space-y-3">
+          <legend className="font-semibold text-gray-800">ช่วงวัยของคุณ</legend>
+          <div className="flex flex-wrap gap-3" role="group" aria-label="ช่วงวัย">
             {ageGroups.map((a) => (
               <button
                 key={a}
+                type="button"
                 onClick={() => setAge(a)}
-                className={`px-4 py-2 rounded-full ${
-                  age === a ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
-                }`}
+                aria-pressed={age === a}
+                className={age === a ? chipOn : chipOff}
               >
                 {a}
               </button>
             ))}
           </div>
-        </div>
+        </fieldset>
 
         {/* วันเวลาสะดวก */}
-        <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700">เวลาที่สะดวก</h2>
-          <div className="flex flex-wrap gap-3">
-            {availableTimes.map((time) => (
-              <button
-                key={time}
-                onClick={() => toggleTime(time)}
-                className={`px-4 py-2 rounded-full ${
-                  times.includes(time) ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-                }`}
-              >
-                {time}
-              </button>
-            ))}
+        <fieldset className="space-y-3">
+          <legend className="font-semibold text-gray-800">เวลาที่สะดวก</legend>
+          <div className="flex flex-wrap gap-3" role="group" aria-label="เวลาที่สะดวก">
+            {availableTimes.map((time) => {
+              const on = times.includes(time);
+              return (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => toggleTime(time)}
+                  aria-pressed={on}
+                  className={on ? chipOn : chipOff}
+                >
+                  {time}
+                </button>
+              );
+            })}
           </div>
-        </div>
+          <p className="text-sm text-gray-500">เลือกได้มากกว่าหนึ่งตัวเลือก</p>
+        </fieldset>
 
         {/* วันเริ่มเรียน */}
         <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700">วันเริ่มเรียน</h2>
+          <label htmlFor="startDate" className="font-semibold text-gray-800">
+            วันเริ่มเรียน (ถ้ามี)
+          </label>
           <input
+            id="startDate"
             type="date"
+            min={today}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full p-3 rounded-lg bg-gray-200 text-gray-700 outline-none"
+            className="w-full rounded-lg bg-white text-gray-900 border border-gray-300 p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2"
           />
         </div>
 
         {/* ความเร่งด่วน */}
-        <div className="space-y-2">
-          <h2 className="font-semibold text-gray-700">ต้องการเริ่มเรียนเมื่อใด?</h2>
-          <div className="flex flex-wrap gap-3">
+        <fieldset className="space-y-3">
+          <legend className="font-semibold text-gray-800">ต้องการเริ่มเรียนเมื่อใด?</legend>
+          <div className="flex flex-wrap gap-3" role="group" aria-label="ความเร่งด่วน">
             {urgencyOptions.map((opt) => (
               <button
                 key={opt}
+                type="button"
                 onClick={() => setUrgency(opt)}
-                className={`px-4 py-2 rounded-full ${
-                  urgency === opt ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
-                }`}
+                aria-pressed={urgency === opt}
+                className={urgency === opt ? chipOn : chipOff}
               >
                 {opt}
               </button>
             ))}
           </div>
+        </fieldset>
+
+        {/* แจ้งเตือนข้อผิดพลาด */}
+        <div aria-live="polite" className="min-h-[1.25rem]">
+          {error && <p className="text-pink-700">{error}</p>}
         </div>
 
-        {/* Search Button */}
+        {/* ปุ่มค้นหา */}
         <div className="text-center">
           <button
-            onClick={handleSearch}
+            type="submit"
             disabled={!age || !urgency}
-            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all disabled:opacity-50"
+            className="
+              w-full sm:w-auto
+              px-8 py-3 min-h-[48px]
+              bg-blue-600 hover:bg-blue-700 active:bg-blue-800
+              text-white font-bold rounded-xl transition
+              disabled:opacity-60 disabled:cursor-not-allowed
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2
+              shadow-sm
+            "
           >
             ค้นหาติวเตอร์ที่เหมาะสมที่สุด
           </button>
         </div>
-
-      </div>
-    </div>
+      </form>
+    </main>
   );
 };
 
