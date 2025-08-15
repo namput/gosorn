@@ -61,7 +61,7 @@ const BlogDetail = () => {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={imageFile} />
-        <meta property="og:url" content={`https://www.guson.co/blog/${slug}`} />
+        <meta property="og:url" content={`https://guson.co/blog/${slug}`} />
       </Helmet>
 
       {/* ✅ ปุ่มย้อนกลับ */}

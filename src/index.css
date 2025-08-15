@@ -1,90 +1,102 @@
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&family=Sarabun:wght@300;400;700&family=Pridi:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&display=swap');
+/* ================= Fonts ================= */
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&family=Sarabun:wght@300;400;700&family=Pridi:wght@700&display=swap');
 
-body {
-  font-family: 'Sarabun', sans-serif; /* ✅ เนื้อหาใช้ Sarabun */
-}
+body { font-family: 'Sarabun', sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Prompt', sans-serif; }
+.logo { font-family: 'Pridi', serif; font-weight: 700; letter-spacing: .5px; }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Prompt', sans-serif; /* ✅ หัวข้อใช้ Prompt */
-}
-.logo {
-    font-family: 'Pridi', sans-serif; /* ✅ โลโก้ใช้ Pridi หรือเปลี่ยนเป็นฟอนต์ที่ต้องการ */
-    font-weight: 700;
-    letter-spacing: 1px;
-  }
-
+/* ================= Tailwind ================= */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ---------- base form helpers (เดิมของคุณ) ---------- */
 .input-field { @apply w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-200; }
 .btn-primary { @apply bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all; }
-.btn-danger { @apply bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-700 transition-all; }
-.btn-submit { @apply bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-700 text-xl font-semibold; }
+.btn-danger  { @apply bg-red-500   text-white px-3 py-2 rounded-lg hover:bg-red-700  transition-all; }
+.btn-submit  { @apply bg-blue-500  text-white py-3 rounded-lg hover:bg-blue-700 text-xl font-semibold; }
 
+/* ================= Theme Variables (HSL ของ shadcn) ================= */
+/* โทนสว่าง: primary = violet, secondary = indigo อ่อน */
 @layer base {
-  :root {
+  :root{
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 252 92% 62%;          /* violet #5648F8 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 231 100% 76%;       /* indigo #5B7CFF */
+    --secondary-foreground: 232 28% 19%;
+
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 16% 31%;
+
+    --accent: 260 83% 69%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 252 92% 62%;
+
+    --chart-1: 189 94% 43%;
+    --chart-2: 267 84% 60%;
+    --chart-3: 158 73% 46%;
+    --chart-4: 48 95% 60%;
+    --chart-5: 345 89% 60%;
+
+    --radius: 0.9rem;
   }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+
+  .dark{
+    --background: 232 28% 12%;
+    --foreground: 0 0% 100%;
+    --card: 232 28% 14%;
+    --card-foreground: 0 0% 100%;
+    --popover: 232 28% 14%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 252 92% 64%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 231 100% 70%;
+    --secondary-foreground: 232 28% 12%;
+    --muted: 232 28% 18%;
+    --muted-foreground: 210 20% 85%;
+    --accent: 260 83% 70%;
+    --accent-foreground: 232 28% 12%;
+    --border: 232 28% 20%;
+    --input: 232 28% 20%;
+    --ring: 252 92% 64%;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+@layer base{
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
 }
 
+/* ================= Brand Palette (HEX ใช้ตรง ๆ) ================= */
+@layer utilities{
+  /* ไล่เฉดฮีโร่ตามภาพ: น้ำเงิน→คราม→ม่วง */
+  .hero-gradient{ @apply bg-gradient-to-br from-[#3BA3FF] via-[#5B7CFF] to-[#7A4DF2]; }
 
+  /* ปุ่มธีม */
+  .btn-mint   { @apply inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl font-semibold text-white bg-[#1CC79E] hover:bg-[#12A885] shadow-md transition; }
+  .btn-violet { @apply inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl font-semibold text-white bg-[#5648F8] hover:bg-[#4638E6] shadow-md transition; }
+  .btn-amber  { @apply inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl font-semibold text-gray-900 bg-[#F9C852] hover:bg-[#F2B832] shadow-md transition; }
+
+  /* การ์ดตามภาพ: ขาว, มุมใหญ่, เงานุ่ม */
+  .card-soft  { @apply bg-white rounded-[1.25rem] shadow-[0_10px_20px_rgba(0,0,0,0.06)] border border-gray-200; }
+}
+
+/* ================= Extras (แนะนำ) ================= */
+/* เคารพผู้ใช้ที่ปิดแอนิเมชัน */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none!important; transition: none!important; }
+}

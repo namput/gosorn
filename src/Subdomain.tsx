@@ -126,7 +126,7 @@ const Subdomain: React.FC = () => {
         setTimeout(() => setIsLoading(false), 500);
       } catch (error) {
         console.error("ไม่พบ template:", error);
-        window.location.href = "https://www.guson.co/404";
+        window.location.href = "https://guson.co/404";
       }
     };
 
