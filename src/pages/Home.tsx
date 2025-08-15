@@ -42,8 +42,8 @@ export default function Home() {
               <h1 className="text-3xl sm:text-5xl font-extrabold leading-snug drop-shadow">
                 Guson (กูสอน)
                 </h1>
-                <h2>
-                <span className="text-white/100">
+                <h1 className="text-3xl sm:text-2xl font-extrabold leading-snug drop-shadow">
+                <span className="text-black/100">
                   <Suspense fallback={"แพลตฟอร์มสำหรับติวเตอร์"}>
                     {typewriterReady ? (
                       <Typewriter
@@ -69,7 +69,7 @@ export default function Home() {
                     )}
                   </Suspense>
                 </span>
-              </h2>
+              </h1>
 
               <p className="mt-4 text-white/90 max-w-2xl mx-auto lg:mx-0">
                 สร้างเว็บไซต์ติวเตอร์ของคุณ หรือค้นหาคนสอนพิเศษที่เหมาะสมกับคุณได้ง่าย ๆ ที่นี่
@@ -83,13 +83,13 @@ export default function Home() {
               >
                 <Link
                   to="/register"
-                  className="inline-flex items-center justify-center w-full sm:w-auto min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-white bg-brand-mint hover:bg-brand-mintDark active:bg-brand-mintDark/90 shadow-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+                  className="inline-flex items-center justify-center w-full sm:w-auto min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-white bg-[#5A31D6] hover:bg-brand-mintDark active:bg-brand-mintDark/90 shadow-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
                 >
                   👨‍🏫 สมัครติวเตอร์
                 </Link>
 
                 <Link
-                  to="/search-tutor"
+                  to="/student/login-request"
                   className="inline-flex items-center justify-center w-full sm:w-auto min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-gray-900 bg-brand-amber hover:bg-brand-amberDark active:bg-brand-amberDark/90 shadow-soft transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
                 >
                   👩‍🎓 ฉันคือนักเรียน
@@ -131,7 +131,7 @@ export default function Home() {
               </ul>
               <Link
                 to="/register"
-                className="mt-6 inline-flex items-center justify-center min-h-[48px] px-6 py-3 rounded-xl2 font-semibold text-white bg-brand-mint hover:bg-brand-mintDark transition shadow-soft"
+                className="mt-6 inline-flex items-center justify-center min-h-[48px] px-6 py-3 rounded-xl2 font-semibold text-white bg-[#5A31D6] hover:bg-brand-mintDark transition shadow-soft"
               >
                 สมัครติวเตอร์
               </Link>
@@ -149,7 +149,7 @@ export default function Home() {
                 <li>✅ เลือกเรียนตัวต่อตัว หรือออนไลน์</li>
               </ul>
               <Link
-                to="/search-tutor"
+                to="/student/login-request"
                 className="mt-6 inline-flex items-center justify-center min-h-[48px] px-6 py-3 rounded-xl2 font-semibold text-white bg-brand-violet hover:bg-brand-violetDark transition shadow-soft"
               >
                 ค้นหาติวเตอร์
@@ -171,12 +171,12 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to="/register"
-              className="inline-flex items-center justify-center min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-white bg-brand-mint hover:bg-brand-mintDark shadow-soft"
+              className="inline-flex items-center justify-center min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-white bg-[#5A31D6] hover:bg-brand-mintDark shadow-soft"
             >
               สมัครติวเตอร์
             </Link>
             <Link
-              to="/search-tutor"
+              to="/student/login-request"
               className="inline-flex items-center justify-center min-h-[50px] px-6 py-3 rounded-xl2 font-semibold text-white bg-brand-violet hover:bg-brand-violetDark shadow-soft"
             >
               ค้นหาติวเตอร์

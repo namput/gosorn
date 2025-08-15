@@ -112,7 +112,7 @@ const NotFound = () => {
           พัฒนาเว็บกับ Guson
         </motion.a>
 
-        {/* 🚀 ปุ่มไป Neuatech */}
+        {/* 🚀 ปุ่มไป NUEATECH COMPANY LIMITED */}
         <motion.a
           href="https://nueatech.co.th/"
           target="_blank"
