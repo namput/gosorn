@@ -12,17 +12,7 @@ const testimonials = [
   { quote: "ระบบใช้งานง่าย มีเครื่องมือครบ", name: "ครูบาส" },
 ];
 
-const featuresTutor = [
-  { title: "สร้างเว็บไซต์ติวเตอร์", desc: "โปรไฟล์มืออาชีพพร้อมโดเมนย่อยของคุณ" },
-  { title: "โปรโมตให้ติดอันดับ", desc: "มีเครื่องมือ SEO ช่วยให้ค้นเจอ" },
-  { title: "จัดการคอร์สและตาราง", desc: "ระบบนัดหมายและแจ้งเตือนอัตโนมัติ" },
-];
 
-const featuresStudent = [
-  { title: "ค้นหาติวเตอร์เร็ว", desc: "ตัวกรองชัดเจน แมตช์ไว" },
-  { title: "รีวิวโปร่งใส", desc: "อ่านรีวิวจริง ประวัติการสอน" },
-  { title: "แชตคุยได้ทันที", desc: "คุยตกลงเวลา/ราคาได้สะดวก" },
-];
 
 export default function Home() {
   const [typewriterReady, setTypewriterReady] = useState(false);
