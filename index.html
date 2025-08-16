@@ -106,7 +106,28 @@
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&family=Sarabun:wght@300;400;700&family=Pridi:wght@700&display=swap">
   </noscript>
-<script src="https://analytics.ahrefs.com/analytics.js" data-key="7HLYWCq92OobcRWy9esiKA" async></script>
+  <script src="https://analytics.ahrefs.com/analytics.js" data-key="7HLYWCq92OobcRWy9esiKA" async></script>
+  <script type="module">
+    import { onCLS, onINP, onLCP } from "https://unpkg.com/web-vitals@3?module";
+
+    function sendToAnalytics({ name, value, id }) {
+      console.log(`${name} [${id}]: ${value}`);
+
+      // 👉 ตัวอย่าง: ส่งค่าไป GA4
+      if (window.gtag) {
+        gtag("event", name, {
+          value: value,
+          event_category: "Web Vitals",
+          event_label: id,
+          non_interaction: true,
+        });
+      }
+    }
+
+    onCLS(sendToAnalytics);
+    onINP(sendToAnalytics);
+    onLCP(sendToAnalytics);
+  </script>
 </head>
 
 <body>
