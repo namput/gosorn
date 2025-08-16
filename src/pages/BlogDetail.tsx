@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import SEO from "@/components/SEO";
 const API_BASE_URL =
   import.meta.env.VITE_API_CONTENT || "http://localhost:3000";
 const BlogDetail = () => {
@@ -50,6 +51,27 @@ const BlogDetail = () => {
   }, [slug]);
 
   return (
+    <>
+    <SEO
+  title={`${title} | Guson Blog`}
+  description={description || "บทความจาก Guson Blog"}
+  path={`/blog/${slug}`}
+  image={imageFile || "https://guson.co/og-blog.jpg"}
+  jsonLd={{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": title,
+    "description": description || "",
+    "datePublished": null,
+    "dateModified": null,
+    "author": { "@type": "Person", "name":  "Guson" },
+    "publisher": { "@type":"Organization", "name":"Guson" },
+    "mainEntityOfPage": `https://guson.co/blog/${slug}`,
+    "image": imageFile ? [imageFile] : ["https://guson.co/og-blog.jpg"]
+  }}
+/>
+
+
     <div className="max-w-4xl mx-auto px-4 py-10">
       <Helmet>
         <title>{title} Blog</title>
@@ -87,6 +109,7 @@ const BlogDetail = () => {
       {/* ส่วนคอมเมนต์เหมือนเดิม */}
       <div className="mt-12 border-t pt-8">{/* ... */}</div>
     </div>
+        </>
   );
 };
 
