@@ -19,87 +19,84 @@ const BlogDetail = () => {
   const [createdAtISO, setCreatedAtISO] = useState<string | undefined>(undefined);
   const [updatedAtISO, setUpdatedAtISO] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        setLoading(true);
-        setError(null);
+useEffect(() => {
+  let cancelled = false;
+  (async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        const res = await fetch(
-          `${API_BASE_URL}/api/articles/${encodeURIComponent(slug)}`
-        );
-        if (!res.ok) throw new Error("โหลดบทความไม่สำเร็จ");
+      const res = await fetch(
+        `${API_BASE_URL}/api/articles/${encodeURIComponent(slug!)}`
+      );
+      if (!res.ok) throw new Error("โหลดบทความไม่สำเร็จ");
 
-        const html = await res.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
 
-        // ✅ ดึงเฉพาะเนื้อ <article> มาแสดง (ไม่ฝังทั้ง <html> ลงใน div)
-        const articleHtml =
-          doc.querySelector("article")?.innerHTML || "<p>ไม่พบบทความ</p>";
+      // 1) ดึงรูปปก (cover) + เนื้อบทความ
+      const coverHtml = doc.querySelector(".cover-image")?.outerHTML || "";
+      const articleInner = doc.querySelector("article")?.innerHTML || "<p>ไม่พบบทความ</p>";
 
-        // ✅ เมตาหลัก
-        const t =
-          doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
-          doc.title ||
-          "Guson Blog";
+      // 2) ดึงเมตา
+      const t =
+        doc.querySelector('meta[property="og:title"]')?.getAttribute("content") ||
+        doc.title || "Guson Blog";
 
-        const d =
-          doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
-          doc.querySelector('meta[property="og:description"]')?.getAttribute("content") ||
-          "อ่านบทความจาก Guson";
+      const d =
+        doc.querySelector('meta[name="description"]')?.getAttribute("content") ||
+        doc.querySelector('meta[property="og:description"]')?.getAttribute("content") ||
+        "อ่านบทความจาก Guson";
 
-        const img =
-          doc.querySelector('meta[property="og:image"]')?.getAttribute("content") ||
-          `${API_BASE_URL}/online.png`;
+      const img =
+        doc.querySelector('meta[property="og:image"]')?.getAttribute("content") ||
+        `${API_BASE_URL}/online.png`;
 
-        // ✅ วันเวลาเผยแพร่/แก้ไข: JSON-LD ก่อน, ค่อย fallback meta article:*
-        let pub: string | undefined;
-        let mod: string | undefined;
-
-        doc.querySelectorAll('script[type="application/ld+json"]').forEach((n) => {
-          try {
-            const obj = JSON.parse(n.textContent || "{}");
-            const arr = Array.isArray(obj) ? obj : [obj];
-            for (const o of arr) {
-              if (o && (o["@type"] === "Article" || o["@type"] === "BlogPosting")) {
-                if (!pub && o.datePublished) pub = o.datePublished;
-                if (!mod && o.dateModified)  mod = o.dateModified;
-              }
+      // 3) วันที่เผยแพร่/แก้ไขจาก JSON-LD (fallback เป็น meta article:*)
+      let pub: string | undefined;
+      let mod: string | undefined;
+      doc.querySelectorAll('script[type="application/ld+json"]').forEach((n) => {
+        try {
+          const obj = JSON.parse(n.textContent || "{}");
+          const arr = Array.isArray(obj) ? obj : [obj];
+          for (const o of arr) {
+            if (o && (o["@type"] === "Article" || o["@type"] === "BlogPosting")) {
+              if (!pub && o.datePublished) pub = o.datePublished;
+              if (!mod && o.dateModified)  mod = o.dateModified;
             }
-          } catch {}
-        });
+          }
+        } catch {}
+      });
+      if (!pub) pub = doc.querySelector('meta[property="article:published_time"]')?.getAttribute("content") || undefined;
+      if (!mod) mod = doc.querySelector('meta[property="article:modified_time"]')?.getAttribute("content") || pub;
 
-        if (!pub)
-          pub =
-            doc
-              .querySelector('meta[property="article:published_time"]')
-              ?.getAttribute("content") || undefined;
-        if (!mod)
-          mod =
-            doc
-              .querySelector('meta[property="article:modified_time"]')
-              ?.getAttribute("content") || pub;
+      // 4) เสริมความทนทาน: ใส่ onerror ให้ทุก <img> และแก้ src ที่ขึ้นต้นด้วย "/" ให้เป็น absolute
+      const injectOnError = (s: string) =>
+        s.replace(/<img\b(?![^>]*\bonerror=)/gi, `<img onerror="this.onerror=null;this.src='${API_BASE_URL}/online.png'"`);
+      const fixLeadingSlashSrc = (s: string) =>
+        s.replace(/src="\//g, `src="${API_BASE_URL}/`);
 
-        if (cancelled) return;
+      const combinedHtml = fixLeadingSlashSrc(injectOnError(`${coverHtml}<article>${articleInner}</article>`));
 
-        setHtmlContent(articleHtml);
-        setTitle(t);
-        setDescription(d);
-        setImageFile(img);
-        setCreatedAtISO(pub);
-        setUpdatedAtISO(mod);
-      } catch (err: any) {
-        if (!cancelled) setError(err.message || "เกิดข้อผิดพลาด");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
+      if (cancelled) return;
+      setHtmlContent(combinedHtml);
+      setTitle(t);
+      setDescription(d);
+      setImageFile(img);
+      setCreatedAtISO(pub);
+      setUpdatedAtISO(mod);
+    } catch (err: any) {
+      if (!cancelled) setError(err.message || "เกิดข้อผิดพลาด");
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  })();
+  return () => {
+    cancelled = true;
+  };
+}, [slug]);
+
 
   return (
     <>
