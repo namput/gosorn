@@ -9,8 +9,8 @@
       "destination": "/sitemap.xml"
     },
     {
-      "source": "/blog/:match*",
-      "destination": "/blog/:match*"
+      "source": "/blog/:slug",
+      "destination": "https://apicontent.neuatech.com/api/articles/:slug"
     },
     {
       "source": "/(.*)",
