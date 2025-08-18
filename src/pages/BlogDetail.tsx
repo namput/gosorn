@@ -103,7 +103,7 @@ useEffect(() => {
       <SEO
         title={`${title} | Guson Blog`}
         description={description}
-        path={`/app/blog/${slug}`}
+        path={`/blog/${slug}`}
         type="article"
         image={imageFile}
         article={{
