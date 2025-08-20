@@ -2,6 +2,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
+import { Helmet } from "react-helmet-async";
 
 const Typewriter = lazy(() =>
   import("react-simple-typewriter").then((m) => ({ default: m.Typewriter }))
@@ -45,6 +46,11 @@ export default function Home() {
             "แพลตฟอร์มสำหรับติวเตอร์และนักเรียน สร้างเว็บไซต์และหางานสอนพิเศษได้ง่าย",
         }}
       />
+      <Helmet>
+        {/* preload + responsive source set */}
+        <link rel="preload" as="image" href="/hero.webp" />
+      </Helmet>
+
       {/* เนื้อหา Home */}
       <main className="min-h-screen bg-white text-gray-900">
         {/* ================= Hero (gradient น้ำเงิน→ม่วง) ================= */}
@@ -113,15 +119,17 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Illustration (การ์ด/ภาพ) */}
-              <div className="hidden lg:block">
+              <div className="block">
+                {" "}
+                {/* ต้อง “มองเห็น” บนมือถือด้วย ห้าม hidden */}
                 <img
-                  src="/hero.png"
+                  src="/hero.webp"
                   width={800}
                   height={520}
-                  loading="lazy"
                   alt="ตัวอย่างโปรไฟล์ติวเตอร์ใน Guson"
-                  className="mx-auto rounded-xl2 shadow-soft"
+                  decoding="async"
+                  /* อย่าใส่ loading="lazy" กับรูป LCP (บนจอแรก) */
+                  className="mx-auto rounded-xl shadow-soft"
                 />
               </div>
             </div>

@@ -8,7 +8,7 @@ const Footer = () => {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
               <img
-                src="/logo.png"
+                src="/logo.webp"
                 alt="Guson Logo"
                 className="h-10 w-auto"
               />
@@ -33,7 +33,7 @@ const Footer = () => {
                 className="inline-block rounded-xl border border-slate-200 bg-white/70 p-2 shadow-sm transition hover:shadow"
               >
                 <img
-                  src='https://dbdregistered.dbd.go.th/api/public/banner?param=4E6FA9688427D1DF55E2744C8F7C9B12FD4EBA1E80299996DC9380F81023A2B8'
+                  src='/dbd.webp'
                   alt="DBD Registered"
                   className="h-12"
                 />

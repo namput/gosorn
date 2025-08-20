@@ -50,7 +50,7 @@ const Header = React.memo(() => {
         {/* โลโก้: อินไลน์ SVG เพื่อลด request และให้เบราว์เซอร์เรนเดอร์เร็ว */}
         <Link to="/" className="text-3xl font-bold text-blue-900 flex items-center gap-x-3">
          <img
-            src="/Guson1.svg"
+            src="/logo.webp"
             alt="Guson Logo"
             className="h-10 w-10 object-contain transition-all duration-300 hover:rotate-6 hover:scale-110"
           />
