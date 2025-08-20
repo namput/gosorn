@@ -33,7 +33,7 @@ const Footer = () => {
                 className="inline-block rounded-xl border border-slate-200 bg-white/70 p-2 shadow-sm transition hover:shadow"
               >
                 <img
-                  src='/dbd.webp'
+                  src='/dbd2.webp'
                   alt="DBD Registered"
                   className="h-12"
                 />
