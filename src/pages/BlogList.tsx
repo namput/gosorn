@@ -135,7 +135,7 @@ export default function BlogList({ onEdit, pageSize = 10 }: BlogListProps) {
                   p.updatedAt ? new Date(p.updatedAt).toLocaleString() :
                   p.updatedAtISO ? new Date(p.updatedAtISO).toLocaleString() :
                   p.publishedAtISO ? new Date(p.publishedAtISO).toLocaleString() : "";
-                const viewUrl = `/cms/${encodeURIComponent(p.slug)}.html`; // เสิร์ฟโดย express.static("output")
+                const viewUrl = `/post/${encodeURIComponent(p.slug)}`; // เสิร์ฟโดย express.static("output")
                 return (
                   <tr key={p.slug} className="border-t">
                     <td className="px-3 py-2">
