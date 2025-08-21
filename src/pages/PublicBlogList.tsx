@@ -18,12 +18,7 @@ type Post = {
 
 const API_BASE =
   (import.meta as any)?.env?.VITE_API_CONTENT ?? "http://localhost:3000";
-const PUBLIC_BASE =
-  (import.meta as any)?.env?.VITE_PUBLIC_BASE ?? "http://localhost:3000";
 
-function toPublicUrl(slug: string) {
-  return `${PUBLIC_BASE}/post/${encodeURIComponent(slug)}`;
-}
 function fmtTH(dt?: string | number) {
   if (!dt) return "";
   const d = typeof dt === "string" ? new Date(dt) : new Date(Number(dt));
@@ -266,7 +261,7 @@ export default function PublicBlogList() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((p) => {
               const href = `/post/${encodeURIComponent(p.slug)}`;
-              const ext = toPublicUrl(p.slug);
+              
               const time =
                 p.publishedAtISO || p.updatedAtISO || (p.updatedAt ? new Date(p.updatedAt).toISOString() : "");
               return (
