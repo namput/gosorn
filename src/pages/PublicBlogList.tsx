@@ -15,9 +15,8 @@ type Post = {
   updatedAtISO?: string;
   publishedAtISO?: string;
 };
-
-const API_BASE =
-  (import.meta as any)?.env?.VITE_API_CONTENT ?? "http://localhost:3000";
+  const API_BASE =
+  import.meta.env.VITE_API_CONTENT || "http://localhost:3000";
 
 function fmtTH(dt?: string | number) {
   if (!dt) return "";
