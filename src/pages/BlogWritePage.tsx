@@ -233,6 +233,38 @@ export default function BlogWritePage({
     updatedAt: Date.now(),
   });
 
+  // === Helpers: reset & clear after publish ===
+function clearLocalDrafts() {
+  try {
+    localStorage.removeItem(storageKey);
+    localStorage.removeItem(`${storageKey}:outbox`);
+    localStorage.removeItem(`${storageKey}:serverMeta`);
+  } catch {}
+}
+
+function resetEditorAfterPublish() {
+  clearLocalDrafts();
+  setTitle("บทความใหม่ของฉัน");
+  setSlug("");
+  setLockSlug(false);
+  setDescription("สรุปใจความของบทความนี้ไม่เกิน 160 อักขระ");
+  setTags(["guson", "howto"]);
+  setTagInput("");
+  setCoverUrl(null);
+  setStatus("draft");
+  setLastSaved(null);
+  setTab("write");
+  setWarning(null);
+
+  // ล้างคอนเทนต์ในตัว editor
+  editor?.commands.clearContent(true);
+  editor?.commands.setContent("");
+
+  // เลื่อนกลับขึ้นบนสุด
+  try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch {}
+}
+
+
   const [isSavingManual, setIsSavingManual] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
@@ -339,7 +371,8 @@ export default function BlogWritePage({
     setWarning(null);
     const draft = { ...currentDraft(), status: "published" as BlogStatus };
     try {
-      await onPublishFn(draft);
+      
+      resetEditorAfterPublish();
       setToast({ kind: "success", text: "เผยแพร่เรียบร้อย!" });
     } catch (e) {
       setToast({ kind: "error", text: "เผยแพร่ไม่สำเร็จ" });
