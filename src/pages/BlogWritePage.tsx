@@ -36,8 +36,8 @@ export type BlogWritePageProps = {
 
 // ---------- Env ----------
 const STORAGE_KEY_DEFAULT = "blog:editor:tiptap:luxe";
-const API_BASE = (import.meta as any)?.env?.VITE_API_CONTENT ?? "http://localhost:3000";
-const PUBLIC_BASE = (import.meta as any)?.env?.VITE_PUBLIC_BASE ?? "http://localhost:3000";
+const API_BASE = import.meta.env.VITE_API_CONTENT ?? "http://localhost:3000";
+const PUBLIC_BASE = import.meta.env.VITE_PUBLIC_BASE ?? "http://localhost:3000";
 
 // ---------- Utils ----------
 function normalizeStr(input: string) {
