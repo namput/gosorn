@@ -694,7 +694,6 @@ function CoverCard(props: {
 }) {
   const {
     coverUrl, setCoverUrl, setWarning, onUpload, fileInputRef,
-    imageTab, setImageTab, imageUrlInput, setImageUrlInput, setShowImageDialog,
   } = props;
   const doUpload = async (file: File) => {
     if (onUpload) return await onUpload(file);

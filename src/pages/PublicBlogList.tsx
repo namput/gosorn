@@ -1,5 +1,5 @@
 // src/pages/PublicBlogList.tsx
-import React, { useEffect, useMemo, useState } from "react";
+import  { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 type BlogStatus = "draft" | "published";
