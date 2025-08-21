@@ -206,15 +206,6 @@ export default function PublicBlogList() {
                 >
                   อ่านฉบับเต็ม <span className="ml-1">→</span>
                 </Link>
-                <a
-                  href={toPublicUrl(hero.slug)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center rounded-xl border border-black/10 bg-white/70 px-4 py-2 text-sm shadow-sm hover:bg-white"
-                  title="เปิดแบบสาธารณะ"
-                >
-                  เปิดแบบสาธารณะ ↗
-                </a>
               </div>
             </div>
           </div>
@@ -332,14 +323,7 @@ export default function PublicBlogList() {
                       ) : null}
                     </div>
                   </Link>
-                  <a
-                    href={ext}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block border-t border-black/5 bg-white/70 p-2 text-center text-[11px] text-neutral-500 hover:bg-white"
-                  >
-                    เปิดแบบสาธารณะ ↗
-                  </a>
+                
                 </article>
               );
             })}
