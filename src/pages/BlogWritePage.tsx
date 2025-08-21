@@ -89,7 +89,6 @@ export default function BlogWritePage({
   storageKey = STORAGE_KEY_DEFAULT,
   initial,
   onSave: onSaveProp,
-  onPublish: onPublishProp,
   onUpload,
 }: BlogWritePageProps) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -287,17 +286,7 @@ function resetEditorAfterPublish() {
       );
     }
   }
-  async function apiPublish(draft: BlogDraft) {
-    const res = await fetch(`http://localhost:3000/api/blogs/publish`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // credentials: "include",
-      body: JSON.stringify(draft),
-    });
-    if (!res.ok) throw new Error(`Publish failed: ${res.status}`);
-  }
   const onSave = onSaveProp ?? apiSaveDraft;
-  const onPublishFn = onPublishProp ?? apiPublish;
 
   const manualSave = async () => {
     if (isSavingManual) return; // กันดับเบิลคลิก
@@ -369,7 +358,6 @@ function resetEditorAfterPublish() {
       return;
     }
     setWarning(null);
-    const draft = { ...currentDraft(), status: "published" as BlogStatus };
     try {
       
       resetEditorAfterPublish();
