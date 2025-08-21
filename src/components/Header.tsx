@@ -69,6 +69,7 @@ const Header = React.memo(() => {
 
           <NavLink to="/forum" className={linkClass}><span>คลับติวเตอร์</span></NavLink>
           <NavLink to="/blog" className={linkClass}><span>Blog</span></NavLink>
+          <NavLink to="/บล็อก" className={linkClass}><span>บล็อก</span></NavLink>
           <NavLink to="/terms" className={linkClass}><span>นโยบายความเป็นส่วนตัว</span></NavLink>
 
           {isLoggedIn ? (

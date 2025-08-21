@@ -36,6 +36,10 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import { HelmetProvider } from "react-helmet-async";
 import TermsAndConditions from "./pages/Terms"
+import BlogWritePage from "./pages/BlogWritePage";
+import BlogList from "./pages/BlogList";
+import BlogView from "./pages/BlogView";
+import PublicBlogList from "./pages/PublicBlogList";
 
 const App: React.FC = () => {
   return (
@@ -45,6 +49,10 @@ const App: React.FC = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/blog-add" element={<BlogWritePage />} />
+              <Route path="/blog-list" element={<BlogList />} />
+              <Route path="/post/:slug" element={<BlogView />} />
+              <Route path= "/บล็อก" element= {<PublicBlogList />}/>
               <Route path="/forum" element={<Forum />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />

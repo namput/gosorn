@@ -52,6 +52,15 @@ const MobileMenu: React.FC<Props> = ({
           </NavLink>
         )}
       </Menu.Item>
+            <Menu.Item>
+        {() => (
+          <NavLink to="/บล็อก" className={linkClass}>
+            <span className="inline-flex items-center gap-2">
+              <span aria-hidden>📰</span><span>บล็อก</span>
+            </span>
+          </NavLink>
+        )}
+      </Menu.Item>
 
       <Menu.Item>
         {() => (
