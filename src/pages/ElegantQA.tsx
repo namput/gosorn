@@ -72,6 +72,7 @@ const ElegantQA = () => {
   const [filtered, setFiltered] = useState(faqs);
 
   useEffect(() => {
+    setQuery("");
     const q = query.trim().toLowerCase();
     if (!q) return setFiltered(faqs);
     setFiltered(
