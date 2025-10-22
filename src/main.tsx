@@ -30,7 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 // ---------- ตรวจโดเมน ----------
 const hostname = window.location.hostname;
 const isLocalhost = hostname.includes("localhost");
-const isMainDomain = /^(www\.)?(guson\.co)$/.test(hostname);
+const isMainDomain = /^(www\.)?(guson\.in\.th)$/.test(hostname);
 const isSubdomain = !isMainDomain && !isLocalhost;
 
 // ---------- Render ----------
