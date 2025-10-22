@@ -421,7 +421,7 @@ const TutorProfileForm = () => {
               disabled={isEditing} // ✅ ถ้ามีโปรไฟล์อยู่แล้ว ห้ามแก้ไข Subdomain
             />
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              .guson.co
+              .guson.in.th
             </span>
           </div>
           {isEditing && (

@@ -122,7 +122,7 @@ useEffect(() => {
           dateModified: updatedAtISO || createdAtISO || null,
           author: { "@type": "Person", name: "Guson" },
           publisher: { "@type": "Organization", name: "Guson" },
-          mainEntityOfPage: `https://guson.co/blog/${slug}`,
+          mainEntityOfPage: `https://guson.in.th/blog/${slug}`,
           image: [imageFile],
         }}
       />

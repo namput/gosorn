@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /admin/
 Allow: /
-Sitemap: https://guson.co/sitemap.xml
+Sitemap: https://guson.in.th/sitemap.xml

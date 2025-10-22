@@ -40,6 +40,7 @@ import BlogWritePage from "./pages/BlogWritePage";
 import BlogList from "./pages/BlogList";
 import BlogView from "./pages/BlogView";
 import PublicBlogList from "./pages/PublicBlogList";
+import ElegantQA from "./pages/ElegantQA";
 
 const App: React.FC = () => {
   return (
@@ -57,6 +58,7 @@ const App: React.FC = () => {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />
               <Route path="/terms" element={<TermsAndConditions />} />
+              <Route path="/elegant-qa" element={<ElegantQA />} />
 
               <Route path="/forum/:id" element={<ThreadDetail />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

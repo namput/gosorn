@@ -71,6 +71,7 @@ const Header = React.memo(() => {
           <NavLink to="/blog" className={linkClass}><span>Blog</span></NavLink>
           <NavLink to="/บล็อก" className={linkClass}><span>บล็อก</span></NavLink>
           <NavLink to="/terms" className={linkClass}><span>นโยบายความเป็นส่วนตัว</span></NavLink>
+          <NavLink to="/elegant-qa" className={linkClass}><span>Q&A</span></NavLink>
 
           {isLoggedIn ? (
             <>

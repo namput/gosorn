@@ -69,7 +69,7 @@ const HelpCenter = ({ darkMode }: { darkMode: boolean }) => {
           <h2 className="text-2xl font-bold">📞 ติดต่อทีม Support</h2>
           <p>หากยังไม่พบคำตอบที่ต้องการ คุณสามารถติดต่อเราได้ที่:</p>
           <div className="space-y-2 text-gray-600 dark:text-gray-300">
-            <p>อีเมล: support@guson.co</p>
+            <p>อีเมล: support@guson.in.th</p>
             <p>เบอร์โทร: 098-123-4567</p>
             <p>ไลน์: @gusonsupport</p>
           </div>

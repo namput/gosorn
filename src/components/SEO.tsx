@@ -34,7 +34,7 @@ type SEOProps = {
   imageHeight?: number;
 };
 
-const SITE = "https://guson.co";
+const SITE = "https://guson.in.th";
 const DEFAULT_IMAGE = `${SITE}/og-cover.jpg`;
 const DEFAULT_LOCALE = "th_TH";
 
