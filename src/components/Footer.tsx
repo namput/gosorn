@@ -43,10 +43,10 @@ const Footer = () => {
                 ได้รับการรับรองจากกรมพัฒนาธุรกิจการค้า (DBD)
               </p>
               <a
-                href="https://dbdregistered.dbd.go.th/api/public/shopinfo?param=4E6FA9688427D1DF55E2744C8F7C9B12FD4EBA1E80299996DC9380F81023A2B8"
+                href="https://dbdregistered.dbd.go.th/api/public/shopinfo?param=9E254450596DC7A044B52A35757C0C08A8A7BC2AC2D5C63221F15DDF332EB1F2"
                 target="_blank"
               >
-                <img src="https://dbdregistered.dbd.go.th/api/public/banner?param=4E6FA9688427D1DF55E2744C8F7C9B12FD4EBA1E80299996DC9380F81023A2B8" />
+                <img src="https://dbdregistered.dbd.go.th/api/public/banner?param=9E254450596DC7A044B52A35757C0C08A8A7BC2AC2D5C63221F15DDF332EB1F2" style={{height: "2.5rem"}} />
               </a>
             </div>
           </div>
