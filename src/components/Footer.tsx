@@ -20,7 +20,7 @@ const Footer = () => {
             <p className="mt-4 text-sm leading-relaxed text-slate-600">
               สำนักงานใหญ่:<br /> 4 บ้านเซอทะ หมู่ 2 ตำบลหนองหลวง อำเภออุ้มผาง จังหวัดตาก 63170<br />
               จันทร์–ศุกร์ 10:00–18:00 น.<br />
-              <a href="mailto:contact@guson.in.th" className="underline decoration-slate-300 hover:text-blue-700">contact@guson.in.th</a>
+              <a href="mailto:contact@kyupikyupi.com" className="underline decoration-slate-300 hover:text-blue-700">contact@kyupikyupi.com</a>
             </p>
             {/* Trust badges */}
             <div className="mt-4 space-y-2">

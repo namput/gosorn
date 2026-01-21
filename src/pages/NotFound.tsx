@@ -39,7 +39,7 @@ const NotFound = () => {
 
     // ✅ ใช้ `navigate()` หลังจาก 20 วินาที
     const redirectTimeout = setTimeout(() => {
-      window.location.href = "https://guson.in.th";
+      window.location.href = "https://kyupikyupi.com";
     }, 10000);
 
     return () => {
@@ -103,7 +103,7 @@ const NotFound = () => {
 
         {/* 🚀 ปุ่มกลับหน้าแรก */}
         <motion.a
-          href="https://guson.in.th/"
+          href="https://kyupikyupi.com/"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
           className="mt-6 px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-pink-500 to-blue-500 rounded-lg shadow-lg flex items-center gap-2 hover:shadow-2xl hover:animate-pulse"

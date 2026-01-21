@@ -81,11 +81,11 @@ const Register: React.FC = () => {
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "WebPage",
-          url: "https://guson.in.th/register",
+          url: "https://kyupikyupi.com/register",
           name: "สมัครติวเตอร์ | Guson",
           potentialAction: {
             "@type": "RegisterAction",
-            target: "https://guson.in.th/register",
+            target: "https://kyupikyupi.com/register",
           },
         }}
       />

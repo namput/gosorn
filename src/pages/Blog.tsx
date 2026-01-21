@@ -39,12 +39,12 @@ const Blog = () => {
         title="บทความสอนพิเศษ | วิธีหางานติวเตอร์ & เลือกติวเตอร์ที่ใช่"
         description="รวมบทความสอนพิเศษ วิธีเป็นติวเตอร์ เทคนิคสมัคร และการเลือกติวเตอร์ที่เหมาะกับคุณ"
         path="/blog"
-        image="https://guson.in.th/og-blog.jpg"
+        image="https://kyupikyupi.com/og-blog.jpg"
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "Guson Blog",
-          url: "https://guson.in.th/blog",
+          url: "https://kyupikyupi.com/blog",
         }}
       />
 

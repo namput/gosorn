@@ -37,13 +37,13 @@ const faqs = [
   {
     id: "tech-1",
     q: "สนับสนุน API หรือการรวมระบบหรือไม่?",
-    a: `มี API เบื้องต้นสำหรับพาร์ทเนอร์องค์กร ติดต่อ devs@guson.in.th เพื่อขอเอกสารและการเข้าถึง`,
+    a: `มี API เบื้องต้นสำหรับพาร์ทเนอร์องค์กร ติดต่อ devs@kyupikyupi.com เพื่อขอเอกสารและการเข้าถึง`,
     category: "เทคนิค",
   },
   {
     id: "support-1",
     q: "ติดต่อทีมสนับสนุนอย่างไร?",
-    a: `อีเมล: support@guson.in.th, ฟอร์ม Help ในเว็บไซต์ และ Live Chat (เวลาทำการประกาศในหน้า Support)`,
+    a: `อีเมล: support@kyupikyupi.com, ฟอร์ม Help ในเว็บไซต์ และ Live Chat (เวลาทำการประกาศในหน้า Support)`,
     category: "การสนับสนุน",
   }
 ];
@@ -98,7 +98,7 @@ const ElegantQA = () => {
               </div>
               <div className="flex items-center gap-4">
                 <a href="/terms" className="text-sm text-gray-700 underline">นโยบายความเป็นส่วนตัว</a>
-                <a href="mailto:support@guson.in.th" className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg shadow-sm text-sm font-medium">ติดต่อ Support</a>
+                <a href="mailto:support@kyupikyupi.com" className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg shadow-sm text-sm font-medium">ติดต่อ Support</a>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@ const ElegantQA = () => {
                   <div className="pt-0 text-gray-700">
                     <p className="whitespace-pre-line">{item.a}</p>
                     <div className="mt-4 text-sm text-gray-500">
-                      <p>หากต้องการรายละเอียดเพิ่มเติม โปรดติดต่อ: <a href="mailto:support@guson.in.th" className="text-primary underline">support@guson.in.th</a></p>
+                      <p>หากต้องการรายละเอียดเพิ่มเติม โปรดติดต่อ: <a href="mailto:support@kyupikyupi.com" className="text-primary underline">support@kyupikyupi.com</a></p>
                     </div>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ const ElegantQA = () => {
 
           <footer id="contact" className="mt-10 rounded-2xl p-6 bg-white border border-gray-100 shadow-sm">
             <h4 className="text-lg font-semibold text-gray-900">ต้องการความช่วยเหลือเพิ่มเติม?</h4>
-            <p className="mt-2 text-gray-600">ทีมงาน Guson ยินดีช่วยเหลือ — ส่งคำถามหรือข้อเสนอแนะมาที่ <a className="text-primary underline" href="mailto:support@guson.in.th">support@guson.in.th</a> หรือใช้ฟอร์มในหน้า Contact ของเรา</p>
+            <p className="mt-2 text-gray-600">ทีมงาน Guson ยินดีช่วยเหลือ — ส่งคำถามหรือข้อเสนอแนะมาที่ <a className="text-primary underline" href="mailto:support@kyupikyupi.com">support@kyupikyupi.com</a> หรือใช้ฟอร์มในหน้า Contact ของเรา</p>
             <p className="mt-3 text-xs text-gray-400">หมายเหตุ: คำตอบในหน้านี้เป็นข้อมูลแนะนำทั่วไป หากเป็นเรื่องของข้อมูลส่วนบุคคล โปรดอ้างอิง Privacy Policy ฉบับเต็ม</p>
           </footer>
         </main>
